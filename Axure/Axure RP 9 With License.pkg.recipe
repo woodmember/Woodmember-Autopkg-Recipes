@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version of Axure RP 9-Trial and creates a package, inserting you lic.key into the finished product</string>
     <key>Identifier</key>
-    <string>local.pkg.Axure 9 RP With License</string>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.Axure 9 RP With License</string>
 	<key>Input</key>
     <dict>
         <key>NAME</key>
