@@ -10,8 +10,8 @@
     <dict>
         <key>NAME</key>
         <string>AxureRP9</string>
-		<key>LicensePATH</key>
-		<string>Path/To/lic.key/Here</string>
+	<key>LicensePATH</key>
+	<string>Path/To/lic.key/Here</string>
     </dict>
     <key>MinimumVersion</key>
     <string>0.6.1</string>
