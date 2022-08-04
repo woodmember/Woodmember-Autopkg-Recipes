@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Packages A Existing DMG or PKG Version Of Sassafras K2 Client. Intended for use with legacy installs/ products.</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember-Autopkg-Recipes.pkg.SassafrasK2Client</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.SassafrasK2ClientBYOInstaller</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
