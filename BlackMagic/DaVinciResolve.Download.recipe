@@ -49,6 +49,9 @@
         <string></string>
         <key>REG_COUNTRY</key>
         <string></string>
+        <!-- You MUST fill in all the above reg fields. You do not need to already have a account
+	It is advisable tgough to fill in details linked to your organisation. Having a org email 
+	and phone number is specifically advised.-->
     </dict>
     <key>MinimumVersion</key>
     <string>2.0.0</string>
