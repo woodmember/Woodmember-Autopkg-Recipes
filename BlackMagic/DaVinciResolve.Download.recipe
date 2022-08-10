@@ -8,8 +8,8 @@
 		
 			This recipe requires the use of the fantastic BlackMagicURLProvider processor, created by venerable timsutton. 
 			You will need to add this processor to your autopkg instance. The Processor can be found on his Github:
-			https://github.com/autopkg/timsutton-recipes/tree/master/Blackmagic . Info on using non standard 
-			processors can be found here: https://github.com/autopkg/autopkg/wiki/Processor-Locations
+			https://github.com/autopkg/timsutton-recipes/tree/master/Blackmagic . You will need to add his repo in order for
+	    		this recipe to function.
 
 			This product requires registration in order to download, so
 			you _must_ override all input variables beginning with 'REG_'
