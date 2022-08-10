@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads latest version of DaVinci Resolve 18 by default. You can modify this to download any available
+    <string>Downloads latest version of DaVinci Resolve Studio 18 by default. You can modify this to download any available
 			legacy version as well. You can also configure this to download Studio and Lite.
 		
 			This recipe requires the use of the fantastic BlackMagicURLProvider processor, created by venerable timsutton. 
