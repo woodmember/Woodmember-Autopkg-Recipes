@@ -19,7 +19,7 @@
 			- REG_COUNTRY is of the form 'us', 'ca', 'au', etc.
 	</string>
     <key>Identifier</key>
-    <string>local.download.davinciresolve18Studio</string>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.davinciresolve</string>
     <key>Input</key>
     <dict>
         <!-- You will need to update the protuct version with to DaVinci Resolve, DaVinci 
