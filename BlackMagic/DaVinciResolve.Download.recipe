@@ -59,7 +59,7 @@
     <array>
         <dict>
             <key>Processor</key>
-            <string>com.github.autopkg.timsutton.Blackmagic/BlackMagicURLProvider</string>
+            <string>com.github.autopkg.timsutton-recipes.Blackmagic/BlackMagicURLProvider</string>
             <key>Arguments</key>
             <dict>
                 <key>product_name_pattern</key>
