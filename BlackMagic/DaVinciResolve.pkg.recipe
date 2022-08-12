@@ -3,8 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads latest version of DaVinci Resolve 18 by default. You can modify this to download any available
-			legacy version as well. You can also configure this to download Studio and Lite.
+	<string>	
+			Downloads latest version of DaVinci Resolve Studio 18 by default. You can modify this to download any available
+			legacy version as well. You can also configure this to download Studio and Lite/ free versions.
 		
 			This recipe requires the use of the fantastic BlackMagicURLProvider processor, created by the venerable timsutton. 
 			You will need to add his repo to your autopkg instance. The Processor can be found on his Github:
@@ -30,8 +31,8 @@
 		<key>VERSION</key>
 		<string></string>
 		<key>Description</key>
-		<string>VERSION should be blank for studio & lite for the free version. This is case sensitive
-		lite sgould be all lower case</string>
+		<string>VERSION should be blank for studio and lite for the free version. This is case sensitive
+		lite should be all lower case</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>1.0</string>
