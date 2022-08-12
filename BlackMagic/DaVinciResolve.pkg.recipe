@@ -27,6 +27,11 @@
         <!-- You will need to update the PKGNAME with the product you are packaging.
 		EG: DaVinci Resolve, DaVinci Resolve Lite or DaVinci Resolve Studio. NO NOT
 		enter version number here. -->
+		<key>VERSION</key>
+		<string></string>
+		<key>Description</key>
+		<string>VERSION should be blank for studio & lite for the free version. This is case sensitive
+		lite sgould be all lower case</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>1.0</string>
@@ -73,7 +78,7 @@
  				<key>destination_path</key>
  				<string>%RECIPE_CACHE_DIR%/payload/</string>
  				<key>pkg_payload_path</key>
- 				<string>%RECIPE_CACHE_DIR%/distpkg/Manifest.pkg/payload</string>
+ 				<string>%RECIPE_CACHE_DIR%/distpkg/Manifest%VERSION%.pkg/payload</string>
  			</dict>
  		</dict>
 		 <dict>
