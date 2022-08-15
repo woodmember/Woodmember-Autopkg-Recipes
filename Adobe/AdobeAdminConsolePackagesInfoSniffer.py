@@ -257,13 +257,13 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
                                                                   self.env['aacp_target_folder'],
                                                                   'Application.json')
             # Process HD installer
-            self.process_hd_installer()
+            #self.process_hd_installer()
 
 
-    def process_apro_installer(self):
-        '''
-            Process APRO (Acrobat) installer
-        '''
+    #def process_apro_installer(self):
+        #'''
+            #Process APRO (Acrobat) installer
+        #'''
 
         # Progress notification
         self.output("Processing Acrobat installer")
