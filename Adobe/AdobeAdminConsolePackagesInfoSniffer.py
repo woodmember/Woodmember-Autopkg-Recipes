@@ -52,12 +52,12 @@ from autopkglib import (Processor,
 
 
 # Define class
-__all__ = ['AdobeAdminConsolePackagesPkgInfoCreator']
+__all__ = ['AdobeAdminConsolePackagesInfoSniffer']
 __version__ = ['1.0']
 
 
 # Class def
-class AdobeAdminConsolePackagesPkgInfoCreator(Processor):
+class AdobeAdminConsolePackagesInfoSniffer(Processor):
     '''
        Parses generated Adobe Admin Console Packages to generate installation information.
     '''
