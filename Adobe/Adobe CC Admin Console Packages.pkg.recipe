@@ -49,7 +49,7 @@
    		 </dict>
    		 <dict>
    			 <key>Processor</key>
-   			 <string>AdobeAdminConsolePackagesPkgInfoCreator</string>
+   			 <string>AdobeAdminConsolePackagesInfoSniffer</string>
    			 <key>Arguments</key>
    			 <dict>
 				 <key>aacp_packages_path</key>
