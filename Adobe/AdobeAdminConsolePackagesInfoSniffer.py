@@ -266,12 +266,12 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
         #'''
 
         # Progress notification
-        self.output("Processing Acrobat installer")
-        self.env['aacp_proxy_xml_path'] = (os.path.join(self.env['aacp_install_pkg_path'],
-                                                        'Contents/Resources/Setup',
-                                                        self.env['aacp_target_folder'],
-                                                        'proxy.xml'))
-        self.output(f"aacp_proxy_xml_path: {self.env['aacp_proxy_xml_path']}")
+        #self.output("Processing Acrobat installer")
+        #self.env['aacp_proxy_xml_path'] = (os.path.join(self.env['aacp_install_pkg_path'],
+                                                        #'Contents/Resources/Setup',
+                                                        #self.env['aacp_target_folder'],
+                                                        #'proxy.xml'))
+        #self.output(f"aacp_proxy_xml_path: {self.env['aacp_proxy_xml_path']}")
 
         # Try to parse proxy_xml, raise if an issue
         try:
