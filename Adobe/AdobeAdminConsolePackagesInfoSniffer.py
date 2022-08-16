@@ -131,7 +131,10 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
             'description': 'The titles version.',
         },
         'aacp_packages_path': {
-            'description': 'Path To The Directory You Keep Your CC .ZIP Files. Note: You DO NOT enter the path to just one Adobe CC .ZIP file here',
+            'description': 'Path to projects unzip folder',
+        },
+        'aacp_unpacked_path': {
+            'description': 'Path To CC app unpacked directory',
         }
     }
 
@@ -195,7 +198,7 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
         self.env['aacp_application_install_lang'] = None
 
         # Path to titles optionXML.xml
-        self.env['aacp_option_xml_path'] = os.path.join(self.env['aacp_install_pkg_path'],
+        self.env['aacp_option_xml_path'] = os.path.join(self.env['aacp_unpacked_path'],
                                                         'Contents', 'Resources', 'optionXML.xml')
         if not os.path.exists(self.env['aacp_option_xml_path']):
             raise ProcessorError(f"ERROR: Cannot find {self.env['aacp_option_xml_path']}... "
