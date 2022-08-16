@@ -260,7 +260,7 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
                                                                   'Application.json')    
 
         # Get root of xml
-        root = parse_xml.getroot()
+        root = aacp_unpacked_path.getroot()
 
         # Get app_version
         self.env['version'] = (root.findtext
