@@ -270,7 +270,7 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
 
         # Get app_version
         self.env['version'] = (root.findtext
-                                   ('./InstallerProperties/Property[@name=\'ProductVersion\']'))
+                                   ('./HDMedia/Property[@name=\'ProductVersion\']'))
         self.output(f"version: {self.env['version']}")
 
         # Set to []
