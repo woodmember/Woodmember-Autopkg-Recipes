@@ -221,6 +221,7 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
                 self.env['aacp_application_sap_code'] = hd_media.findtext('SAPCode')
                 self.env['aacp_target_folder'] = hd_media.findtext('TargetFolderName')
                 self.env['aacp_application_major_version'] = hd_media.findtext('baseVersion')
+                self.env['version'] = hd_media.findtext('productVersion')
 
         # If no HDMedia is found, then self.env['aacp_application_install_lang'] will be none
         if not self.env['aacp_application_install_lang']:
@@ -260,21 +261,21 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
                                                                   'Application.json')    
 
         # Try to parse xml, raise if an issue
-        try:
-            parse_xml = ElementTree.parse(self.env['aacp_unpacked_path'])
-        except xml.etree.ElementTree.ParseError as err_msg:
-            raise ProcessorError from err_msg
+        ##try:
+            ##parse_xml = ElementTree.parse(self.env['aacp_unpacked_path'])
+       ## except xml.etree.ElementTree.ParseError as err_msg:
+            ##raise ProcessorError from err_msg
 
         # Get root of xml
-        root = parse_xml.getroot()
+        ##root = parse_xml.getroot()
 
         # Get app_version
-        self.env['version'] = (root.findtext
-                                   ('./HDMedia/Property[@name=\'ProductVersion\']'))
-        self.output(f"version: {self.env['version']}")
+        ##self.env['version'] = (root.findtext
+                                  ## ('./HDMedia/Property[@name=\'ProductVersion\']'))
+        ##self.output(f"version: {self.env['version']}")
 
         # Set to []
-        self.env['aacp_blocking_applications'] = []
+        ##self.env['aacp_blocking_applications'] = []
 
 if __name__ == '__main__':
     PROCESSOR = AdobeAdminConsolePackagesPkgInfoCreator()
