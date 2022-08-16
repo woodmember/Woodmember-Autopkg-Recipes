@@ -273,22 +273,5 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
                                                         #'proxy.xml'))
         #self.output(f"aacp_proxy_xml_path: {self.env['aacp_proxy_xml_path']}")
 
-        # Try to parse proxy_xml, raise if an issue
-        try:
-            parse_xml = ElementTree.parse(self.env['aacp_proxy_xml_path'])
-        except xml.etree.ElementTree.ParseError as err_msg:
-            raise ProcessorError from err_msg
-
-        # Get root of xml
-        root = parse_xml.getroot()
-
-        # Get app_version
-        self.env['version'] = (root.findtext
-                                   ('./InstallerProperties/Property[@name=\'ProductVersion\']'))
-        self.output(f"version: {self.env['version']}")
-
-        # Set to []
-        self.env['aacp_blocking_applications'] = []
-
 if __name__ == '__main__':
     PROCESSOR = AdobeAdminConsolePackagesPkgInfoCreator()
