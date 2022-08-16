@@ -256,7 +256,14 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
                                                                   'Contents/Resources/HD',
                                                                   self.env['aacp_target_folder'],
                                                                   'Application.json')
-            # Process HD installer
+            
+               
+             # Get app_version
+        self.env['version'] = (root.findtext
+                                   ('./InstallerProperties/Property[@name=\'ProductVersion\']'))
+        self.output(f"version: {self.env['version']}")
+               
+               # Process HD installer
             #self.process_hd_installer()
 
 
