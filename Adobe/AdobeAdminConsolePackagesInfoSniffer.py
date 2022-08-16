@@ -259,8 +259,14 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
                                                                   self.env['aacp_target_folder'],
                                                                   'Application.json')    
 
+        # Try to parse xml, raise if an issue
+        try:
+            parse_xml = ElementTree.parse(self.env['aacp_unpacked_path'])
+        except xml.etree.ElementTree.ParseError as err_msg:
+            raise ProcessorError from err_msg
+
         # Get root of xml
-        root = aacp_unpacked_path.getroot()
+        root = parse_xml.getroot()
 
         # Get app_version
         self.env['version'] = (root.findtext
