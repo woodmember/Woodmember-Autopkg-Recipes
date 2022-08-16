@@ -259,7 +259,7 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
 
           
           # Get app_version
-        self.env['version'] = (aacp_option_xml_path.findtext
+        self.env['version'] = (option_xml.findtext
                                    ('./InstallerProperties/Property[@name=\'ProductVersion\']'))
         self.output(f"version: {self.env['version']}")
                
