@@ -54,6 +54,8 @@
    			 <dict>
 				 <key>aacp_packages_path</key>
 				 <string>%RECIPE_CACHE_DIR%/unzip/</string>
+				 <key>aacp_unpacked_path</key>
+				 <string>%RECIPE_CACHE_DIR%/distpkg/Contents/Resources</string>
    				 <key>aacp_install_pkg_path</key>
    				 <string>%RECIPE_CACHE_DIR%/unzip/%NAME%/Build/%NAME%_Install.pkg</string>
    			 </dict>
