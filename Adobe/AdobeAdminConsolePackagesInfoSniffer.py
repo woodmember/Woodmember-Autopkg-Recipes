@@ -259,12 +259,6 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
                                                                   self.env['aacp_target_folder'],
                                                                   'Application.json')    
 
-        # Try to parse proxy_xml, raise if an issue
-        try:
-            parse_xml = ElementTree.parse(self.env['aacp_proxy_xml_path'])
-        except xml.etree.ElementTree.ParseError as err_msg:
-            raise ProcessorError from err_msg
-
         # Get root of xml
         root = parse_xml.getroot()
 
