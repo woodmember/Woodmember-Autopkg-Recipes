@@ -198,8 +198,7 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
         self.env['aacp_application_install_lang'] = None
 
         # Path to titles optionXML.xml
-        self.env['aacp_option_xml_path'] = os.path.join(self.env['aacp_unpacked_path'],
-                                                        'Contents', 'Resources', 'optionXML.xml')
+        self.env['aacp_option_xml_path'] = os.path.join(self.env['aacp_unpacked_path'])
         if not os.path.exists(self.env['aacp_option_xml_path']):
             raise ProcessorError(f"ERROR: Cannot find {self.env['aacp_option_xml_path']}... "
                                   "exiting...")
