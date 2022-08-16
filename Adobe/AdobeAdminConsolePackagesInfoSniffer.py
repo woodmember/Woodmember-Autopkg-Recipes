@@ -178,13 +178,6 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
                                                             self.env['NAME'], 'Build',
                                                             self.env['NAME'] + '_Uninstall.pkg'))
 
-        # Check that the path exists, raise if not
-        if not os.path.exists(self.env['aacp_uninstall_pkg_path']):
-            raise ProcessorError(f"ERROR: Cannot find {self.env['aacp_uninstall_pkg_path']}, these "
-                                 f"recipes need packages of the Managed Package variety, which "
-                                 f"include _Install and _Uninstall packages.... exiting...")
-        self.output(f"aacp_uninstall_pkg_path {self.env['aacp_uninstall_pkg_path']}")
-
         # Process the titles optionXML.xml
         self.process_optionxml_xml()
 
