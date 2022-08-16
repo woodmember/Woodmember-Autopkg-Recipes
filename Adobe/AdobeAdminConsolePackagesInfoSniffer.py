@@ -255,30 +255,24 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
             self.env['aacp_application_json_path'] = os.path.join(self.env['aacp_install_pkg_path'],
                                                                   'Contents/Resources/HD',
                                                                   self.env['aacp_target_folder'],
-                                                                  'Application.json')
+                                                                  'Application.json')    
 
-          
-          # Get app_version
-        self.env['version'] = (option_xml.findtext
+        # Try to parse proxy_xml, raise if an issue
+        try:
+            parse_xml = ElementTree.parse(self.env['aacp_proxy_xml_path'])
+        except xml.etree.ElementTree.ParseError as err_msg:
+            raise ProcessorError from err_msg
+
+        # Get root of xml
+        root = parse_xml.getroot()
+
+        # Get app_version
+        self.env['version'] = (root.findtext
                                    ('./InstallerProperties/Property[@name=\'ProductVersion\']'))
         self.output(f"version: {self.env['version']}")
-               
-               # Process HD installer
-            #self.process_hd_installer()
 
-
-    #def process_apro_installer(self):
-        #'''
-            #Process APRO (Acrobat) installer
-        #'''
-
-        # Progress notification
-        #self.output("Processing Acrobat installer")
-        #self.env['aacp_proxy_xml_path'] = (os.path.join(self.env['aacp_install_pkg_path'],
-                                                        #'Contents/Resources/Setup',
-                                                        #self.env['aacp_target_folder'],
-                                                        #'proxy.xml'))
-        #self.output(f"aacp_proxy_xml_path: {self.env['aacp_proxy_xml_path']}")
+        # Set to []
+        self.env['aacp_blocking_applications'] = []
 
 if __name__ == '__main__':
     PROCESSOR = AdobeAdminConsolePackagesPkgInfoCreator()
