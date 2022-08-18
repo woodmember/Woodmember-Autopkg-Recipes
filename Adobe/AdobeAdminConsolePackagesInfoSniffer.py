@@ -249,9 +249,9 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
         ##else:
             # Set application_json_path
           ##  self.env['aacp_application_json_path'] = os.path.join(self.env['aacp_install_pkg_path'],
-                                                                  'Contents/Resources/HD',
-                                                                  self.env['aacp_target_folder'],
-                                                                  'Application.json')    
+                                                                  ##'Contents/Resources/HD',
+                                                                  ##self.env['aacp_target_folder'],
+                                                                  ##'Application.json')    
 
         # Try to parse xml, raise if an issue
         ##try:
