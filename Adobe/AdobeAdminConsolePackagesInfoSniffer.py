@@ -244,11 +244,11 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
         self.output(f"aacp_application_major_version: {self.env['aacp_application_major_version']}")
 
         # If the we're looking at Acrobat, then we need to process things differently
-        if self.env['aacp_application_sap_code'] == 'APRO':
-            self.process_apro_installer()
-        else:
+        ##if self.env['aacp_application_sap_code'] == 'APRO':
+          ##  self.process_apro_installer()
+        ##else:
             # Set application_json_path
-            self.env['aacp_application_json_path'] = os.path.join(self.env['aacp_install_pkg_path'],
+          ##  self.env['aacp_application_json_path'] = os.path.join(self.env['aacp_install_pkg_path'],
                                                                   'Contents/Resources/HD',
                                                                   self.env['aacp_target_folder'],
                                                                   'Application.json')    
