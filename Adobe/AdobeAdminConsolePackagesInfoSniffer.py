@@ -224,6 +224,7 @@ class AdobeAdminConsolePackagesInfoSniffer(Processor):
                 self.env['aacp_application_sap_code'] = ribs_media.findtext('SAPCode')
                 self.env['aacp_target_folder'] = ribs_media.findtext('TargetFolderName')
                 self.env['aacp_application_major_version'] = ribs_media.findtext('prodVersion')
+                self.env['version'] = ribs_media.findtext('prodVersion')
 
         # Check for Processor Architecture
         self.env['aacp_application_architecture_type'] = (
