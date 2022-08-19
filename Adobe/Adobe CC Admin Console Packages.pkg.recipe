@@ -31,9 +31,10 @@
 	            <key>Arguments</key>
 	            <dict>
 	                <key>archive_path</key>
+					<!-- Working Dirctory For All CC ZIP DOWNLOADS -->
 	                <string>%found_filename%</string>
 	                <key>destination_path</key>
-	                <string>%RECIPE_CACHE_DIR%/unzip/</string>
+	                <string>%RECIPE_CACHE_DIR%/unzip</string>
 				</dict>
 			</dict>
             <dict>
@@ -46,10 +47,49 @@
                     <key>pkg_path</key>
                     <string>%RECIPE_CACHE_DIR%/distpkg</string>
                 </dict>
+   		 	</dict>
+   		 <dict>
+   			 <key>Processor</key>
+   			 <string>PkgRootCreator</string>
+   			 <key>Arguments</key>
+   			 <dict>
+				 <key>pkgroot</key>
+				 <string>%RECIPE_CACHE_DIR%/%NAME%root</string>
+                 <key>pkgdirs</key>
+                 <dict>
+                     <key>pkgroot</key>
+                     <string>0775</string>
+                 </dict>
+   			 </dict>
    		 </dict>
    		 <dict>
    			 <key>Processor</key>
-   			 <string>AdobeAdminConsolePackagesInfoSniffer</string>
+   			 <string>PkgRootCreator</string>
+   			 <key>Arguments</key>
+   			 <dict>
+				 <key>pkgroot</key>
+				 <string>%RECIPE_CACHE_DIR%/%NAME%scripts</string>
+                 <key>pkgdirs</key>
+                 <dict>
+                     <key>Scripts</key>
+                     <string>0775</string>
+                 </dict>
+   			 </dict>
+   		 </dict>
+         <dict>
+             <key>Processor</key>
+            <string>Copier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%found_filename%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/AdobeCCDA.zip</string>
+			</dict>
+		</dict>
+   		 <dict>
+   			 <key>Processor</key>
+   			 <string>AdobeAdminConsolePackagesInfoSnifferV2</string>
    			 <key>Arguments</key>
    			 <dict>
 				 <key>aacp_packages_path</key>
@@ -62,26 +102,90 @@
    		 </dict>
    		 <dict>
    			 <key>Processor</key>
-   			 <string>FlatPkgPacker</string>
+   			 <string>FileCreator</string>
    			 <key>Arguments</key>
    			 <dict>
-   				 <key>source_flatpkg_dir</key>
-   				 <string>%RECIPE_CACHE_DIR%/distpkg</string>
-   				 <key>destination_pkg</key>
-   				 <string>%RECIPE_CACHE_DIR%/%NAME% %version%.pkg</string>
-   			 </dict>
+				 <key>file_content</key>
+				 <string>#!/bin/bash
+DIR=$(dirname "$0")
+APPPATH="/tmp/CCDA"
+/bin/rm -rf "$APPPATH"
+mkdir -p "$APPPATH"
+/usr/bin/unzip $DIR/AdobeCCDA.zip -d "$APPPATH"
+/usr/sbin/installer -tgt / -pkg "$APPPATH"/%NAME%/Build/*_Install.pkg
+exit 0</string>
+	 		<key>file_mode</key>
+	 		<string>0755</string>
+	 		<key>file_path</key>
+	 		<string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/postinstall</string>
+   			</dict>
    		 </dict>
-		 <dict>
-		     <key>Processor</key>
-		     <string>PathDeleter</string>
-		     <key>Arguments</key>
-		     <dict>
-		         <key>path_list</key>
-		         <array>
-		             <string>%RECIPE_CACHE_DIR%/unzip/</string>
-		         </array>
-		     </dict>
-		 </dict>
+ 		<dict>
+ 			<key>Processor</key>
+ 			<string>PkgCreator</string>
+ 			<key>Arguments</key>
+ 			<dict>
+ 				<key>pkg_request</key>
+ 				<dict>
+ 					<key>pkgname</key>
+ 					<string>%NAME% %version%</string>
+ 					<key>id</key>
+ 					<string>com.adobe.%NAME%.pkg.%version%</string>
+ 					<key>pkgtype</key>
+ 					<string>flat</string>
+ 					<key>pkgroot</key>
+ 					<string>%RECIPE_CACHE_DIR%/%NAME%root/pkgroot</string>
+ 					<key>version</key>
+ 					<string>%version%</string>
+ 					<key>scripts</key>
+ 					<string>%NAME%scripts/Scripts</string>
+ 				</dict>
+ 			</dict>
+ 		</dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/%NAME%scripts</string>
+   	         </array>
+   	     </dict>
+   	 </dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/%NAME%root</string>
+   	         </array>
+   	     </dict>
+   	 </dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/distpkg</string>
+   	         </array>
+   	     </dict>
+   	 </dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/unzip</string>
+   	         </array>
+   	     </dict>
+   	 </dict>	 
         </array>
     </dict>
 </plist>
