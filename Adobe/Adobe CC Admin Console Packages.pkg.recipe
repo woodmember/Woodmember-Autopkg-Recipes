@@ -89,7 +89,7 @@
 		</dict>
    		 <dict>
    			 <key>Processor</key>
-   			 <string>AdobeAdminConsolePackagesInfoSnifferV2</string>
+   			 <string>AdobeAdminConsolePackagesInfoSniffer</string>
    			 <key>Arguments</key>
    			 <dict>
 				 <key>aacp_packages_path</key>
