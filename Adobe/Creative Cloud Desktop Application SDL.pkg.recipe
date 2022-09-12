@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>Identifier</key>
+        <string>com.github.Woodmember-Autopkg-Recipes.pkg.CreativeCloudDesktopAppSDL.recipe</string>
+        <key>Description</key>
+        <string>
+        Intended to be used with a the Adopbe Creative Clould Desktop App downloaded from the Adobe Admine Console. 
+        
+        This workflow was created specifically for use with the use of a CC app, wheer by you have allowed SDL devices/users 
+        to download CC apps themselves. Effectivley, this is for use on devices where you wish users to pick and choose what 
+        CC apps they have installed.
+        
+        Please note you need to provide the version number for this recipe. Unlike other CC recipes in this repository, this 
+        one can not automatically find the bversion number.
+        </string>
+        <key>Input</key>
+        <dict>
+      <key>NAME</key>
+      <string>CreativeCloudDesktopApplication</string>
+      <!-- When downloading the Adobe Creative Cloud Desktop App, you must name the package what you enter here in the NAME -->
+			<key>VERSION</key>
+			<!-- Enter the version you downloaded from the admin portal here -->
+			<string>5.8</string>
+		    <key>CCPKGPATH</key>
+		    <string>Path/To/The/Directory/You/Keep/Your/CC/.ZIP/Files</string>
+        </dict>
+        <key>MinimumVersion</key>
+        <string>1.0.0</string>
+        <key>Process</key>
+        <array>
+            <dict>
+                <key>Processor</key>
+                <string>FileFinder</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>pattern</key>
+                    <string>%CCPKGPATH%/%NAME%*.zip</string>
+                </dict>
+            </dict>
+            <dict>
+                <key>Processor</key>
+	            <string>Unarchiver</string>
+	            <key>Arguments</key>
+	            <dict>
+	                <key>archive_path</key>
+					<!-- Working Dirctory For All CC ZIP DOWNLOADS -->
+	                <string>%found_filename%</string>
+	                <key>destination_path</key>
+	                <string>%RECIPE_CACHE_DIR%/unzip</string>
+				</dict>
+			</dict>
+            <dict>
+                <key>Processor</key>
+                <string>PkgCopier</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>source_pkg</key>
+                    <string>%RECIPE_CACHE_DIR%/unzip/%NAME%/Build/%NAME%_Install.pkg</string>
+                    <key>pkg_path</key>
+                    <string>%RECIPE_CACHE_DIR%/distpkg</string>
+                </dict>
+   		 	</dict>
+   		 <dict>
+   			 <key>Processor</key>
+   			 <string>PkgRootCreator</string>
+   			 <key>Arguments</key>
+   			 <dict>
+				 <key>pkgroot</key>
+				 <string>%RECIPE_CACHE_DIR%/%NAME%root</string>
+                 <key>pkgdirs</key>
+                 <dict>
+                     <key>pkgroot</key>
+                     <string>0775</string>
+                 </dict>
+   			 </dict>
+   		 </dict>
+   		 <dict>
+   			 <key>Processor</key>
+   			 <string>PkgRootCreator</string>
+   			 <key>Arguments</key>
+   			 <dict>
+				 <key>pkgroot</key>
+				 <string>%RECIPE_CACHE_DIR%/%NAME%scripts</string>
+                 <key>pkgdirs</key>
+                 <dict>
+                     <key>Scripts</key>
+                     <string>0775</string>
+                 </dict>
+   			 </dict>
+   		 </dict>
+         <dict>
+             <key>Processor</key>
+            <string>Copier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%found_filename%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/AdobeCCDA.zip</string>
+			</dict>
+		</dict>
+   		 <dict>
+   			 <key>Processor</key>
+   			 <string>FileCreator</string>
+   			 <key>Arguments</key>
+   			 <dict>
+				 <key>file_content</key>
+				 <string>#!/bin/bash
+DIR=$(dirname "$0")
+APPPATH="/tmp/CCDA"
+/bin/rm -rf "$APPPATH"
+mkdir -p "$APPPATH"
+/usr/bin/unzip $DIR/AdobeCCDA.zip -d "$APPPATH"
+/usr/sbin/installer -tgt / -pkg "$APPPATH"/%NAME%/Build/*_Install.pkg
+exit 0</string>
+	 		<key>file_mode</key>
+	 		<string>0755</string>
+	 		<key>file_path</key>
+	 		<string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/postinstall</string>
+   			</dict>
+   		 </dict>
+ 		<dict>
+ 			<key>Processor</key>
+ 			<string>PkgCreator</string>
+ 			<key>Arguments</key>
+ 			<dict>
+ 				<key>pkg_request</key>
+ 				<dict>
+ 					<key>pkgname</key>
+ 					<string>%NAME% %VERSION%</string>
+ 					<key>id</key>
+ 					<string>com.adobe.%NAME%.pkg.%VERSION%</string>
+ 					<key>pkgtype</key>
+ 					<string>flat</string>
+ 					<key>pkgroot</key>
+ 					<string>%RECIPE_CACHE_DIR%/%NAME%root/pkgroot</string>
+ 					<key>version</key>
+ 					<string>%VERSION%</string>
+ 					<key>scripts</key>
+ 					<string>%NAME%scripts/Scripts</string>
+ 				</dict>
+ 			</dict>
+ 		</dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/%NAME%scripts</string>
+   	         </array>
+   	     </dict>
+   	 </dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/%NAME%root</string>
+   	         </array>
+   	     </dict>
+   	 </dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/distpkg</string>
+   	         </array>
+   	     </dict>
+   	 </dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/unzip</string>
+   	         </array>
+   	     </dict>
+   	 </dict>	 
+        </array>
+    </dict>
+</plist>
