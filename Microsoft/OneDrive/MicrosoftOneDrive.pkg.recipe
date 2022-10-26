@@ -3,7 +3,7 @@
 <plist version="1.0">
     <dict>
 	<key>Identifier</key>
-        <string>com.github.Woodmember-Autopkg-Recipes.pkg.jamfpatch.microsoftonedrive</string>
+        <string>com.github.Woodmember-Autopkg-Recipes.pkg.jamfpatch.MicrosoftOneDrive</string>
         <key>Description</key>
         <string>Downloads the current standalone Microsoft OneDrive installer, extracts version information and renames the installer package. This creates a pkg compatible wiith Jamf Patch Management</string>
         <key>Input</key>
