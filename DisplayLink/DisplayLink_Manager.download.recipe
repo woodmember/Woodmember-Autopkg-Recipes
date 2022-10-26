@@ -6,8 +6,6 @@
 		<string>Downloads the latest version of the DisplayLink Manager App.</string>
 		<key>Identifier</key>
 		<string>com.github.Woodmember-Autopkg-Recipes.download.DisplayLink_Manager</string>
-		<key>MinimumVersion</key>
-		<real>2.3</real>
 		<key>Input</key>
 		<dict>
 			<key>NAME</key>
