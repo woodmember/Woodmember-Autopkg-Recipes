@@ -29,9 +29,9 @@
 					<key>pkgdirs</key>
 					<dict>
 						<key>pkgroot</key>
-						<integer>775</integer>
+						<string>775</string>
 						<key>Scripts</key>
-						<integer>775</integer>
+						<string>775</string>
 					</dict>
 				</dict>
 			</dict>
@@ -106,7 +106,7 @@
 					<key>file_path</key>
 					<string>%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/Scripts/preinstall</string>
 					<key>file_mode</key>
-					<integer>755</integer>
+					<string>755</string>
 					<key>file_content</key>
 					<string>#!/bin/bash
 
