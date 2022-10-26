@@ -16,7 +16,7 @@
 			<string>com.displaylink.displaylinkmanagerapp</string>
 		</dict>
 		<key>ParentRecipe</key>
-		<string>com.github.smithjw.download.DisplayLink_Manager</string>
+		<string>com.github.Woodmember-Autopkg-Recipes.download.DisplayLink_Manager</string>
 		<key>Process</key>
 		<array>
 			<dict>
