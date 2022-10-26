@@ -2,10 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
     <dict>
+	<key>Identifier</key>
+        <string>com.github.Woodmember-Autopkg-Recipes.pkg.jamfpatch.microsoftonedrive</string>
         <key>Description</key>
         <string>Downloads the current standalone Microsoft OneDrive installer, extracts version information and renames the installer package. This creates a pkg compatible wiith Jamf Patch Management</string>
-        <key>Identifier</key>
-        <string>com.github.Woodmember-Autopkg-Recipes.pkg.jamfpatch.microsoftonedrive</string>
         <key>Input</key>
         <dict>
             <key>NAME</key>
