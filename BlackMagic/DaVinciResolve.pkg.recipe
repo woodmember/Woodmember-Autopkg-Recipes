@@ -147,7 +147,5 @@
              </dict>
          </dict>  
     </array>
-	<key>pkg_path</key>
-	<string>%found_filename%</string> 	
 </dict>
 </plist>
