@@ -137,6 +137,15 @@
 			         </array>
 			     </dict>
 			 </dict>
+	             <dict>
+             <key>Processor</key>
+             <string>FileFinder</string>
+             <key>Arguments</key>
+             <dict>
+                 <key>pattern</key>
+                 <string>%RECIPE_CACHE_DIR%/*%version%.dmg</string>
+             </dict>
+         </dict>
     </array>
 </dict>
 </plist>
