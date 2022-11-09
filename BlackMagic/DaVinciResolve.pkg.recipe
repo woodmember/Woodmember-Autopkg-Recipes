@@ -146,6 +146,8 @@
                  <string>%RECIPE_CACHE_DIR%/*%version%.pkg</string>
              </dict>
          </dict>
+	<key>pkg_path</key>
+	<string>%found_filename%</string>   
     </array>
 </dict>
 </plist>
