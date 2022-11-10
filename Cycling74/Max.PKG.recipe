@@ -9,7 +9,7 @@
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
-		<string>Max</string>
+		<string>Max 8</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.2.9</string>
@@ -68,7 +68,7 @@
 					<key>pkgroot</key>
 					<string>%pkgroot%</string>
 					<key>pkgname</key>
-					<string>%NAME%</string>
+					<string>%NAME% %version%</string>
 					<key>id</key>
 					<string>%identifier%</string>
 					<key>version</key>
@@ -87,6 +87,18 @@
 				</dict>
 			</dict>
 		</dict>
+	 <dict>
+	     <key>Processor</key>
+	     <string>PathDeleter</string>
+	     <key>Arguments</key>
+	     <dict>
+	         <key>path_list</key>
+	         <array>
+	             <string>%RECIPE_CACHE_DIR%/Max/</string>
+	         </array>
+	     </dict>
+	 </dict>
 	</array>
 </dict>
 </plist>
+
