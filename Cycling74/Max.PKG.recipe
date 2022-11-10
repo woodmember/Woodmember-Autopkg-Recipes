@@ -51,6 +51,8 @@
 				<dict>
 					<key>CFBundleShortVersionString</key>
 					<string>version</string>
+					<key>CFBundleVersion</key>
+					<string>nameversion</string>
 					<key>CFBundleIdentifier</key>
 					<string>identifier</string>
 				</dict>
@@ -66,7 +68,7 @@
 					<key>pkgroot</key>
 					<string>%pkgroot%</string>
 					<key>pkgname</key>
-					<string>%NAME% %version%</string>
+					<string>%NAME% %nameversion%</string>
 					<key>id</key>
 					<string>%identifier%</string>
 					<key>version</key>
