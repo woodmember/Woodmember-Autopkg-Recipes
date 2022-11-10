@@ -5,11 +5,11 @@
 	<key>Description</key>
 	<string>Create a package from the latest Max download</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember-Autopkg-Recipes.pkg.pkg.Max Latest</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.Max Latest</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
-		<string>Max 8</string>
+		<string>Max</string>
 	</dict>
 	<key>ParentRecipe</key>
 	<string>com.github.timsutton.download.Max7</string>
