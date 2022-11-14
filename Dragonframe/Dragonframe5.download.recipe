@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>Identifier</key>
-    <string>om.github.Woodmember-Autopkg-Recipes.download.Dragonframe5</string>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.Dragonframe5</string>
     <key>Description</key>
     <string>Downloads the latest version of Dragonframe 5</string>
     <key>Input</key>
