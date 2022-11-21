@@ -29,7 +29,7 @@
 				</array>
 			</dict>
 			<key>Processor</key>
-			<string>PathListCopier</string>
+			<string>com.woodmember.processors/PathListCopier</string>
 		</dict>
 		<dict>
 			<key>Processor</key>
