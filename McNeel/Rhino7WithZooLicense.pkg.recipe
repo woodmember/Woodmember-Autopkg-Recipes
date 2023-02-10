@@ -5,7 +5,7 @@
         <key>Description</key>
         <string>Downloads the latest version of Rhino 7 and packages into a pkg. Based on moofot Rhino 7 recipe. Added component for Lan Zoo Licensing.</string>
         <key>Identifier</key>
-        <string>local.pkg.Rhino7</string>
+        <string>com.github.Woodmember-Autopkg-Recipes.pkg.Rhino7</string>
         <key>ParentRecipe</key>
         <string>com.github.dataJAR-recipes.download.Rhino 7</string>
         <!-- When using a Zoo License, A directory titled "McNeel" will be created in /Users/Shared. License 1 Mac. Grab this directory to use in the recipe -->
