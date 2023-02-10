@@ -13,6 +13,10 @@
         <dict>
             <key>NAME</key>
             <string>Rhino 7</string>
+            <key>BUNDLEID</key>
+            <string>com.mcneel.rhinoceros.7</string>
+            <key>VERSIONTYPE</key>
+			<string>CFBundleVersion</string>
             <key>SEARCH_URL</key>
             <string>https://files.mcneel.com/rhino/7/mac/updates/commercialUpdates.xml</string>
             <key>LANZOOLIC</key>
@@ -22,11 +26,13 @@
         <array>
             <dict>
                 <key>Processor</key>
-                <string>AppDmgVersioner</string>
+                <string>Versioner</string>
                 <key>Arguments</key>
                 <dict>
-                    <key>dmg_path</key>
-                    <string>%pathname%</string>
+                    <key>input_plist_path</key>
+                    <string>%pathname%/%NAME%.app/Contents/info.plist</string>
+                    <key>plist_version_key</key>
+                    <string>%VERSIONTYPE%</string>
                 </dict>
             </dict>
             <dict>
@@ -63,9 +69,9 @@
                 <key>Arguments</key>
                 <dict>
                     <key>source_path</key>
-                    <string>%pathname%/%app_name%</string>
+                    <string>%pathname%/%NAME%.app</string>
                     <key>destination_path</key>
-                    <string>%pkgroot%/Applications/%app_name%</string>
+                    <string>%pkgroot%/Applications/%NAME%.app</string>
                 </dict>
             </dict>
             <dict>
@@ -91,7 +97,7 @@
                         <key>version</key>
                         <string>%version%</string>
                         <key>id</key>
-                        <string>%bundleid%</string>
+                        <string>%BUNDLEID%</string>
                         <key>options</key>
                         <string>purge_ds_store</string>
                         <key>chown</key>
