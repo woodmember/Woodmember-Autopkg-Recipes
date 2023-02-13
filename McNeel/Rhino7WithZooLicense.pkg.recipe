@@ -3,7 +3,7 @@
 <plist version="1.0">
     <dict>
         <key>Description</key>
-        <string>Downloads the latest version of Rhino 7 and packages into a pkg. Based on moofot Rhino 7 recipe. Added component for Lan Zoo Licensing & modified
+        <string>Downloads the latest version of Rhino 7 and packages into a pkg. Based on moofot Rhino 7 recipe. Added component for Lan Zoo Licensing and modified
 	it for use with Jamf Patch Management.</string>
         <key>Identifier</key>
         <string>com.github.Woodmember-Autopkg-Recipes.pkg.Rhino7</string>
