@@ -4,13 +4,16 @@
     <dict>
     <key>Description</key>
 	  <string>
+    This recipe requires you to obtain your own AnyConnect.pkg. Copy the .pkg out of the Cisco provided .dmg to your PKGPATH location.
+		  
     In order to gnerate the vpn_install_choices.xml, follow this guide: 
     https://www.cisco.com/c/en/us/support/docs/security/anyconnect-secure-mobility-client/215876-customize-anyconnect-module-installation.pdf 
     
-    The anyconnect_profile.xml is found post insatll on a Mac at 	/opt/cisco/anyconnect/profile. Copy this from a Mac with a existing install.
+    The anyconnect_profile.xml is found post insatll on a Mac at /opt/cisco/anyconnect/profile. Copy this from a Mac with a existing install. Edit
+    this for client side config/ settings.
     </string>
         <key>Identifier</key>
-        <string>local.PKG.CiscoAnyConnectV3.recipe</string>
+        <string>com.github.Woodmember-Autopkg-Recipes.pkg.CiscoAnyConnect.recipe</string>
         <key>Input</key>
         <dict>
           <key>NAME</key>
