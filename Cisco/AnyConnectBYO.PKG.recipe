@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+    <key>Description</key>
+	  <string>
+    In order to gnerate the vpn_install_choices.xml, follow this guide: 
+    https://www.cisco.com/c/en/us/support/docs/security/anyconnect-secure-mobility-client/215876-customize-anyconnect-module-installation.pdf 
+    
+    The anyconnect_profile.xml is found post insatll on a Mac at 	/opt/cisco/anyconnect/profile. Copy this from a Mac with a existing install.
+    </string>
+        <key>Identifier</key>
+        <string>local.PKG.CiscoAnyConnectV3.recipe</string>
+        <key>Input</key>
+        <dict>
+          <key>NAME</key>
+          <string>AnyConnect</string>
+		      <key>PKGPATH</key>
+		      <string>Directory/Of/Your/Cisco/AnyConnect/.pkg</string>
+        <!-- Place your anyconnect_profile.xml and vpn_install_choices.xml files into the same directory as your AnyConnect.pkg. -->
+		      <key>PROFILEXML</key>
+		      <string>%PKGPATH%/anyconnect_profile.xml</string>
+		     <key>CHOICESXML</key>
+		     <string>%PKGPATH%/vpn_install_choices.xml</string>
+        </dict>
+        <key>MinimumVersion</key>
+        <string>1.0.0</string>
+        <key>Process</key>
+        <array>
+            <dict>
+                <key>Processor</key>
+                <string>FileFinder</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>pattern</key>
+                    <string>%PKGPATH%/%NAME%*.pkg</string>
+                </dict>
+            </dict>
+	 		<dict>
+				<key>Processor</key>
+				<string>FlatPkgUnpacker</string>
+				<key>Arguments</key>
+				<dict>
+					<key>flat_pkg_path</key>
+					<string>%PKGPATH%/%found_basename%</string>
+					<key>destination_path</key>
+					<string>%RECIPE_CACHE_DIR%/unpack/basepkg</string>
+					<key>purge_destination</key>
+					<true/>
+				</dict>
+			</dict>
+	 		<dict>
+				<key>Processor</key>
+				<string>PkgPayloadUnpacker</string>
+				<key>Arguments</key>
+				<dict>
+					<key>pkg_payload_path</key>
+					<string>%RECIPE_CACHE_DIR%/unpack/basepkg/vpn_module.pkg/Payload</string>
+					<key>destination_path</key>
+					<string>%RECIPE_CACHE_DIR%/unpack/vpn_module</string>
+					<key>purge_destination</key>
+					<true/>
+				</dict>
+			</dict>
+			<dict>
+				<key>Processor</key>
+				<string>Versioner</string>
+				<key>Arguments</key>
+				<dict>
+					<key>input_plist_path</key>
+					<string>%RECIPE_CACHE_DIR%/unpack/vpn_module/Applications/Cisco/Cisco AnyConnect Secure Mobility Client.app/Contents/Info.plist</string>
+					<key>plist_version_key</key>
+					<string>CFBundleShortVersionString</string>
+			</dict>
+		</dict>
+   			<dict>
+   			 <key>Processor</key>
+   			 <string>PkgRootCreator</string>
+   			 <key>Arguments</key>
+   			 <dict>
+				 <key>pkgroot</key>
+				 <string>%RECIPE_CACHE_DIR%/%NAME%root</string>
+                 <key>pkgdirs</key>
+                 <dict>
+                     <key>pkgroot</key>
+                     <string>0775</string>
+                 </dict>
+   			 </dict>
+   		 </dict>
+   		 <dict>
+   			 <key>Processor</key>
+   			 <string>PkgRootCreator</string>
+   			 <key>Arguments</key>
+   			 <dict>
+				 <key>pkgroot</key>
+				 <string>%RECIPE_CACHE_DIR%/%NAME%scripts</string>
+                 <key>pkgdirs</key>
+                 <dict>
+                     <key>Scripts</key>
+                     <string>0775</string>
+                 </dict>
+   			 </dict>
+   		 </dict>
+         <dict>
+             <key>Processor</key>
+            <string>Copier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%found_filename%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+           <string>Copier</string>
+           <key>Arguments</key>
+           <dict>
+               <key>source_path</key>
+               <string>%PROFILEXML%</string>
+               <key>destination_path</key>
+               <string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/</string>
+		</dict>
+	</dict>
+    <dict>
+        <key>Processor</key>
+       <string>Copier</string>
+       <key>Arguments</key>
+       <dict>
+           <key>source_path</key>
+           <string>%CHOICESXML%</string>
+           <key>destination_path</key>
+           <string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/</string>
+	</dict>
+</dict>
+   		 <dict>
+   			 <key>Processor</key>
+   			 <string>FileCreator</string>
+   			 <key>Arguments</key>
+   			 <dict>
+				 <key>file_content</key>
+				 <string>#!/bin/bash
+DIR=$(dirname "$0")
+APPPATH="/var/tmp/CiscoAnyConnect"
+/bin/rm -rf "$APPPATH"
+
+#Copy Files To Woring Directory
+
+cp -a /"$DIR"/. /"$APPPATH"/
+
+#Install Cisco AnyConnect With Config
+
+/usr/sbin/installer -applyChoiceChangesXML "$APPPATH"/vpn_install_choices.xml -pkg "$APPPATH"/%found_basename% -target /
+
+#Move The Cisco Settings File To The opt-cisco-anyconnect-profile Folder
+
+sudo /bin/mv -f /tmp/anyconnect_profile.xml /opt/cisco/anyconnect/profile/
+exit 0</string>
+	 		<key>file_mode</key>
+	 		<string>0755</string>
+	 		<key>file_path</key>
+	 		<string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/postinstall</string>
+   			</dict>
+   		 </dict>
+ 		<dict>
+ 			<key>Processor</key>
+ 			<string>PkgCreator</string>
+ 			<key>Arguments</key>
+ 			<dict>
+ 				<key>pkg_request</key>
+ 				<dict>
+ 					<key>pkgname</key>
+ 					<string>%NAME% %version%</string>
+ 					<key>id</key>
+ 					<string>com.%NAME%.pkg.%version%</string>
+ 					<key>pkgtype</key>
+ 					<string>flat</string>
+ 					<key>pkgroot</key>
+ 					<string>%RECIPE_CACHE_DIR%/%NAME%root/pkgroot</string>
+ 					<key>version</key>
+ 					<string>%version%</string>
+ 					<key>scripts</key>
+ 					<string>%NAME%scripts/Scripts</string>
+ 				</dict>
+ 			</dict>
+ 		</dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/%NAME%scripts</string>
+   	         </array>
+   	     </dict>
+   	 </dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/%NAME%root</string>
+   	         </array>
+   	     </dict>
+   	 </dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/distpkg</string>
+   	         </array>
+   	     </dict>
+   	 </dict> 
+        </array>
+    </dict>
+</plist>
