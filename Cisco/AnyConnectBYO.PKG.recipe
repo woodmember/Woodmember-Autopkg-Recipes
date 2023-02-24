@@ -3,7 +3,7 @@
 <plist version="1.0">
     <dict>
     <key>Description</key>
-	  <string>
+    <string>
     This recipe requires you to obtain your own AnyConnect.pkg. Copy the .pkg out of the Cisco provided .dmg to your PKGPATH location.
 		  
     In order to gnerate the vpn_install_choices.xml, follow this guide: 
