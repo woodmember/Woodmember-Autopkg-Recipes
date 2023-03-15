@@ -100,6 +100,17 @@
 		<dict>
 			<key>Arguments</key>
 			<dict>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot/Library/Application Support/Microsoft/Office365/User Content.localized/Startup.localized/Word/EndNote CWYW Word 16.bundle</string>
+				<key>source_path</key>
+				<string>%RECIPE_CACHE_DIR%/unarchive/EndNote/Cite While You Write/EndNote CWYW Word 16.bundle</string>
+			</dict>
+			<key>Processor</key>
+			<string>Copier</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
 				<key>pkg_request</key>
 				<dict>
 					<key>chown</key>
