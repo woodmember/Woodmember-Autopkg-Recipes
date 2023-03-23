@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+	  <string>Packages the latest verison of Maple from a local directory. Requires both a Maple MacInstaller .dmg and a installer.properties file.
+
+The .properties file is plain text, and containes your license server details. Info on what is needed for this license file can be found here:
+https://faq.maplesoft.com/s/article/Silent-unattended-installation-of-Maple?language=en_US
+
+This recipe should be good for versions 2019 and beyond.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.MapleNetLic</string>
+    <key>Input</key>
+    <dict>
+    <key>NAME</key>
+    <string>Maple</string>
+		<key>DMG_PATH</key>
+		<string>Full/Path/To/Your/Maple.2MacInstaller.dmg</string>
+		<key>LIC_PATH</key>
+		<string>Full/Path/To/Your/installer.properties</string>	
+    </dict>
+    <key>Process</key>
+    <array>
+		<dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+				<key>pkgdirs</key>
+				<dict/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>FileFinder</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pattern</key>
+				<string>%DMG_PATH%/*.app</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>Copier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>source_path</key>
+				<string>%DMG_PATH%/%found_basename%</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/download/%found_basename%</string>
+                <key>overwrite</key>
+                <true/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>input_plist_path</key>
+				<string>%RECIPE_CACHE_DIR%/download/%dmg_found_filename%/Contents/Info.plist</string>
+				<key>plist_version_key</key>
+				<string>CFBundleShortVersionString</string>
+			</dict>
+			<key>Processor</key>
+			<string>Versioner</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>Copier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>source_path</key>
+				<string>%DMG_PATH%/%found_basename%</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/scripts/%found_basename%</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>Copier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>source_path</key>
+				<string>%LIC_PATH%</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/scripts/installer.properties</string>
+                <key>overwrite</key>
+                <true/>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+            <key>Arguments</key>
+            <dict>
+				<key>file_content</key>
+				<string>#!/bin/bash
+
+###################################################################################################
+# Script Name:  install_Maple.sh
+# By:  Zack Thompson / Created:  3/2/2017
+# Version:  1.5.1 / Updated:  3/30/2018 / By:  ZT
+#
+# Description:  This script silently installs Maple.
+#
+###################################################################################################
+
+echo "*****  Install Maple process:  START  *****"
+
+##################################################
+# Define Variables
+
+# Set working directory
+pkgDir=$( /usr/bin/dirname "${0}" )
+# Get the filename of the .dmg file
+app=$( /bin/ls "${pkgDir}" | /usr/bin/grep .app )
+# Get the filename of the license file
+lic=$( /bin/ls "${pkgDir}" | /usr/bin/grep .properties )
+
+##################################################
+# Bits staged...
+
+# Setup Network License
+
+LICDIREC="/tmp/Maple/"
+
+echo "Copying License Files"
+mkdir "$LICDIREC"
+cp "$lic" "$LICDIREC"
+
+
+# Install Maple
+echo "Installing Maple..."
+exitStatus=$( "${pkgDir}/${app}/Contents/MacOS/installbuilder.sh" --mode unattended --optionfile /tmp/Maple/installer.properties )
+exitCode=$?
+
+if [[ $exitCode != 0 ]]; then
+	echo "ERROR:  Install failed!"
+	echo "Exit Code:  ${exitCode}"
+	echo "Exit status was:  ${exitStatus}"
+	echo "*****  Install Maple process:  FAILED  *****"
+	exit 1
+fi
+
+# Clean Up Licsense Directory:
+
+echo "Removing License File"
+
+rm -frv "$LICDIREC"
+
+echo "Install complete!"
+echo "*****  Install Maple process:  COMPLETE  *****"
+
+exit 0</string>
+                <key>file_mode</key>
+                <string>0755</string>
+                <key>file_path</key>
+                <string>%RECIPE_CACHE_DIR%/scripts/postinstall</string>
+            </dict>
+        </dict>
+		<dict>
+			<key>Processor</key>
+			<string>PkgCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_request</key>
+				<dict>
+					<key>pkgname</key>
+					<string>%NAME%-%version%</string>
+					<key>pkgroot</key>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+					<key>version</key>
+					<string>%version%</string>
+					<key>id</key>
+					<string>com.bitrock.appinstaller</string>
+					<key>options</key>
+					<string>purge_ds_store</string>
+					<key>scripts</key>
+					<string>Scripts</string>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PathDeleter</string>
+			<key>Arguments</key>
+			<dict>
+				<key>path_list</key>
+				<array>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+					<string>%RECIPE_CACHE_DIR%/scripts</string>
+					<string>%RECIPE_CACHE_DIR%/download</string>
+				</array>
+			</dict>
+		</dict>
+    </array>
+</dict>
+</plist>
