@@ -5,7 +5,9 @@
 	<key>Comment</key>
 	<string>Packages DDPM from a local directory. Use as the base of a Jamf policy workflow</string>
 	<key>Description</key>
-	<string>Downloads the latest version of DDPM.</string>
+	<string>Packages DDPM from a local directory. Use as the base of a Jamf policy workflow
+		Set the DDPM_PKG to the location of your DDPM .zip file.
+	</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.pkg.DDPM</string>
 	<key>Input</key>
