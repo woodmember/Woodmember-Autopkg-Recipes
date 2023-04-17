@@ -5,7 +5,9 @@
         <key>Identifier</key>
         <string>local.PKG.SplashtopStreamerJamfSSPKG<string>
 		<key>Comment</key>
-		<string></string>
+		<string>Autopkg recipe for Splashtop Streamer, packaged for Jamf self-service distribution. 
+		Includes nested package installed via post install script with sudo privileges to avoid user 
+		prompts for installation location.</string>
         <key>Input</key>
         <dict>
             <key>NAME</key>
