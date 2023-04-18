@@ -9,11 +9,13 @@
 	</string>
         <key>Identifier</key>
         <string>com.github.Woodmember-Autopkg-Recipes.pkg.SplashtopStreamerJamfSSPKG<string>
-        <key>Input</key>
+         <key>Input</key>
         <dict>
             <key>NAME</key>
             <string>Splashtop Streamer</string>
         </dict>
+	    <key>MinimumVersion</key>
+	       <string>1.0</string>
 	       <key>ParentRecipe</key>
 	   	<string>com.github.peetinc.download.SplashtopStreamer</string>
 	       <key>Process</key>
@@ -131,7 +133,7 @@ exit 0</string>
  				</dict>
  			</dict>
  		</dict>
-  	 <dict>
+		<dict>
    	     <key>Processor</key>
    	     <string>PathDeleter</string>
    	     <key>Arguments</key>
@@ -142,7 +144,7 @@ exit 0</string>
 				 <string>%RECIPE_CACHE_DIR%/unpack</string>
    	         </array>
    	     </dict>
-   	 </dict>
+   	 	</dict>
         </array>
     </dict>
 </plist>
