@@ -8,7 +8,7 @@
 		prompts for installation location.
 	</string>
         <key>Identifier</key>
-        <string>com.github.Woodmember-Autopkg-Recipes.pkg.SplashtopStreamerJamfSSPKG.recipe<string>
+        <string>com.github.Woodmember-Autopkg-Recipes.pkg.SplashtopStreamerJamfSS.recipe<string>
          <key>Input</key>
         <dict>
             <key>NAME</key>
