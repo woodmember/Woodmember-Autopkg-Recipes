@@ -131,7 +131,7 @@ exit 0</string>
  				</dict>
  			</dict>
  		</dict>
-<!--   	 <dict>
+  	 <dict>
    	     <key>Processor</key>
    	     <string>PathDeleter</string>
    	     <key>Arguments</key>
@@ -142,7 +142,7 @@ exit 0</string>
 				 <string>%RECIPE_CACHE_DIR%/unpack</string>
    	         </array>
    	     </dict>
-   	 </dict> -->
+   	 </dict>
         </array>
     </dict>
 </plist>
