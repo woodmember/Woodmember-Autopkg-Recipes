@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Downloads and Packages the latest version of TigerVNC.</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember-Autopkg-Recipes.pkg.TigerVNCViewer</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.TigerVNCViewer.recipe</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
