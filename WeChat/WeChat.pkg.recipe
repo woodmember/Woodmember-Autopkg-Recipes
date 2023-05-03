@@ -3,8 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Comment</key>
-	<key>Description</key>
-	<string>Downloads the latest version of WeChat and creates a package.</string>
+	<string>Downloads the latest version of WeChat and creates a package</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.pkg.WeChat</string>
 	<key>Input</key>
