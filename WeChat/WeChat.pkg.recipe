@@ -6,7 +6,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of WeChat and creates a package.</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember-Autopkg-Recipes.download.WeChat</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.WeChat</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
