@@ -3,8 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>Comment</key>
-	<string>Created with Recipe Robot v2.2.0 (https://github.com/homebysix/recipe-robot)</string>
-	<key>Description</key>
 	<string>Downloads the latest version of RODE Connect and creates a package.</string>
 	<key>Identifier</key>
 	<string>Woodmember.pkg.RODEConnect</string>
