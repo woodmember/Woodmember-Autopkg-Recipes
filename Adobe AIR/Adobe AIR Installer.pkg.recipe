@@ -5,7 +5,7 @@
 	<key>Comment</key>
 	<string>Downloads the latest version of Adobe AIR Installer and creates a package.</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember.pkg.AdobeAIRInstaller</string>
+	<string>com.github.Woodmember.pkg.AdobeAIR</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
