@@ -3,11 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>Comment</key>
-	<string>Created with Recipe Robot v2.2.0 (https://github.com/homebysix/recipe-robot)</string>
-	<key>Description</key>
 	<string>Downloads the latest version of Adobe AIR Installer and creates a package.</string>
 	<key>Identifier</key>
-	<string>woodmember.pkg.AdobeAIRInstaller</string>
+	<string>com.github.Woodmember.pkg.AdobeAIRInstaller</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
@@ -16,7 +14,7 @@
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>
 	<key>ParentRecipe</key>
-	<string>woodmember.download.AdobeAIRInstaller</string>
+	<string>com.github.Woodmember.download.AdobeAIRInstaller</string>
 	<key>Process</key>
 	<array>
 		<dict>
