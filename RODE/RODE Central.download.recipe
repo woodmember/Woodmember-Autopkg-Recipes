@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Comment</key>
+	<string>Downloads the latest version of RODE Central.</string>
+	<key>Identifier</key>
+	<string>local.download.RODECentral</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>RODE Central</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.0.0</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%.tgz</string>
+				<key>url</key>
+				<string>https://update.rode.com/central/RODE_Central_MACOS.zip</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>archive_path</key>
+				<string>%pathname%</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%</string>
+				<key>purge_destination</key>
+				<true/>
+			</dict>
+			<key>Processor</key>
+			<string>Unarchiver</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pattern</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%/*.pkg</string>
+			</dict>
+			<key>Processor</key>
+			<string>FileFinder</string>
+		</dict>		
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/unpack</string>
+				<key>flat_pkg_path</key>
+				<string>%found_filename%</string>
+				<key>purge_destination</key>
+				<true/>
+			</dict>
+			<key>Processor</key>
+			<string>FlatPkgUnpacker</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/payload</string>
+				<key>pkg_payload_path</key>
+				<string>%RECIPE_CACHE_DIR%/unpack/RodeCentral.pkg/Payload</string>
+				<key>purge_destination</key>
+				<true/>
+			</dict>
+			<key>Processor</key>
+			<string>PkgPayloadUnpacker</string>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>PlistReader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>info_path</key>
+                <string>%RECIPE_CACHE_DIR%/payload/Applications/RODE Central.app/Contents/Info.plist</string>
+                <key>plist_keys</key>
+                <dict>
+                    <key>CFBundleIdentifier</key>
+                    <string>bundleid</string>
+                    <key>CFBundleVersion</key>
+                    <string>version</string>
+                </dict>
+            </dict>
+        </dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>expected_authority_names</key>
+				<array>
+					<string>Developer ID Installer: FREEDMAN ELECTRONICS PTY LTD (Z9T72PWTJA)</string>
+					<string>Developer ID Certification Authority</string>
+					<string>Apple Root CA</string>
+				</array>
+				<key>input_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%/RØDE Central Installer (%version%).pkg</string>
+			</dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>
