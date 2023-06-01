@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of RODE Central and creates a package.</string>
 	<key>Identifier</key>
-	<string>local.pkg.RODECentral</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.RODECentral</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
@@ -16,7 +16,7 @@
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>
 	<key>ParentRecipe</key>
-	<string>local.download.RODECentral</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.RODECentral</string>
 	<key>Process</key>
 	<array>
     	<dict>
