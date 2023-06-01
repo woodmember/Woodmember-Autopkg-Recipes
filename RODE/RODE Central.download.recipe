@@ -5,7 +5,7 @@
 	<key>Comment</key>
 	<string>Downloads the latest version of RODE Central.</string>
 	<key>Identifier</key>
-	<string>local.download.RODECentral</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.RODECentral</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
