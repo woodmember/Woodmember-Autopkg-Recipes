@@ -11,6 +11,8 @@
             <key>CCPKGPATH</key>
             <!-- Working Dirctory To All Your CC .ZIP CC DOWNLOADS. -->
             <string>Path/To/The/Directory/You/Keep/Your/CC/.ZIP/Files</string>
+	    <key>CC_VERSION</key>
+            <string>Full.CC.Version</string>
         </dict>
         <key>MinimumVersion</key>
         <string>1.0.0</string>
@@ -128,15 +130,15 @@ exit 0</string>
  				<key>pkg_request</key>
  				<dict>
  					<key>pkgname</key>
- 					<string>%NAME% %version%</string>
+ 					<string>%NAME% %CC_VERSION%</string>
  					<key>id</key>
- 					<string>com.adobe.%NAME%.pkg.%version%</string>
+ 					<string>com.adobe.%NAME%.pkg.%CC_VERSION%</string>
  					<key>pkgtype</key>
  					<string>flat</string>
  					<key>pkgroot</key>
  					<string>%RECIPE_CACHE_DIR%/%NAME%root/pkgroot</string>
  					<key>version</key>
- 					<string>%version%</string>
+ 					<string>%CC_VERSION%</string>
  					<key>scripts</key>
  					<string>%NAME%scripts/Scripts</string>
  				</dict>
