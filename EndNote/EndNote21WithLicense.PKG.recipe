@@ -133,7 +133,7 @@
 						</dict>
 						<dict>
 							<key>path</key>
-							<string>/Applications/EndNote 21.app/.license.dat</string>
+							<string>/Applications/EndNote 21</string>
 							<key>user</key>
 							<string>root</string>
 							<key>group</key>
