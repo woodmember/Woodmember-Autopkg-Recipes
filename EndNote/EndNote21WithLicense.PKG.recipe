@@ -131,7 +131,6 @@
 							<key>group</key>
 							<string>admin</string>
 						</dict>
-						</dict>
 						<dict>
 							<key>path</key>
 							<string>/Applications/EndNote\ 21/.license.dat</string>
