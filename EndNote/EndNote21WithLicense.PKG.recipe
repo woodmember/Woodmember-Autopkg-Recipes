@@ -123,11 +123,27 @@
 							<key>user</key>
 							<string>root</string>
 						</dict>
+						<dict>
+							<key>path</key>
+							<string>Library</string>
+							<key>user</key>
+							<string>root</string>
+							<key>group</key>
+							<string>admin</string>
+						</dict>
+						</dict>
+						<dict>
+							<key>path</key>
+							<string>/Applications/EndNote\ 21/.license.dat</string>
+							<key>user</key>
+							<string>root</string>
+							<key>group</key>
+							<string>admin</string>
+						</dict>
 					</array>
 					<key>id</key>
 					<string>com.endnote.EndNote21.pkg</string>
 					<key>pkgname</key>
-					
 					<string>EndNote-%version%</string>
 					<key>pkgroot</key>
 					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
