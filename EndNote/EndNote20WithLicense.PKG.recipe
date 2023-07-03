@@ -7,7 +7,7 @@
 		You need to provide the full path your .license.dat file used for licensing Endnote.
 	</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember-Autopkg-Recipes.pkg.EndNote20WithLicense</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.EndNote22WithLicense</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
