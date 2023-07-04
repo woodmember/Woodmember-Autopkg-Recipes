@@ -3,10 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>Comment</key>
-	<string>Packages DDPM from a local directory. Use as the base of a Jamf policy workflow</string>
+	<string>Packages DDPM from a local directory. Use as the base of a Jamf policy workflow. DDPM can be obtained directly from https://dl.dell.com/FOLDER09479814M/1/</string>
 	<key>Description</key>
 	<string>Packages DDPM from a local directory. Use as the base of a Jamf policy workflow
 		Set the DDPM_PKG to the location of your DDPM .zip file.
+		https://dl.dell.com/FOLDER09479814M/1/
 	</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.pkg.DDPM</string>
