@@ -10,7 +10,7 @@
 		https://dl.dell.com/FOLDER09479814M/1/
 	</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember-Autopkg-Recipes.pkg.DDPM</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.DDPMBYO</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
