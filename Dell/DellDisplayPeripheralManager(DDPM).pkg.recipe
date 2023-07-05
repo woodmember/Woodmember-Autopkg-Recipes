@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads and Packages the current release version of Dell DDPM. Populate the PKGSHORTNAME input with what you wish the base name of the pkg 
+          created.
+  </string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.DellDisplayPeripheralManager(DDPM)</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Dell Display and Peripheral Manager (DDPM)</string>
+		<key>DDPM_URL</key>
+		<string>https://www.delldisplaymanagermac.com/</string>
+		<key>PKGSHORTNAME</key>
+		<string>Dell Display and Peripheral Manager</string>
+	</dict>
+	<key>ParentRecipe</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.DellDisplayPeripheralManager(DDPM)</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>source_pkg</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%/DDPM_Installer.pkg</string>
+				<key>pkg_path</key>
+				<string>%RECIPE_CACHE_DIR%/%PKGSHORTNAME%-%version%.pkg</string>
+			</dict>
+			<key>Processor</key>
+			<string>PkgCopier</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PathDeleter</string>
+			<key>Arguments</key>
+			<dict>
+				<key>path_list</key>
+				<array>
+					<string>%RECIPE_CACHE_DIR%/%NAME%</string>
+					<string>%RECIPE_CACHE_DIR%/Payload</string>
+					<string>%RECIPE_CACHE_DIR%/unpack</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
