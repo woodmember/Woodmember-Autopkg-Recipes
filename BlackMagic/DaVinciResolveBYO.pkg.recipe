@@ -20,7 +20,7 @@
 			- REG_COUNTRY is of the form 'us', 'ca', 'au', etc.
 	</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember-Autopkg-Recipes.pkg.DaVinciResolve</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.DaVinciResolveBYO</string>
 	<key>Input</key>
 	<dict>
     <key>NAME</key>
