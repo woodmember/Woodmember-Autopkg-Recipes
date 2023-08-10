@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Identifier</key>
+    <string>com.github.Woodmember.pkg.XcodeEdu</string>
+    <key>Description</key>
+    <string>
+        Creates an installer package from a App Store Doanload of Xcode. The workflow here then is to download Xcode from the appstore and let the app store auto update.
+        This will lead to AutoPKG creating a new package after the appstore finishes updating your Macs local version.
+
+        This recipe also adds a postflight script to the package, to install the command-line tools and configure these 
+        for lab Mac use.
+
+        Due to Apple signed packages not being able to install to SIP protected areas when called via a postflight, the
+        additional packages are installed by a self-destrictible LaunchDaemon which is called immediately after the 
+        parent Xcode installer is complete. This LaunchDaemon runs a script (both stored in /tmp) which installs all 3
+        additional component packages, and then unloads and deletes the launchdaemon, and itself.
+
+        This kind of installation package would typically be used in lab enviroments, where users dont have admin 
+        rights.
+    </string>
+    <key>Input</key>
+    <dict>
+		<key>NAME</key>
+		<string>Xcode</string>
+        <key>PATH</key>
+        <string>/Applications/%NAME%.app</string>
+    </dict>
+    <key>Process</key>
+    <array>
+		    <dict>
+            <key>Processor</key>
+            <string>PkgRootCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkgroot</key>
+                <string>%RECIPE_CACHE_DIR%/pkgroot</string>
+                <key>pkgdirs</key>
+                <dict>
+                    <key>payload/Applications</key>
+                    <string>0775</string>
+                    <key>payload/private</key>
+                    <string>0755</string>
+                    <key>payload/private/tmp</key>
+                    <string>0777</string>
+                    <key>scripts</key>
+                    <string>0755</string>
+                </dict>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>Versioner</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_plist_path</key>
+                <string>%PATH%/Contents/Info.plist</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%PATH%</string>
+                <key>destination_path</key>
+                <string>%pkgroot%/payload/Applications/Xcode.app</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+            <key>Comment</key>
+            <string>Make postinstall script for use in the package</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%pkgroot%/scripts/postinstall</string>
+                <key>file_content</key>
+                <string>#!/bin/sh
+
+# Author:   Moof IT
+# Name:     xcodeEduPostinstall.sh
+# Version:  1.0.0
+#
+# Purpose:  Postinstall script to install and configure Xcode for use on a device without admin rights, typically for 
+#           use on lab Macs
+#
+# Usage:    Postinstall script
+#
+# 1.0.0:    2020-07-13
+#           SB - Initial Creation
+
+# Use at your own risk. Moof IT will accept no responsibility for loss or damage caused by this script.
+
+##### Declare functions
+
+# This function uses the native system logger to output events in this script. 
+
+writelog ()
+{
+	/usr/bin/logger -is -t "${LOG_PROCESS}" "${1}"
+}
+
+##### Set variables
+
+LOG_PROCESS="xcodeEduPostinstall"
+OS_VERSION=$(/usr/bin/sw_vers -productVersion | awk -F "." '{print $2}')
+XCODE_CLI_TOOLS_TEMP_FILE="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
+
+##### Run script
+
+writelog "Enabling Xcode Development Tools Security..."
+/usr/sbin/DevToolsSecurity -enable
+
+writelog "Accepting Xcode license..."
+/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -license accept
+
+if [[ "${OS_VERSION}" -ge 9 ]];
+then
+    writelog "Installing Xcode command line Tools on 10.9.x or higher..."
+
+    # Create the placeholder file which is checked by the softwareupdate
+    # tool before allowing the installation of the Xcode command line tools.
+    /usr/bin/touch "${XCODE_CLI_TOOLS_TEMP_FILE}"
+
+    # Find the last listed update in the Software Update feed with "Command Line Tools" in the name
+    XCODE_CLI_TOOLS_VERSION=$(/usr/sbin/softwareupdate -l | grep "\*.*Command Line" | awk -F ': ' '/Label: / { print $2 }')
+
+    # Install the command line tools
+    writelog "Installing via softwareupdate..."
+    /usr/sbin/softwareupdate -i "${XCODE_CLI_TOOLS_VERSION}"
+
+    # Remove the temp file
+    if [ -e "${XCODE_CLI_TOOLS_TEMP_FILE}" ]
+    then
+        rm "${XCODE_CLI_TOOLS_TEMP_FILE}"
+    fi
+fi
+
+writelog "Adding all users to Developer group..."
+/usr/sbin/dseditgroup -o edit -a everyone -t group _developer
+
+if [[ -e "/private/tmp/UNSW.IT.xcodeComponentsInstaller.plist" ]]
+then
+    writelog "Loading LaunchDaemon..."
+    /bin/launchctl load -w "/private/tmp/UNSW.IT.xcodeComponentsInstaller.plist"
+else
+    writelog "LaunchDaemon not found. Please install additional components manually."
+fi</string>
+                <key>file_mode</key>
+                <string>0755</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+            <key>Comment</key>
+            <string>Make script to be called by the launchdaemon to install the additional packages</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%pkgroot%/payload/private/tmp/xcodeComponentsInstaller.sh</string>
+                <key>file_content</key>
+                <string>#!/bin/sh
+
+# Author:   Stephen Bygrave - Moof IT
+# Name:     installXcodeComponents.sh
+# Version:  1.0.1
+#
+# Purpose:  This script is called by launchd to install the required "Additional Xcode" components
+#
+# Usage:    Script launched by launchd
+#
+# 1.0.0:    2020-07-29
+#           SB - Initial Creation
+# 1.0.1:    2021-10-22
+#           SB - Added additional CoreTypes installer in Xcode 12.5.1
+
+# Use at your own risk. Moof IT will accept no responsibility for loss or damage caused by this script.
+
+##### Declare functions
+
+# This function uses the native system logger to output events in this script. 
+
+writelog ()
+{
+    # Write to system log
+    /usr/bin/logger -is -t "${LOG_PROCESS}" "${1}"
+}
+
+# This function outputs all variables set above to stdout and logger, as defined in the writelog function above
+
+echoVariables ()
+{
+    writelog "Log Process is ${LOG_PROCESS}"
+}
+
+##### Set variables
+
+LOG_PROCESS="installXcodeComponents"
+
+##### Run script
+
+echoVariables
+
+# Install Xcode components from Xcode.app
+if [ -e "/Applications/Xcode.app/Contents/Resources/Packages/CoreTypes.pkg" ]
+then
+    writelog "Installing Xcode CoreTypes..."
+    if ! /usr/sbin/installer -pkg "/Applications/Xcode.app/Contents/Resources/Packages/CoreTypes.pkg" -target / -verbose
+    then
+        writelog "CoreTypes.pkg failed to install."
+    fi
+fi
+
+if [ -e "/Applications/Xcode.app/Contents/Resources/Packages/MobileDevice.pkg" ]
+then
+    writelog "Installing MobileDevice components..."
+    if ! /usr/sbin/installer -pkg "/Applications/Xcode.app/Contents/Resources/Packages/MobileDevice.pkg" -target / -verbose
+    then
+        writelog "MobileDevice.pkg failed to install."
+    fi
+fi
+
+if [ -e "/Applications/Xcode.app/Contents/Resources/Packages/MobileDeviceDevelopment.pkg" ]
+then
+    writelog "Installing MobileDeviceDevelopment components..."
+    if ! /usr/sbin/installer -pkg "/Applications/Xcode.app/Contents/Resources/Packages/MobileDeviceDevelopment.pkg" -target / -verbose
+    then
+        writelog "MobileDeviceDevelopment.pkg failed to install."
+
+    fi
+fi
+
+if [ -e "/Applications/Xcode.app/Contents/Resources/Packages/XcodeSystemResources.pkg" ]
+then
+    writelog "Installing Xcode System Resources..."
+    if ! /usr/sbin/installer -pkg "/Applications/Xcode.app/Contents/Resources/Packages/XcodeSystemResources.pkg" -target / -verbose
+    then
+        writelog "XcodeSystemResources.pkg failed to install."
+    fi
+fi
+
+# Stop and remove LaunchDaemon and script
+writelog "Stopping launchdaemon..."
+/bin/launchctl stop UNSW.IT.xcodeComponentsInstaller.plist
+/bin/launchctl remove UNSW.IT.xcodeComponentsInstaller.plist
+
+writelog "Self destructing..."
+rm /tmp/UNSW.IT.xcodeComponentsInstaller.plist
+rm /tmp/xcodeComponentsInstaller.sh
+
+writelog "Script completed"</string>
+                <key>file_mode</key>
+                <string>0755</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>PlistEditor</string>
+            <key>Comment</key>
+            <string>Make launchdaemon plist to call xcodeComponentsInstaller.sh script at /tmp</string>
+            <key>Arguments</key>
+            <dict>
+                <key>output_plist_path</key>
+                <string>%pkgroot%/payload/private/tmp/UNSW.IT.xcodeComponentsInstaller.plist</string>
+                <key>plist_data</key>
+                <dict>
+                    <key>Label</key>
+                    <string>UNSW.IT.xcodeComponentsInstaller</string>
+                    <key>ProgramArguments</key>
+                    <array>
+                        <string>/tmp/xcodeComponentsInstaller.sh</string>
+                    </array>
+                    <key>RunAtLoad</key>
+                    <true/>
+                </dict>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>PkgCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_request</key>
+                <dict>
+                    <key>chown</key>
+                    <array>
+                        <dict>
+                            <key>path</key>
+                            <string>Applications</string>
+                            <key>user</key>
+                            <string>root</string>
+                            <key>group</key>
+                            <string>admin</string>
+                            <key>mode</key>
+                            <string>0775</string>
+                        </dict>
+                        <dict>
+                            <key>path</key>
+                            <string>private</string>
+                            <key>user</key>
+                            <string>root</string>
+                            <key>group</key>
+                            <string>wheel</string>
+                            <key>mode</key>
+                            <string>0755</string>
+                        </dict>
+                        <dict>
+                            <key>path</key>
+                            <string>private/tmp</string>
+                            <key>user</key>
+                            <string>root</string>
+                            <key>group</key>
+                            <string>wheel</string>
+                            <key>mode</key>
+                            <string>0777</string>
+                        </dict>
+                        <dict>
+                            <key>path</key>
+                            <string>private/tmp/UNSW.IT.xcodeComponentsInstaller.plist</string>
+                            <key>user</key>
+                            <string>root</string>
+                            <key>group</key>
+                            <string>wheel</string>
+                            <key>mode</key>
+                            <string>0644</string>
+                        </dict>
+                    </array>
+                    <key>id</key>
+                    <string>com.apple.dt.Xcode</string>
+                    <key>options</key>
+                    <string>purge_ds_store</string>
+                    <key>pkgdir</key>
+                    <string>%RECIPE_CACHE_DIR%</string>
+                    <key>scripts</key>
+                    <string>%pkgroot%/scripts</string>
+                    <key>pkgroot</key>
+                    <string>%pkgroot%/payload</string>
+                    <key>pkgname</key>
+                    <string>%NAME%-%version%</string>
+                </dict>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>PathDeleter</string>
+            <key>Arguments</key>
+            <dict>
+                <key>path_list</key>
+                <array>
+                    <string>%RECIPE_CACHE_DIR%/%pkgroot%/payload</string>
+                    <string>%pkgroot%</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
