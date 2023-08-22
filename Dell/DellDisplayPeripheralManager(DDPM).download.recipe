@@ -46,6 +46,19 @@
 		<dict>
 			<key>archive_path</key>
 			<string>%RECIPE_CACHE_DIR%/downloads/DDPM.zip</string>
+			<key>pattern</key>
+			<string>%RECIPE_CACHE_DIR%/%NAME%/DDPM*/*.pkg</string>
+			<key>purge_destination</key>
+			<true/>
+		</dict>
+		<key>Processor</key>
+		<string>FileFinder</string>
+	</dict>
+	<dict>
+		<key>Arguments</key>
+		<dict>
+			<key>archive_path</key>
+			<string>%RECIPE_CACHE_DIR%/downloads/DDPM.zip</string>
 			<key>destination_path</key>
 			<string>%RECIPE_CACHE_DIR%/%NAME%</string>
 			<key>purge_destination</key>
