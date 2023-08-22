@@ -25,7 +25,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>source_pkg</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%/DDPM_Installer.pkg</string>
+				<string>%found_filename%</string>
 				<key>pkg_path</key>
 				<string>%RECIPE_CACHE_DIR%/%PKGSHORTNAME%-%version%.pkg</string>
 			</dict>
