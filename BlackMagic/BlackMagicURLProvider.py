@@ -34,6 +34,7 @@ REQUIRED_REG_KEYS = [
     "email",
     "phone",
     "city",
+    "street",
     "country",
 ]
 
