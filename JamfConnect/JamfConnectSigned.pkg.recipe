@@ -10,7 +10,7 @@
             signed pkg location to differ from the unsigned pkg.
     </string>
     <key>Identifier</key>
-    <string>local.pkg.JamfConnect</string>
+    <string>com.github.Woodmember.pkg.JamfConnect</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
