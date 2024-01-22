@@ -14,7 +14,7 @@
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>
 	<key>ParentRecipe</key>
-	<string>local.download.Insta360 Studio 2023</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.Insta360 Studio 2023</string>
 	<key>Process</key>
 	<array>
 		<dict>
