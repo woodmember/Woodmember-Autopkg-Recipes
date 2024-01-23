@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Comment</key>
+	<string>
+  Creates a Unreal Engine package from a existing install/ download. You need to first Use the Epic Games launcher to download Unreal Engine to a systems Shared user folder.
+			
+	You must define the Engine version you need packaged at the UNREALVERSION variable, EG: 5.3.2
+			
+	You must define the Engine location you need packaged at the UNREALPATH variable, EG: /Users/Shared/Epic Games/UE_5.3
+  </string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.Unreal_Engine.recipe</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Unreal Engine</string>
+		<key>UNREALVERSION</key>
+		<!-- You must define the Engine version you need packaged here -->
+		<string>5.3.2</string>
+		<key>UNREALPATH</key>
+		<!-- You must define the Engine path, EG: /Users/Shared/Epic Games/UE_5.3 -->
+		<string>/Users/Shared/Epic Games/UE_5.3/</string>			
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.0.0</string>
+	<key>Process</key>
+	<array>
+        <dict>
+            <key>Processor</key>
+            <string>PkgRootCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkgdirs</key>
+                <dict/>
+                <key>pkgroot</key>
+                <string>%RECIPE_CACHE_DIR%/pkgroot</string>
+            </dict>
+        </dict>
+    	<dict>
+    		<key>Processor</key>
+			<string>PkgRootCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgdirs</key>
+				<dict>
+					<key>Users</key>
+					<string>0775</string>
+				</dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot/%NAME%-%UNREALVERSION%</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>source_path</key>
+				<string>%UNREALPATH%</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot/%NAME%-%UNREALVERSION%/Users/Shared/Epic Games/UE_5.3/</string>
+			</dict>
+			<key>Processor</key>
+			<string>Copier</string>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>PkgRootCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkgdirs</key>
+                <dict/>
+                <key>pkgroot</key>
+                <string>%RECIPE_CACHE_DIR%/pkgroot/Scripts</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_content</key>
+                <string>#!/bin/sh 
+ 
+# Check for old version 
+if [ -e "/Users/Shared/Epic Games" ]; then 
+/bin/rm -r "/Users/Shared/Epic Games/*" 
+/bin/rm /Applications/"Unreal Editor.app" 
+fi 
+ 
+exit 0</string>
+				<key>file_mode</key>
+				<string>0755</string>
+				<key>file_path</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot/Scripts/preinstall</string>
+				</dict>
+			</dict>
+	        <dict>
+	            <key>Processor</key>
+	            <string>FileCreator</string>
+	            <key>Arguments</key>
+	            <dict>
+	                <key>file_content</key>
+	                <string>#!/bin/bash 
+ 
+# get latest version 
+URVERSION=`ls /Users/Shared/Epic\ Games/` 
+ 
+# symlink to Applications 
+ln -s /Users/Shared/Epic\ Games/"${URVERSION}"/Engine/Binaries/Mac/UE4Editor.app /Applications/Unreal\ Editor.app 
+ 
+## Allows access to create AutomationTool folder when building apps 
+mkdir /Users/Shared/Epic\ Games/"${URVERSION}"/Engine/Programs/AutomationTool 
+chmod a+rwx /Users/Shared/Epic\ Games/"${URVERSION}"/Engine/Programs/AutomationTool 
+ 
+exit 0</string>
+					<key>file_mode</key>
+					<string>0755</string>
+					<key>file_path</key>
+					<string>%RECIPE_CACHE_DIR%/pkgroot/Scripts/postinstall</string>
+					</dict>
+				</dict>
+		<dict>
+					<key>Processor</key>
+					<string>PkgCreator</string>
+					<key>Arguments</key>
+					<dict>
+						<key>pkg_request</key>
+						<dict>
+							<key>pkgname</key>
+							<string>%NAME%-%UNREALVERSION%</string>
+							<key>chown</key>
+							<array>
+								<dict>
+									<key>path</key>
+									<string>Users</string>
+									<key>scripts</key>
+									<string>Scripts</string>
+									<key>user</key>
+									<string>root</string>
+									<key>group</key>
+									<string>wheel</string>
+								</dict>
+							</array>
+							<key>id</key>
+							<string>com.unreal.engine.unsw</string>
+							<key>options</key>
+							<string>purge_ds_store</string>
+							<key>pkgdir</key>
+							<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+							<key>pkgroot</key>
+							<string>%RECIPE_CACHE_DIR%/pkgroot/%NAME%-%UNREALVERSION%</string>
+							<key>version</key>
+							<string>%UNREALVERSION%</string>
+		 					<key>scripts</key>
+		 					<string>%RECIPE_CACHE_DIR%/pkgroot/Scripts</string>
+						</dict>
+					</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PathDeleter</string>
+			<key>Arguments</key>
+			<dict>
+				<key>path_list</key>
+				<array>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+				</array>
+			</dict>
+		</dict> 																
+	</array>
+</dict>
+</plist>
