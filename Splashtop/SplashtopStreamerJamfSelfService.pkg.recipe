@@ -141,6 +141,9 @@ exit 0</string>
    	         <array>
 				 <string>%RECIPE_CACHE_DIR%/payload</string>
 				 <string>%RECIPE_CACHE_DIR%/unpack</string>
+				 <string>%RECIPE_CACHE_DIR%/Applications</string>
+				 <string>%RECIPE_CACHE_DIR%/Splashtop Streamerscripts</string>
+				 <string>%RECIPE_CACHE_DIR%/Splashtop Streamerroot</string></string>
    	         </array>
    	     </dict>
    	 	</dict>
