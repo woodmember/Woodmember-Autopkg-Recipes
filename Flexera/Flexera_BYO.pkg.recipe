@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>Identifier</key>
+        <string>com.github.Woodmember.pkg.Flexera.recipe</string>
+		<key>Comment</key>
+		<string>
+		Creates a Flexera Managesoft Agent .pkg using the following:
+		- managesoft.pkg
+		- mgsft_rollout_cert certificate (The "certificate" needs to have no file extension)
+		- mgsft_rollout_response (This needs to have no file extension)
+		
+		The recipe also needs to be provided with the version of the agent being packaged. This is done via the AGENTVERSION input variable.
+		
+		The AGENTNAME input varible is used to identify the provided/ source Flexera agent .pkg being used by this recipe.
+		</string>
+        <key>Input</key>
+        <dict>
+          <key>NAME</key>
+          <string>Flexera ManageSoft Agent</string>
+          <key>AGENTVERSION</key>
+          <string>21.3.0</string>
+		      <key>SAMPATH</key>
+		      <string>/PATH/TO/DIRECTOR/CONTAINING/FLEXERA/PKG/AND/mgsft/CONFIG/FILES</string>
+		      <key>SAMCERT</key>
+		      <string>%SAMPATH%/mgsft_rollout_cert</string>
+		      <key>SAMRESPONSE</key>
+		      <string>%SAMPATH%/mgsft_rollout_response</string>
+          <key>AGENTNAME</key>
+          <string>managesoft</string>
+          </dict>
+          <key>MinimumVersion</key>
+          <string>1.0.0</string>
+          <key>Process</key>
+        <array>
+            <dict>
+                <key>Processor</key>
+                <string>FileFinder</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>pattern</key>
+                    <string>%SAMPATH%/%AGENTNAME%*.pkg</string>
+                </dict>
+            </dict>
+   		 <dict>
+   			 <key>Processor</key>
+   			 <string>PkgRootCreator</string>
+   			 <key>Arguments</key>
+   			 <dict>
+				 <key>pkgroot</key>
+				 <string>%RECIPE_CACHE_DIR%/%NAME%root</string>
+                 <key>pkgdirs</key>
+                 <dict>
+                     <key>pkgroot</key>
+                     <string>0775</string>
+                 </dict>
+   			 </dict>
+   		 </dict>
+   		 <dict>
+   			 <key>Processor</key>
+   			 <string>PkgRootCreator</string>
+   			 <key>Arguments</key>
+   			 <dict>
+				 <key>pkgroot</key>
+				 <string>%RECIPE_CACHE_DIR%/%NAME%scripts</string>
+                 <key>pkgdirs</key>
+                 <dict>
+                     <key>Scripts</key>
+                     <string>0775</string>
+                 </dict>
+   			 </dict>
+   		 </dict>
+         <dict>
+             <key>Processor</key>
+            <string>Copier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%found_filename%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+           <string>Copier</string>
+           <key>Arguments</key>
+           <dict>
+               <key>source_path</key>
+               <string>%SAMCERT%</string>
+               <key>destination_path</key>
+               <string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/</string>
+		</dict>
+	</dict>
+    <dict>
+        <key>Processor</key>
+       <string>Copier</string>
+       <key>Arguments</key>
+       <dict>
+           <key>source_path</key>
+           <string>%SAMRESPONSE%</string>
+           <key>destination_path</key>
+           <string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/</string>
+	</dict>
+</dict>
+   		 <dict>
+   			 <key>Processor</key>
+   			 <string>FileCreator</string>
+   			 <key>Arguments</key>
+   			 <dict>
+				 <key>file_content</key>
+				 <string>#!/bin/bash
+DIR=$(dirname "$0")
+APPPATH="/var/tmp"
+/bin/rm -rf "$APPPATH"/%found_basename%
+cp -a /"$DIR"/. /"$APPPATH"/
+/usr/sbin/installer -verbose -pkg "$APPPATH"/%found_basename% -target /
+exit 0</string>
+	 		<key>file_mode</key>
+	 		<string>0755</string>
+	 		<key>file_path</key>
+	 		<string>%RECIPE_CACHE_DIR%/%NAME%scripts/Scripts/postinstall</string>
+   			</dict>
+   		 </dict>
+ 		<dict>
+ 			<key>Processor</key>
+ 			<string>PkgCreator</string>
+ 			<key>Arguments</key>
+ 			<dict>
+ 				<key>pkg_request</key>
+ 				<dict>
+ 					<key>pkgname</key>
+ 					<string>%NAME% %AGENTVERSION%</string>
+ 					<key>id</key>
+ 					<string>com.Flexera.%NAME%.pkg.%AGENTVERSION%</string>
+ 					<key>pkgtype</key>
+ 					<string>flat</string>
+ 					<key>pkgroot</key>
+ 					<string>%RECIPE_CACHE_DIR%/%NAME%root/pkgroot</string>
+ 					<key>version</key>
+ 					<string>%AGENTVERSION%</string>
+ 					<key>scripts</key>
+ 					<string>%NAME%scripts/Scripts</string>
+ 				</dict>
+ 			</dict>
+ 		</dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/%NAME%scripts</string>
+   	         </array>
+   	     </dict>
+   	 </dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/%NAME%root</string>
+   	         </array>
+   	     </dict>
+   	 </dict>
+   	 <dict>
+   	     <key>Processor</key>
+   	     <string>PathDeleter</string>
+   	     <key>Arguments</key>
+   	     <dict>
+   	         <key>path_list</key>
+   	         <array>
+   	             <string>%RECIPE_CACHE_DIR%/distpkg</string>
+   	         </array>
+   	     </dict>
+   	 </dict> 
+        </array>
+    </dict>
+</plist>
