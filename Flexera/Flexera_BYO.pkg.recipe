@@ -21,14 +21,14 @@
           <string>Flexera ManageSoft Agent</string>
           <key>AGENTVERSION</key>
           <string>21.3.0</string>
-		      <key>SAMPATH</key>
-		      <string>/PATH/TO/DIRECTOR/CONTAINING/FLEXERA/PKG/AND/mgsft/CONFIG/FILES</string>
-		      <key>SAMCERT</key>
-		      <string>%SAMPATH%/mgsft_rollout_cert</string>
-		      <key>SAMRESPONSE</key>
-		      <string>%SAMPATH%/mgsft_rollout_response</string>
-          <key>AGENTNAME</key>
-          <string>managesoft</string>
+		<key>SAMPATH</key>
+		<string>/PATH/TO/DIRECTOR/CONTAINING/FLEXERA/PKG/AND/mgsft/CONFIG/FILES</string>
+		<key>SAMCERT</key>
+		<string>%SAMPATH%/mgsft_rollout_cert</string>
+		<key>SAMRESPONSE</key>
+		<string>%SAMPATH%/mgsft_rollout_response</string>
+          	<key>AGENTNAME</key>
+          	<string>managesoft</string>
           </dict>
           <key>MinimumVersion</key>
           <string>1.0.0</string>
