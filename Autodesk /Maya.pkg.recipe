@@ -149,16 +149,6 @@ fi
 
 # A few permissions and silly installer fixes
 /bin/chmod -R 755 "/Library/Application Support/Autodesk"
-<!--
-CURRENT_USER=$(/bin/echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }')
-if [[ -n ${CURRENT_USER} ]]; then
-    CURRENT_USER_HOME=$(/usr/bin/finger -m ${CURRENT_USER} | awk '/^Directory/ {print $2}')
-    if [[ -e "${CURRENT_USER_HOME}/Library/Application Support/Autodesk" ]]; then
-        writelog "Fixing a permissions bug for "${CURRENT_USER}"... psssh..."
-        /usr/sbin/chown -R "${CURRENT_USER}" "${CURRENT_USER_HOME}/Library/Application Support/Autodesk"
-    fi
-fi
--->
 
 # Activate application
 writelog "Licensing %NAME% %VER%..."
