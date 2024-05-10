@@ -32,7 +32,7 @@ to copy the file into the correct location in each user's account when they logi
 There are no external file dependencies for this recipe; it creates all the files it needs during the recipe run.
 </string>
 	<key>Identifier</key>
-	<string>com.github.jazzace.pkg.vectorworkswithserverinfo</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.vectorworkswithserverinfo</string>
 	<key>Input</key>
 	<dict>
 		<key>AUTOFIND_SERVER</key>
