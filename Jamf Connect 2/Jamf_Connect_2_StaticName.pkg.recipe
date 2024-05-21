@@ -7,7 +7,7 @@
     Jamf for prestage enrollment packages. It is advised then that you have replace_package set to True in your Jamf upload policy. This means that your prestage enrollment package will be 
     updated every time Jamf release a new version. Do not use for patching purposes.</string>
     <key>Identifier</key>
-    <string>com.github.Woodmember.pkg.Jamf Connect 2</string>
+    <string>com.github.Woodmember.pkg.Jamf_Connect_2 StaticName</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
