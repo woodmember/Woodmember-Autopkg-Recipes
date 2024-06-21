@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>
+  Downloads the UAM installer pkg for the most recent major version of macOS, using the macadmins SOFA project feed. 
+  For more information on the SOFA project, vist https://sofa.macadmins.io.
+  </string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.LatestmacOSUMAInstallerPKG</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>macOS Installer</string>
+		<key>SOFA_URL</key>
+		<string>https://sofa.macadmins.io/v1/macos_data_feed.json</string>
+		<key>URL_PATTERN</key>
+		<string>"LatestUMA"\s*:\s*{\s*"title"\s*:\s*"([^"]+)"\s*,\s*"version"\s*:\s*"([^"]+)"\s*,\s*"build"\s*:\s*"([^"]+)"\s*,\s*"apple_slug"\s*:\s*"([^"]+)"\s*,\s*"url"\s*:\s*"([^"]+)"\s*</string>
+	</dict>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>%SOFA_URL%</string>
+				<key>re_pattern</key>
+				<string>%URL_PATTERN%</string>
+				<key>result_output_var_name</key>
+				<string>url</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+            <dict>
+                <key>filename</key>
+                <string>InstallAssistant.pkg</string>
+            </dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+	<dict>
+		<key>Arguments</key>
+		<dict>
+			<key>expected_authority_names</key>
+			<array>
+				<string>Software Update</string>
+				<string>Apple Software Update Certification Authority</string>
+				<string>Apple Root CA</string>
+			</array>
+			<key>input_path</key>
+			<string>%RECIPE_CACHE_DIR%/downloads/InstallAssistant.pkg</string>
+		</dict>
+		<key>Processor</key>
+		<string>CodeSignatureVerifier</string>
+	</dict>
+	<dict>
+		<key>Arguments</key>
+		<dict>
+			<key>destination_path</key>
+			<string>%RECIPE_CACHE_DIR%/unpack</string>
+			<key>flat_pkg_path</key>
+			<string>%RECIPE_CACHE_DIR%/downloads/InstallAssistant.pkg</string>
+		</dict>
+		<key>Processor</key>
+		<string>FlatPkgUnpacker</string>
+	</dict>
+	<dict>
+		<key>Arguments</key>
+		<dict>
+			<key>destination_path</key>
+			<string>%RECIPE_CACHE_DIR%/payload</string>
+			<key>pkg_payload_path</key>
+			<string>%RECIPE_CACHE_DIR%/unpack/Payload</string>
+			<key>purge_destination</key>
+			<true/>
+		</dict>
+		<key>Processor</key>
+		<string>PkgPayloadUnpacker</string>
+	</dict>
+	<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pattern</key>
+				<string>%RECIPE_CACHE_DIR%/payload/Applications/Install macOS*</string>
+			</dict>
+			<key>Processor</key>
+			<string>FileFinder</string>
+		</dict>
+	<dict>
+		<key>Arguments</key>
+		<dict>
+			<key>info_path</key>
+			<string>%found_filename%/Contents/Info.plist</string>
+			<key>plist_keys</key>
+			<dict>
+				<key>DTPlatformVersion</key>
+				<string>version</string>
+				<key>CFBundleShortVersionString</key>
+				<string>buildversion</string>
+				<key>CFBundleDisplayName</key>
+				<string>displayname</string>
+			</dict>
+		</dict>
+		<key>Processor</key>
+		<string>PlistReader</string>
+	</dict> 
+	</array>
+</dict>
+</plist>
