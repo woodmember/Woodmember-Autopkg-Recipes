@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the installer the recipes defined version of macOS, using the macadmins SOFA project feed. 
+		The version must be entered in as regular expression. For example: 
+		14.4.1 would be "14\.4\.1"
+		13.5 would be "13\.5"</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.DefinedVersionAppleOSInstallerPKG</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>macOS Installer Sonoma</string>
+		<key>SOFA_URL</key>
+		<string>https://sofa.macadmins.io/v1/macos_data_feed.json</string>
+		<key>MACOS_VER</key>
+		<!-- 
+		This represents that specific macOS version you wish to download. This version must
+		be listed in the SOFA JSON feed. 
+		The version number must be written in regular expression. 
+		For example: 14.4.1 would be "14\.4\.1"
+		13.5 would be "13\.5"
+		-->
+		<string>14\.4\.1</string>		
+		<key>URL_PATTERN</key>
+		<string>"version":\s*"%MACOS_VER%",\s*"build":\s*".*?",\s*"apple_slug":\s*".*?",\s*"url":\s*"(https?://[^"]+)"</string>
+	</dict>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>%SOFA_URL%</string>
+				<key>re_pattern</key>
+				<string>%URL_PATTERN%</string>
+				<key>result_output_var_name</key>
+				<string>url</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+            <dict>
+                <key>filename</key>
+                <string>InstallAssistant.pkg</string>
+            </dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+	<dict>
+		<key>Arguments</key>
+		<dict>
+			<key>expected_authority_names</key>
+			<array>
+				<string>Software Update</string>
+				<string>Apple Software Update Certification Authority</string>
+				<string>Apple Root CA</string>
+			</array>
+			<key>input_path</key>
+			<string>%RECIPE_CACHE_DIR%/downloads/InstallAssistant.pkg</string>
+		</dict>
+		<key>Processor</key>
+		<string>CodeSignatureVerifier</string>
+	</dict>
+	<dict>
+		<key>Arguments</key>
+		<dict>
+			<key>destination_path</key>
+			<string>%RECIPE_CACHE_DIR%/unpack</string>
+			<key>flat_pkg_path</key>
+			<string>%RECIPE_CACHE_DIR%/downloads/InstallAssistant.pkg</string>
+		</dict>
+		<key>Processor</key>
+		<string>FlatPkgUnpacker</string>
+	</dict>
+	<dict>
+		<key>Arguments</key>
+		<dict>
+			<key>destination_path</key>
+			<string>%RECIPE_CACHE_DIR%/payload</string>
+			<key>pkg_payload_path</key>
+			<string>%RECIPE_CACHE_DIR%/unpack/Payload</string>
+			<key>purge_destination</key>
+			<true/>
+		</dict>
+		<key>Processor</key>
+		<string>PkgPayloadUnpacker</string>
+	</dict>
+	<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pattern</key>
+				<string>%RECIPE_CACHE_DIR%/payload/Applications/Install macOS*</string>
+			</dict>
+			<key>Processor</key>
+			<string>FileFinder</string>
+		</dict>
+	<dict>
+		<key>Arguments</key>
+		<dict>
+			<key>info_path</key>
+			<string>%found_filename%/Contents/Info.plist</string>
+			<key>plist_keys</key>
+			<dict>
+				<key>DTPlatformVersion</key>
+				<string>version</string>
+				<key>CFBundleShortVersionString</key>
+				<string>buildversion</string>
+				<key>CFBundleDisplayName</key>
+				<string>displayname</string>
+			</dict>
+		</dict>
+		<key>Processor</key>
+		<string>PlistReader</string>
+	</dict> 
+	</array>
+</dict>
+</plist>
