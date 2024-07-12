@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the latest version of PrinterSetup.</string>
+	<string>Downloads the latest version of Jamf Printer Manager</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember.download.Jamf Printer Manager</string>
 	<key>Input</key>
