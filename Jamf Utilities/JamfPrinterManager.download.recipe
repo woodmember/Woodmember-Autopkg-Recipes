@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of PrinterSetup.</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember.download.PrinterSetup</string>
+	<string>com.github.Woodmember.download.Jamf Printer Manager</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
