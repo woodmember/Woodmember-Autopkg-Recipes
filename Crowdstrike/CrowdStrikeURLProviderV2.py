@@ -1,7 +1,8 @@
 #!/usr/local/autopkg/python
 #
-#
-#
+# Updated CrowdStrikeURLProviderV2 processor
+# Incorporates logic from the provided shell script
+# Uses the original method for bearer token acquisition
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +17,6 @@
 # limitations under the License.
 
 import json
-import base64
 
 from autopkglib import ProcessorError, URLGetter
 
@@ -54,31 +54,36 @@ class CrowdStrikeURLProviderV2(URLGetter):
         },
     }
 
-    def get_base_url(self, client_id, client_secret, initial_base_url):
-        headers = {
-            "accept": "application/json",
-            "Content-Type": "application/x-www-form-urlencoded",
-        }
-        data = f"client_id={client_id}&client_secret={client_secret}"
-        
-        try:
-            response = self.download(initial_base_url + "/oauth2/token", headers=headers, post_data=data)
-            return self.env.get('url')  # This should contain the redirected URL
-        except:
-            return initial_base_url
-
     def get_access_token(self, base_url, client_id, client_secret):
         token_url = f"{base_url}/oauth2/token"
         headers = {
             "accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
         }
-        data = f"client_id={client_id}&client_secret={client_secret}"
+        
+        # Build the required curl switches
+        curl_opts = [
+            "--url",
+            f"{token_url}",
+            "--request",
+            "POST",
+            "--data",
+            f"client_id={client_id}&client_secret={client_secret}"
+        ]
 
         try:
-            response = self.download(token_url, headers=headers, post_data=data)
-            json_data = json.loads(response)
-            return json_data["access_token"]
+            # Initialize the curl_cmd, add the curl options, and execute curl
+            curl_cmd = self.prepare_curl_cmd()
+            self.add_curl_headers(curl_cmd, headers)
+            curl_cmd.extend(curl_opts)
+            response_token = self.download_with_curl(curl_cmd)
+
+            # Load the JSON response
+            json_data = json.loads(response_token)
+            access_token = json_data["access_token"]
+            self.output(f"Access Token: {access_token}", verbose_level=3)
+            return access_token
+
         except:
             raise ProcessorError("Failed to acquire the bearer authentication token!")
 
@@ -100,18 +105,16 @@ class CrowdStrikeURLProviderV2(URLGetter):
         client_id = self.env.get("client_id")
         client_secret = self.env.get("client_secret")
         version_offset = self.env.get("version_offset", "1")
-        initial_base_url = self.env.get("api_base_url", "https://api.crowdstrike.com")
+        base_url = self.env.get("api_base_url", "https://api.crowdstrike.com")
 
         if not client_id or client_id == "%CLIENT_ID%":
             raise ProcessorError("The input variable 'client_id' was not set!")
         if not client_secret or client_secret == "%CLIENT_SECRET%":
             raise ProcessorError("The input variable 'client_secret' was not set!")
 
-        base_url = self.get_base_url(client_id, client_secret, initial_base_url)
         self.output(f"Using API base URL: {base_url}", verbose_level=2)
 
         access_token = self.get_access_token(base_url, client_id, client_secret)
-        self.output(f"Access Token: {access_token}", verbose_level=3)
 
         sensor_info = self.get_sensor_info(base_url, access_token, version_offset)
         
