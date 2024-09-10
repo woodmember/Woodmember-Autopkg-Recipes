@@ -95,9 +95,14 @@ class CrowdStrikeURLProviderV2(URLGetter):
             self.add_curl_headers(curl_cmd, headers)
             curl_cmd.extend(["--url", sensor_list_url])
             
+            self.output(f"Curl command for sensor info: {' '.join(curl_cmd)}", verbose_level=3)
+            
             sensor_response = self.download_with_curl(curl_cmd)
             self.output(f"Full Sensor API Response (sensorv): {sensor_response}", verbose_level=2)
             sensor_json = json.loads(sensor_response)
+            
+            if sensor_json.get("errors"):
+                raise ProcessorError(f"API Error: {sensor_json['errors']}")
             
             if not sensor_json.get("resources"):
                 self.output("No resources found in the API response. Full response:", verbose_level=2)
