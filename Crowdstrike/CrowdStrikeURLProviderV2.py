@@ -1,5 +1,7 @@
 #!/usr/local/autopkg/python
 #
+# Copyright 2023 Your Name
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,7 +15,6 @@
 # limitations under the License.
 
 import json
-import urllib.parse
 
 from autopkglib import ProcessorError, URLGetter
 
@@ -23,21 +24,24 @@ __all__ = ["CrowdStrikeURLProviderV2"]
 
 class CrowdStrikeURLProviderV2(URLGetter):
 
-    """This processor finds the download URL for the CrowdStrike Sensor."""
+    """This processor finds the download URL for the CrowdStrike Sensor
+    based on a specified version offset."""
 
     description = __doc__
     input_variables = {
-        "client_id": {"required": True, "description": "CrowdStrike API Client ID."},
-        "client_secret": {
+        "CLIENT_ID": {"required": True, "description": "CrowdStrike API Client ID."},
+        "CLIENT_SECRET": {
             "required": True,
             "description": "CrowdStrike API Client Secret.",
         },
         "VERSION_OFFSET": {
             "required": False,
             "default": "1",
-            "description": "Version offset (0 for latest, 1 for N-1, 2 for N-2, etc.). Default is 1.",
+            "description": (
+                "Version offset from latest. 0 = latest, 1 = previous version, 2 = two versions back."
+            ),
         },
-        "api_region_url": {
+        "API_REGION_URL": {
             "required": False,
             "default": "https://api.crowdstrike.com",
             "description": (
@@ -57,102 +61,64 @@ class CrowdStrikeURLProviderV2(URLGetter):
         },
     }
 
-    def get_bearer_token(self, api_region_url, client_id, client_secret):
+    def main(self):
+        # Define variables
+        client_id = self.env.get("CLIENT_ID")
+        client_secret = self.env.get("CLIENT_SECRET")
+        version_offset = int(self.env.get("VERSION_OFFSET", "1"))
+        api_region_url = self.env.get("API_REGION_URL", "https://api.crowdstrike.com")
+
         token_url = f"{api_region_url}/oauth2/token"
+        installer_url = f"{api_region_url}/sensors/combined/installers/v2?offset={version_offset}&limit=1&filter=platform%3A%22mac%22"
+
+        # Verify the input variables were provided
+        if not client_id or client_id == "%CLIENT_ID%":
+            raise ProcessorError("The input variable 'CLIENT_ID' was not set!")
+        if not client_secret or client_secret == "%CLIENT_SECRET%":
+            raise ProcessorError("The input variable 'CLIENT_SECRET' was not set!")
+
+        # Get access token
         headers = {
             "accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
         }
-        
-        curl_cmd = self.prepare_curl_cmd()
-        self.add_curl_headers(curl_cmd, headers)
-        curl_cmd.extend([
-            "--data",
-            f"client_id={client_id}&client_secret={client_secret}",
-            "--url", token_url
-        ])
+        token_data = f"client_id={client_id}&client_secret={client_secret}"
 
         try:
-            token_response = self.download_with_curl(curl_cmd)
-            self.output(f"Token API Response: {token_response}", verbose_level=3)
+            token_response = self.download(url=token_url, headers=headers, post_data=token_data)
             token_json = json.loads(token_response)
-            return token_json["access_token"]
+            access_token = token_json["access_token"]
         except Exception as e:
-            raise ProcessorError(f"Failed to acquire bearer token: {str(e)}")
+            raise ProcessorError(f"Failed to acquire the bearer authentication token: {str(e)}")
 
-    def get_sensor_info(self, api_region_url, bearer_token, version_offset):
-        sensor_list_url = (
-            f"{api_region_url}/sensors/combined/installers/v2?"
-            f"offset={version_offset}&limit=1&filter=platform%3A%22mac%22"
-        )
-        headers = {
+        # Get installer information
+        auth_headers = {
             "accept": "application/json",
-            "authorization": f"Bearer {bearer_token}",
+            "authorization": f"bearer {access_token}",
         }
 
         try:
-            curl_cmd = self.prepare_curl_cmd()
-            self.add_curl_headers(curl_cmd, headers)
-            curl_cmd.extend(["--url", sensor_list_url])
+            installer_response = self.download(url=installer_url, headers=auth_headers)
+            installer_json = json.loads(installer_response)
             
-            self.output(f"Curl command for sensor info: {' '.join(curl_cmd)}", verbose_level=3)
+            if not installer_json.get("resources"):
+                raise ProcessorError("No installer found for the specified version offset.")
             
-            sensor_response = self.download_with_curl(curl_cmd)
-            self.output(f"Full Sensor API Response (sensorv): {sensor_response}", verbose_level=2)
-            sensor_json = json.loads(sensor_response)
-            
-            if sensor_json.get("errors"):
-                raise ProcessorError(f"API Error: {sensor_json['errors']}")
-            
-            if not sensor_json.get("resources"):
-                self.output("No resources found in the API response. Full response:", verbose_level=2)
-                self.output(json.dumps(sensor_json, indent=2), verbose_level=2)
-                raise ProcessorError("No sensor resources found in the API response")
-            
-            sensor = sensor_json["resources"][0]
-            return sensor["name"], sensor["version"], sensor["sha256"]
-        except json.JSONDecodeError as e:
-            raise ProcessorError(f"Failed to parse sensor information JSON: {str(e)}, Response: {sensor_response}")
+            installer = installer_json["resources"][0]
+            version = installer.get("version")
+            sha256 = installer.get("sha256")
         except Exception as e:
-            raise ProcessorError(f"Failed to retrieve sensor information: {str(e)}")
+            raise ProcessorError(f"Failed to get installer information: {str(e)}")
 
-    def main(self):
-        client_id = self.env.get("client_id")
-        client_secret = self.env.get("client_secret")
-        version_offset = self.env.get("VERSION_OFFSET", "1")
-        api_region_url = self.env.get("api_region_url", "https://api.crowdstrike.com")
+        # Set output variables
+        download_url = f"{api_region_url}/sensors/entities/download-installer/v2?id={sha256}"
+        
+        self.env["access_token"] = access_token
+        self.env["version"] = f"{version}.0"
+        self.env["download_url"] = download_url
 
-        if not client_id or client_id == "%CLIENT_ID%":
-            raise ProcessorError("The input variable 'client_id' was not set!")
-        if not client_secret or client_secret == "%CLIENT_SECRET%":
-            raise ProcessorError("The input variable 'client_secret' was not set!")
-
-        self.output(f"Using version offset: {version_offset}", verbose_level=2)
-        self.output(f"Using API region URL: {api_region_url}", verbose_level=2)
-
-        try:
-            bearer_token = self.get_bearer_token(api_region_url, client_id, client_secret)
-            self.env["access_token"] = bearer_token
-            self.output(f"Bearer token acquired: {bearer_token[:10]}...", verbose_level=2)
-
-            sensor_name, sensor_version, sensor_sha256 = self.get_sensor_info(
-                api_region_url, bearer_token, version_offset
-            )
-
-            download_url = (
-                f"{api_region_url}/sensors/entities/download-installer/v2?"
-                f"id={urllib.parse.quote(sensor_sha256)}"
-            )
-
-            self.env["version"] = sensor_version
-            self.env["download_url"] = download_url
-
-            self.output(f"Sensor version that will be downloaded: {sensor_version}", verbose_level=1)
-            self.output(f"Sensor name: {sensor_name}", verbose_level=2)
-            self.output(f"Download URL: {download_url}", verbose_level=2)
-
-        except Exception as e:
-            raise ProcessorError(f"Error in CrowdStrikeURLProviderV2: {str(e)}")
+        self.output(f"Sensor version that will be downloaded: {self.env['version']}", verbose_level=1)
+        self.output(f"Download URL: {download_url}", verbose_level=3)
 
 
 if __name__ == "__main__":
