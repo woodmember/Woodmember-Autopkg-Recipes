@@ -74,6 +74,7 @@ class CrowdStrikeURLProviderV2(URLGetter):
 
         try:
             token_response = self.download_with_curl(curl_cmd)
+            self.output(f"Token API Response: {token_response}", verbose_level=3)
             token_json = json.loads(token_response)
             return token_json["access_token"]
         except Exception as e:
@@ -91,10 +92,14 @@ class CrowdStrikeURLProviderV2(URLGetter):
 
         try:
             sensor_response = self.download(sensor_list_url, headers=headers)
-            self.output(f"Sensor API Response: {sensor_response}", verbose_level=3)
+            self.output(f"Sensor API Response: {sensor_response}", verbose_level=2)
             sensor_json = json.loads(sensor_response)
+            
             if not sensor_json.get("resources"):
+                self.output("No resources found in the API response. Full response:", verbose_level=2)
+                self.output(json.dumps(sensor_json, indent=2), verbose_level=2)
                 raise ProcessorError("No sensor resources found in the API response")
+            
             sensor = sensor_json["resources"][0]
             return sensor["name"], sensor["version"], sensor["sha256"]
         except json.JSONDecodeError as e:
