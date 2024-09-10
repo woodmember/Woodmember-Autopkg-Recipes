@@ -15,7 +15,7 @@
 import json
 import urllib.parse
 
-from autopkglib import Processor, ProcessorError, URLGetter
+from autopkglib import ProcessorError, URLGetter
 
 
 __all__ = ["CrowdStrikeURLProviderV2"]
@@ -63,10 +63,17 @@ class CrowdStrikeURLProviderV2(URLGetter):
             "accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
         }
-        data = f"client_id={client_id}&client_secret={client_secret}"
+        
+        curl_cmd = self.prepare_curl_cmd()
+        self.add_curl_headers(curl_cmd, headers)
+        curl_cmd.extend([
+            "--data",
+            f"client_id={client_id}&client_secret={client_secret}",
+            "--url", token_url
+        ])
 
         try:
-            token_response = self.download(token_url, headers=headers, post_data=data)
+            token_response = self.download_with_curl(curl_cmd)
             token_json = json.loads(token_response)
             return token_json["access_token"]
         except Exception as e:
