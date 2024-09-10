@@ -1,8 +1,7 @@
 #!/usr/local/autopkg/python
 #
-# Fork Of MLBZ521 CrowdStrikeURLProvider.py
-# Updated to V2 of the api
-# All Credit belongs to MLBZ521
+#
+#
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +16,7 @@
 # limitations under the License.
 
 import json
+import base64
 
 from autopkglib import ProcessorError, URLGetter
 
@@ -26,8 +26,7 @@ __all__ = ["CrowdStrikeURLProviderV2"]
 
 class CrowdStrikeURLProviderV2(URLGetter):
 
-    """This processor finds the download URL for the CrowdStrike Sensor
-    version of the supplied Policy ID."""
+    """This processor finds the download URL for the CrowdStrike Sensor."""
 
     description = __doc__
     input_variables = {
@@ -36,157 +35,99 @@ class CrowdStrikeURLProviderV2(URLGetter):
             "required": True,
             "description": "CrowdStrike API Client Secret.",
         },
-        "policy_id": {
-            "required": True,
-            "description": "CrowdStrike Policy ID to get the assigned Sensor version.",
+        "version_offset": {
+            "required": False,
+            "default": "1",
+            "description": "Version offset. 0 for latest, 1 for N-1, 2 for N-2, etc.",
         },
-        "api_region_url": {
+        "api_base_url": {
             "required": False,
             "default": "https://api.crowdstrike.com",
-            "description": (
-                "CrowdStrike Region your instance is associated with."
-                "Default region:  https://api.crowdstrike.com"
-            ),
+            "description": "CrowdStrike API base URL.",
         },
     }
     output_variables = {
         "download_url": {"description": "Returns the url to download."},
         "version": {"description": "Returns the version of the package to download."},
         "access_token": {
-            "description": (
-                "Authorization Bearer Token required to "
-                "interact with the CrowdStrike API."
-            )
+            "description": "Authorization Bearer Token required to interact with the CrowdStrike API."
         },
     }
 
-
-    def main(self):
-
-        # Define variables
-        client_id = self.env.get("client_id")
-        client_secret = self.env.get("client_secret")
-        policy_id = self.env.get("policy_id")
-        api_region_url = self.env.get("api_region_url", "https://api.crowdstrike.com")
-
-        token_url = f"{api_region_url}/oauth2/token"
-        policy_url = f"{api_region_url}/policy/combined/sensor-update/v2?filter=platform_name%3A'Mac'"
-        installer_url = f"{api_region_url}/sensors/combined/installers/v2?filter=platform%3A%22mac%22"
-
-        # Verify the input variables were provided
-        if not client_id or client_id == "%CLIENT_ID%":
-            raise ProcessorError("The input variable 'client_id' was not set!")
-        if not client_secret or client_secret == "%CLIENT_SECRET%":
-            raise ProcessorError("The input variable 'client_secret' was not set!")
-        if not policy_id or policy_id == "%POLICY_ID%":
-            raise ProcessorError("The input variable 'policy_id' was not set!")
-
-        # Build the headers
+    def get_base_url(self, client_id, client_secret, initial_base_url):
         headers = {
             "accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
         }
-
-        # Build the required curl switches
-        curl_opts = [
-            "--url",
-            f"{token_url}",
-            "--request",
-            "POST",
-            "--data",
-            f"client_id={client_id}&client_secret={client_secret}"
-        ]
-
+        data = f"client_id={client_id}&client_secret={client_secret}"
+        
         try:
-            # Initialize the curl_cmd, add the curl options, and execute curl
-            curl_cmd = self.prepare_curl_cmd()
-            self.add_curl_headers(curl_cmd, headers)
-            curl_cmd.extend(curl_opts)
-            response_token = self.download_with_curl(curl_cmd)
-
+            response = self.download(initial_base_url + "/oauth2/token", headers=headers, post_data=data)
+            return self.env.get('url')  # This should contain the redirected URL
         except:
-            raise ProcessorError("Failed to authenticate with the CrowdStrike API!")
+            return initial_base_url
+
+    def get_access_token(self, base_url, client_id, client_secret):
+        token_url = f"{base_url}/oauth2/token"
+        headers = {
+            "accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
+        }
+        data = f"client_id={client_id}&client_secret={client_secret}"
 
         try:
-            # Load the JSON response
-            json_data = json.loads(response_token)
-            access_token = json_data["access_token"]
-            self.output(f"Access Token:  {access_token}", verbose_level=3)
-
+            response = self.download(token_url, headers=headers, post_data=data)
+            json_data = json.loads(response)
+            return json_data["access_token"]
         except:
             raise ProcessorError("Failed to acquire the bearer authentication token!")
 
-        try:
-
-            auth_headers = {
-                "accept": "application/json",
-                "authorization": f"bearer {access_token}",
-            }
-
-            # Execute curl
-            response_policies = self.download(url=policy_url, headers=auth_headers)
-
-            # Load the JSON response
-            json_data = json.loads(response_policies)
-
-        except:
-            raise ProcessorError("Failed to get the Sensor Update Policies!")
+    def get_sensor_info(self, base_url, access_token, version_offset):
+        sensor_list_url = f"{base_url}/sensors/combined/installers/v2?offset={version_offset}&limit=1&filter=platform%3A%22mac%22"
+        headers = {
+            "accept": "application/json",
+            "authorization": f"Bearer {access_token}",
+        }
 
         try:
-
-            # Loop through the policies to find the desired policy id
-            for policy in json_data["resources"]:
-
-                if policy.get("id") == policy_id:
-
-                    # Get the build assigned to the policy
-                    build = policy.get("settings")["build"]
-
-            build_version = build.split("|", 1)[0]
-            self.output(
-                f"Build version for matching Policy:  {build_version}", verbose_level=1)
-
+            response = self.download(sensor_list_url, headers=headers)
+            json_data = json.loads(response)
+            return json_data["resources"][0]
         except:
-            raise ProcessorError("Failed to match a Sensor Update Policy!")
+            raise ProcessorError("Failed to acquire sensor information!")
 
-        try:
-            # Execute curl
-            response_installers = self.download(url=installer_url, headers=auth_headers)
+    def main(self):
+        client_id = self.env.get("client_id")
+        client_secret = self.env.get("client_secret")
+        version_offset = self.env.get("version_offset", "1")
+        initial_base_url = self.env.get("api_base_url", "https://api.crowdstrike.com")
 
-            # Load the JSON response
-            json_data = json.loads(response_installers)
+        if not client_id or client_id == "%CLIENT_ID%":
+            raise ProcessorError("The input variable 'client_id' was not set!")
+        if not client_secret or client_secret == "%CLIENT_SECRET%":
+            raise ProcessorError("The input variable 'client_secret' was not set!")
 
-        except:
-            raise ProcessorError("Failed to acquire list of installers!")
+        base_url = self.get_base_url(client_id, client_secret, initial_base_url)
+        self.output(f"Using API base URL: {base_url}", verbose_level=2)
 
-        try:
-            # Loop through the installers to to find the desired build
-            for installer in json_data["resources"]:
+        access_token = self.get_access_token(base_url, client_id, client_secret)
+        self.output(f"Access Token: {access_token}", verbose_level=3)
 
-                # The build is the last string of digits of the version string
-                if installer.get("version").split(".")[-1] == build_version:
-                    version = installer.get("version")
-                    sha256 = installer.get("sha256")
+        sensor_info = self.get_sensor_info(base_url, access_token, version_offset)
+        
+        sensor_name = sensor_info.get("name")
+        sensor_sha256 = sensor_info.get("sha256")
+        sensor_version = sensor_info.get("version")
 
-        except:
-            raise ProcessorError(
-                "Failed to match an available sensor version to the Policy assigned build version!")
+        download_url = f"{base_url}/sensors/entities/download-installer/v2?id={sensor_sha256}"
 
-        try:
-            download_url = f"{api_region_url}/sensors/entities/download-installer/v2?id={sha256}"
+        self.env["access_token"] = access_token
+        self.env["version"] = f"{sensor_version}.0"
+        self.env["download_url"] = download_url
 
-            self.env["access_token"] = access_token
-            # This version is appended to match the _actual_ CFBundleShortVersionString
-            self.env["version"] = f"{version}.0"
-            self.env["download_url"] = download_url
-
-            self.output(
-                f"Sensor version that will be downloaded: {self.env['version']}", verbose_level=1)
-            self.output(f"Download URL:  {download_url}", verbose_level=3)
-
-        except:
-            raise ProcessorError("Something went wrong assigning environment variables!")
-
+        self.output(f"Sensor version that will be downloaded: {self.env['version']}", verbose_level=1)
+        self.output(f"Sensor name: {sensor_name}", verbose_level=1)
+        self.output(f"Download URL: {download_url}", verbose_level=2)
 
 if __name__ == "__main__":
     processor = CrowdStrikeURLProviderV2()
