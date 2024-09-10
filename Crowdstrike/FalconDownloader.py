@@ -117,8 +117,12 @@ class FalconDownloader(Processor):
         download_cmd = self.curl_cmd(f"{sensor_dl}?id={sensor_sha}", headers={"Authorization": f"Bearer {bearer}"}, output=download_path)
         _, download_stderr = self.run_curl(download_cmd)
 
-        if "HTTP/2 200" not in download_stderr:
+        # Check if the download was successful
+        if "HTTP/1.1 200 OK" not in download_stderr and "HTTP/2 200" not in download_stderr:
             raise ProcessorError(f"Failed to download sensor: {download_stderr}")
+
+        if not os.path.exists(download_path) or os.path.getsize(download_path) == 0:
+            raise ProcessorError(f"Download seems to have failed. File is missing or empty: {download_path}")
 
         # Revoke the bearer token
         revoke_cmd = self.curl_cmd(oauth_revoke, method="POST", headers={
@@ -129,7 +133,7 @@ class FalconDownloader(Processor):
 
         # Set output variable
         self.env["falcon_agent_path"] = download_path
-        self.output(f"Downloaded Falcon agent to: {download_path}")
+        self.output(f"Successfully downloaded Falcon agent to: {download_path}")
 
 if __name__ == "__main__":
     processor = FalconDownloader()
