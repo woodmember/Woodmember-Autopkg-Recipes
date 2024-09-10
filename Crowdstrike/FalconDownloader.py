@@ -36,7 +36,7 @@ class FalconDownloader(Processor):
         "version": {
             "required": False,
             "description": "Version to download. 0 for latest, 1 for N-1, etc.",
-            "default": "0",
+            "default": "1",
         },
     }
     output_variables = {
