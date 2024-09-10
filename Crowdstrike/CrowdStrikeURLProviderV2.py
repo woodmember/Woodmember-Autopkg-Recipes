@@ -91,7 +91,11 @@ class CrowdStrikeURLProviderV2(URLGetter):
         }
 
         try:
-            sensor_response = self.download(sensor_list_url, headers=headers)
+            curl_cmd = self.prepare_curl_cmd()
+            self.add_curl_headers(curl_cmd, headers)
+            curl_cmd.extend(["--url", sensor_list_url])
+            
+            sensor_response = self.download_with_curl(curl_cmd)
             self.output(f"Full Sensor API Response (sensorv): {sensor_response}", verbose_level=2)
             sensor_json = json.loads(sensor_response)
             
@@ -110,7 +114,7 @@ class CrowdStrikeURLProviderV2(URLGetter):
     def main(self):
         client_id = self.env.get("client_id")
         client_secret = self.env.get("client_secret")
-        version_offset = self.env.get("VERSION_OFFSET", "1")  # Use VERSION_OFFSET, default to 1 if not provided
+        version_offset = self.env.get("VERSION_OFFSET", "1")
         api_region_url = self.env.get("api_region_url", "https://api.crowdstrike.com")
 
         if not client_id or client_id == "%CLIENT_ID%":
@@ -119,11 +123,12 @@ class CrowdStrikeURLProviderV2(URLGetter):
             raise ProcessorError("The input variable 'client_secret' was not set!")
 
         self.output(f"Using version offset: {version_offset}", verbose_level=2)
+        self.output(f"Using API region URL: {api_region_url}", verbose_level=2)
 
         try:
             bearer_token = self.get_bearer_token(api_region_url, client_id, client_secret)
             self.env["access_token"] = bearer_token
-            self.output(f"Bearer token acquired", verbose_level=2)
+            self.output(f"Bearer token acquired: {bearer_token[:10]}...", verbose_level=2)
 
             sensor_name, sensor_version, sensor_sha256 = self.get_sensor_info(
                 api_region_url, bearer_token, version_offset
