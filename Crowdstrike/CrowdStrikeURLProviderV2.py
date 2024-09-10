@@ -32,10 +32,10 @@ class CrowdStrikeURLProviderV2(URLGetter):
             "required": True,
             "description": "CrowdStrike API Client Secret.",
         },
-        "version_offset": {
+        "VERSION_OFFSET": {
             "required": False,
             "default": "1",
-            "description": "Version offset (0 for latest, 1 for N-1, 2 for N-2). Default is 1.",
+            "description": "Version offset (0 for latest, 1 for N-1, 2 for N-2, etc.). Default is 1.",
         },
         "api_region_url": {
             "required": False,
@@ -92,7 +92,7 @@ class CrowdStrikeURLProviderV2(URLGetter):
 
         try:
             sensor_response = self.download(sensor_list_url, headers=headers)
-            self.output(f"Sensor API Response: {sensor_response}", verbose_level=2)
+            self.output(f"Full Sensor API Response (sensorv): {sensor_response}", verbose_level=2)
             sensor_json = json.loads(sensor_response)
             
             if not sensor_json.get("resources"):
@@ -110,13 +110,15 @@ class CrowdStrikeURLProviderV2(URLGetter):
     def main(self):
         client_id = self.env.get("client_id")
         client_secret = self.env.get("client_secret")
-        version_offset = self.env.get("version_offset", "1")  # Default to 1 (N-1)
+        version_offset = self.env.get("VERSION_OFFSET", "1")  # Use VERSION_OFFSET, default to 1 if not provided
         api_region_url = self.env.get("api_region_url", "https://api.crowdstrike.com")
 
         if not client_id or client_id == "%CLIENT_ID%":
             raise ProcessorError("The input variable 'client_id' was not set!")
         if not client_secret or client_secret == "%CLIENT_SECRET%":
             raise ProcessorError("The input variable 'client_secret' was not set!")
+
+        self.output(f"Using version offset: {version_offset}", verbose_level=2)
 
         try:
             bearer_token = self.get_bearer_token(api_region_url, client_id, client_secret)
