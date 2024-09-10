@@ -3,6 +3,7 @@
 # Updated CrowdStrikeURLProviderV2 processor
 # Incorporates logic from the provided shell script
 # Uses the original method for bearer token acquisition
+# Updated sensor info acquisition to match shell script
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +18,8 @@
 # limitations under the License.
 
 import json
+import subprocess
+import plistlib
 
 from autopkglib import ProcessorError, URLGetter
 
@@ -95,11 +98,38 @@ class CrowdStrikeURLProviderV2(URLGetter):
         }
 
         try:
-            response = self.download(sensor_list_url, headers=headers)
-            json_data = json.loads(response)
-            return json_data["resources"][0]
-        except:
-            raise ProcessorError("Failed to acquire sensor information!")
+            # Use curl command similar to the shell script
+            curl_cmd = [
+                "curl",
+                "-s",
+                "-X", "GET",
+                sensor_list_url,
+                "-H", f"accept: {headers['accept']}",
+                "-H", f"authorization: {headers['authorization']}"
+            ]
+            
+            process = subprocess.Popen(curl_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout, stderr = process.communicate()
+            
+            if process.returncode != 0:
+                raise ProcessorError(f"curl command failed: {stderr.decode()}")
+
+            # Parse the JSON response
+            json_data = json.loads(stdout.decode())
+            
+            # Extract sensor information using plistlib, similar to the shell script
+            sensor_name = plistlib.loads(json_data["resources"][0]["name"].encode())
+            sensor_sha256 = plistlib.loads(json_data["resources"][0]["sha256"].encode())
+            sensor_version = plistlib.loads(json_data["resources"][0]["version"].encode())
+
+            return {
+                "name": sensor_name,
+                "sha256": sensor_sha256,
+                "version": sensor_version
+            }
+
+        except Exception as e:
+            raise ProcessorError(f"Failed to acquire sensor information: {str(e)}")
 
     def main(self):
         client_id = self.env.get("client_id")
@@ -118,9 +148,9 @@ class CrowdStrikeURLProviderV2(URLGetter):
 
         sensor_info = self.get_sensor_info(base_url, access_token, version_offset)
         
-        sensor_name = sensor_info.get("name")
-        sensor_sha256 = sensor_info.get("sha256")
-        sensor_version = sensor_info.get("version")
+        sensor_name = sensor_info["name"]
+        sensor_sha256 = sensor_info["sha256"]
+        sensor_version = sensor_info["version"]
 
         download_url = f"{base_url}/sensors/entities/download-installer/v2?id={sensor_sha256}"
 
