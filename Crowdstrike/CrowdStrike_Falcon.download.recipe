@@ -37,25 +37,7 @@ You must provide a Client ID and Secret along with the Policy ID to determine wh
 				<string>%CS_POLICY_ID%</string>
 			</dict>
 			<key>Processor</key>
-			<string>CrowdStrikeURLProviderV2</string>
-		</dict>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>filename</key>
-				<string>%NAME%-%version%.pkg</string>
-				<key>request_headers</key>
-				<dict>
-					<key>accept</key>
-					<string>application/json</string>
-					<key>authorization</key>
-					<string>bearer %access_token%</string>
-				</dict>
-				<key>url</key>
-				<string>%download_url%</string>
-			</dict>
-			<key>Processor</key>
-			<string>URLDownloader</string>
+			<string>FalconDownloader</string>
 		</dict>
 		<dict>
 			<key>Arguments</key>
@@ -67,7 +49,7 @@ You must provide a Client ID and Secret along with the Policy ID to determine wh
 					<string>Apple Root CA</string>
 				</array>
 				<key>input_path</key>
-				<string>%pathname%</string>
+				<string>%falcon_agent_path%</string>
 			</dict>
 			<key>Processor</key>
 			<string>CodeSignatureVerifier</string>
