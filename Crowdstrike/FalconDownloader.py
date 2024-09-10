@@ -19,7 +19,6 @@ import json
 import base64
 from autopkglib import Processor, ProcessorError
 import subprocess
-import plistlib
 
 __all__ = ["FalconDownloader"]
 
@@ -46,7 +45,7 @@ class FalconDownloader(Processor):
         }
     }
 
-    def curl_cmd(self, url, headers=None, data=None, method="GET"):
+    def curl_cmd(self, url, headers=None, data=None, method="GET", output=None):
         cmd = ["/usr/bin/curl", "-s", "-v"]
         if method == "POST":
             cmd.extend(["-X", "POST"])
@@ -55,13 +54,15 @@ class FalconDownloader(Processor):
                 cmd.extend(["-H", f"{key}: {value}"])
         if data:
             cmd.extend(["-d", data])
+        if output:
+            cmd.extend(["-o", output])
         cmd.append(url)
         return cmd
 
     def run_curl(self, cmd):
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
-        return stdout.decode(), stderr.decode()
+        return stdout, stderr.decode()
 
     def main(self):
         client_id = self.env["client_id"]
@@ -112,13 +113,12 @@ class FalconDownloader(Processor):
         sensor_sha = sensor_data["resources"][0]["sha256"]
 
         # Download the sensor
-        download_cmd = self.curl_cmd(f"{sensor_dl}?id={sensor_sha}", headers={"Authorization": f"Bearer {bearer}"})
-        download_stdout, _ = self.run_curl(download_cmd)
-
-        # Save the downloaded file to the recipe cache dir
         download_path = os.path.join(self.env["RECIPE_CACHE_DIR"], sensor_name)
-        with open(download_path, "wb") as file:
-            file.write(download_stdout.encode())
+        download_cmd = self.curl_cmd(f"{sensor_dl}?id={sensor_sha}", headers={"Authorization": f"Bearer {bearer}"}, output=download_path)
+        _, download_stderr = self.run_curl(download_cmd)
+
+        if "HTTP/2 200" not in download_stderr:
+            raise ProcessorError(f"Failed to download sensor: {download_stderr}")
 
         # Revoke the bearer token
         revoke_cmd = self.curl_cmd(oauth_revoke, method="POST", headers={
