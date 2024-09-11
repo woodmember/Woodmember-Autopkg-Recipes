@@ -17,8 +17,9 @@ You must provide a Client ID and Secret along with the Policy ID to determine wh
 		<string>09d09ufa0sdfh03abcoiy3ba98weyxas</string>
 		<key>CS_CLIENT_SECRET</key>
 		<string>093Uhd093HqGAH309h309fa3j0H3AsdFJ0AIH3iQ</string>
-		<key>CS_POLICY_ID</key>
-		<string>20983aunw039ufapsuf03u0a0sudfna0</string>
+		<key>VERSION</key>
+		<!-- 0  = Latest, 1 = N-1, 2 = N-2 -->
+		<string>1</string>
 		<key>NAME</key>
 		<string>CrowdStrike Falcon</string>
 	</dict>
