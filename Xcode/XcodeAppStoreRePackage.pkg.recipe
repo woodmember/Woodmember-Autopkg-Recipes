@@ -253,6 +253,9 @@ writelog "Self destructing..."
 rm /tmp/UNSW.IT.xcodeComponentsInstaller.plist
 rm /tmp/xcodeComponentsInstaller.sh
 
+#Update Version
+xcode-select -r
+
 writelog "Script completed"</string>
                 <key>file_mode</key>
                 <string>0755</string>
