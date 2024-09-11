@@ -112,8 +112,13 @@ class FalconDownloader(Processor):
         sensor_name = sensor_data["resources"][0]["name"]
         sensor_sha = sensor_data["resources"][0]["sha256"]
 
-        # Download the sensor to the recipe's cache folder
-        download_path = os.path.join(self.env["RECIPE_CACHE_DIR"], sensor_name)
+        # Create downloads folder in the recipe cache directory
+        downloads_dir = os.path.join(self.env["RECIPE_CACHE_DIR"], "downloads")
+        if not os.path.exists(downloads_dir):
+            os.makedirs(downloads_dir)
+
+        # Download the sensor to the downloads folder in the recipe's cache folder
+        download_path = os.path.join(downloads_dir, sensor_name)
         download_cmd = self.curl_cmd(f"{sensor_dl}?id={sensor_sha}", headers={"Authorization": f"Bearer {bearer}"}, output=download_path)
         _, download_stderr = self.run_curl(download_cmd)
 
