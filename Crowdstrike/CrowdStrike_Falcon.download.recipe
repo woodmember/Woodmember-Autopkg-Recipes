@@ -3,9 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads a CrowdStrike Falcon Sensor pkg via CrowdStrike's API.
+	<string>Downloads a CrowdStrike Falcon Sensor pkg via CrowdStrike's API and then creates a installation package.
 
-You must provide a Client ID and Secret along with the Policy ID to determine which senor version to download.
+You must provide a Client ID and Secret along with your version selection of 0, 1 or 2 to determine which senor to download.
+
+Version 0 = Latest, 1 = N-1, 2 = N-2. The default is 1.
+
+Expects your Customer ID (license ID) so that the pkg recipe can license the Sensor on install.
 	</string>
 	<key>Identifier</key>
 	<string>com.github.woodmember.download.CrowdStrikeFalcon</string>
