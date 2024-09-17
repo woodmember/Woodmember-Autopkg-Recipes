@@ -143,7 +143,7 @@ exit 0</string>
 				 <string>%RECIPE_CACHE_DIR%/unpack</string>
 				 <string>%RECIPE_CACHE_DIR%/Applications</string>
 				 <string>%RECIPE_CACHE_DIR%/Splashtop Streamerscripts</string>
-				 <string>%RECIPE_CACHE_DIR%/Splashtop Streamerroot</string></string>
+				 <string>%RECIPE_CACHE_DIR%/Splashtop Streamerroot</string>
    	         </array>
    	     </dict>
    	 	</dict>
