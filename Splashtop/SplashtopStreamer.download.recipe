@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Splashtop Streamer.</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember-Autopkg-Recipes..download.SplashtopStreamer</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.SplashtopStreamer</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
