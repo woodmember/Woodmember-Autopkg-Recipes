@@ -16,7 +16,7 @@
 	    <key>MinimumVersion</key>
 	       <string>1.0</string>
 	       <key>ParentRecipe</key>
-	   	<string>com.github.peetinc.download.SplashtopStreamer</string>
+	   	<string>com.github.Woodmember-Autopkg-Recipes.download.SplashtopStreamer</string>
 	       <key>Process</key>
 	       <array>
 	           <dict>
