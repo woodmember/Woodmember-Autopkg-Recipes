@@ -6,9 +6,9 @@
 		<string>local.download.Matlab</string>
 		<key>Description</key>
 		<string>
-Downloads the latest version of Matlab from a local file share.
-
-This recipe version uses the offline media created with the "MathWorks Installer" described in the guide here:  https://www.mathworks.com/matlabcentral/answers/259632-how-can-i-get-matlab-installation-files-for-use-on-an-offline-machine
+Unpacks and preps a local Matlab install directory.
+This recipe version uses the offline media created with the "MathWorks Installer" 
+described in the guide here:  https://www.mathworks.com/matlabcentral/answers/259632-how-can-i-get-matlab-installation-files-for-use-on-an-offline-machine
 
 For information on how this recipe works, please see the README in my repo (https://github.com/autopkg/MLBZ521-recipes/blob/master/ReadMe.md).
 </string>
@@ -16,29 +16,23 @@ For information on how this recipe works, please see the README in my repo (http
 		<dict>
 			<key>NAME</key>
 			<string>Matlab</string>
-			<key>DMG_LOC</key>
+			<key>MATLAB_DIR_LOC</key>
 			<string>Path/To/Your/Matlab/DMG</string>
 			<key>MAJOR_VERSION</key>
 			<string>R2024b</string>
+			<key>ARCHITECTURE</key>
+			<!-- Must Input either AppleSilicon or IntelProcessor -->
+			<string>AppleSilicon</string>
 		</dict>
 		<key>Process</key>
 		<array>
 			<dict>
 				<key>Arguments</key>
 				<dict>
-					<key>pattern</key>
-					<string>%DMG_LOC%/*.dmg</string>
-				</dict>
-				<key>Processor</key>
-				<string>FileFinder</string>
-			</dict>
-			<dict>
-				<key>Arguments</key>
-				<dict>
 					<key>source_path</key>
-					<string>%found_filename%/InstallForMacOSX.app</string>
+					<string>%MATLAB_DIR_LOC%</string>
 					<key>destination_path</key>
-					<string>%RECIPE_CACHE_DIR%/unpack</string>
+					<string>%RECIPE_CACHE_DIR%/unpack/</string>
 					<key>overwrite</key>
 					<true/>
 				</dict>
