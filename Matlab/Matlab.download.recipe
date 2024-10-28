@@ -3,7 +3,7 @@
 <plist version="1.0">
 	<dict>
 		<key>Identifier</key>
-		<string>local.download.Matlab</string>
+		<string>com.github.Woodmember-Autopkg-Recipes.download.Matlab</string>
 		<key>Description</key>
 		<string>
 Unpacks and preps a local Matlab install directory.
