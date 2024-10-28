@@ -9,7 +9,7 @@
             Currently available from Amazon are the 8 and 11 JDKs.
     </string>
     <key>Identifier</key>
-    <string>local.pkg.AmazonCorrettoOpenJDK</string>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.AmazonCorrettoOpenJDK</string>
     <key>Input</key>
     <dict>
     <key>NAME</key>
