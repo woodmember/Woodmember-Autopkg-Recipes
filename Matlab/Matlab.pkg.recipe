@@ -250,7 +250,7 @@ USE_SERVER
 ###################################################################################################
 # Script Name:  Install-MatLabUniversal.sh
 # By:  Zack Thompson / Created:  5/20/2024
-# Version:  1.0.2 / Updated:  5/20/2024 / By:  ZT
+# Version:  1.0.3 / Updated:  5/20/2024 / By:  ZT
 #
 # Description:  "Installs" the appropriate installer type based on the systems' architecture.
 #
@@ -280,6 +280,39 @@ fi
 # Install MatLab with option file.
 # Inject dummy location to the installer.input file -- hacky, but works
 LANG=C /usr/bin/sed -Ei '' 's,(#)? ?licensePath=.*,'"licensePath=${pkg_dir}/installer_input.txt"',' "${pkg_dir}/installer_input.txt"
+
+# Copy license file to installation directory
+echo "*****  License File Copy Process:  START  *****"
+license_source="${pkg_dir}/license.dat"
+license_dest="/Applications/MATLAB_R2024b.app/"
+
+if [[ ! -f "${license_source}" ]]; then
+    echo "[Error] License file not found at: ${license_source}"
+    echo "*****  License File Copy Process:  FAILED  *****"
+    exit 1
+fi
+
+if [[ ! -d "${license_dest}" ]]; then
+    echo "[Error] MATLAB application directory not found at: ${license_dest}"
+    echo "*****  License File Copy Process:  FAILED  *****"
+    exit 1
+fi
+
+echo "Copying license file from: ${license_source}"
+echo "To destination: ${license_dest}"
+
+/bin/cp "${license_source}" "${license_dest}" 
+copy_exit_code=$?
+
+if [[ $copy_exit_code != 0 ]]; then
+    echo "[Error] Failed to copy license file"
+    echo "Exit Code: ${copy_exit_code}"
+    echo "*****  License File Copy Process:  FAILED  *****"
+    exit 1
+else
+    echo "License file successfully copied"
+    echo "*****  License File Copy Process:  COMPLETE  *****"
+fi
 
 # Determine which architecture type should be installed
 if [[ $( /usr/bin/arch ) == "arm64" ]]; then
