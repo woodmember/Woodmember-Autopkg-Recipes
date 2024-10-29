@@ -175,7 +175,7 @@ USE_SERVER
 		<string>AppleSilicon</string>
 		</dict>
 		<key>ParentRecipe</key>
-		<string>com.github.Woodmember-Autopkg-Recipes</string>
+		<string>com.github.Woodmember-Autopkg-Recipes.download.Matlab</string>
 		<key>Process</key>
 		<array>
 			<dict>
