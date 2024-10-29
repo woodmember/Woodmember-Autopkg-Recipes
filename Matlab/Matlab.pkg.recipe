@@ -331,7 +331,7 @@ exit 0]]>
 						<key>options</key>
 						<string>purge_ds_store</string>
 						<key>pkgname</key>
-						<string>%NAME%-%MAJOR_VERSION%</string>
+						<string>%NAME%-%MAJOR_VERSION%-%ARCHITECTURE%</string>
 						<key>pkgroot</key>
 						<string>%RECIPE_CACHE_DIR%/pkgroot</string>
 						<key>scripts</key>
