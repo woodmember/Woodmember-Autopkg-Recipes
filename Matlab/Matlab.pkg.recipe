@@ -166,7 +166,7 @@ USE_SERVER
 </string>
 		<key>NAME</key>
 		<string>Matlab</string>
-		<key>DMG_LOC</key>
+		<key>MATLAB_DIR_LOC</key>
 		<string>PATH/TO/MATLAB/INSTALLER/DIRECTORY</string>
 		<key>MAJOR_VERSION</key>
 		<string>R2024b</string>
