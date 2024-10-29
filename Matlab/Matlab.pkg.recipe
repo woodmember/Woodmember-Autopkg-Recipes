@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>Identifier</key>
+		<string>local.pkg.Matlab</string>
+		<key>Description</key>
+		<string>
+Downloads and packages the latest version of Matlab from a local file share.
+
+This recipe version uses the offline media created with the "MathWorks Installer" described in the guide here:  https://www.mathworks.com/matlabcentral/answers/259632-how-can-i-get-matlab-installation-files-for-use-on-an-offline-machine
+
+For information on how this recipe works, please see the README in my repo (https://github.com/autopkg/MLBZ521-recipes/blob/master/ReadMe.md).
+
+I follow the lead of MLBZ521 and license most software separately in my environment and do not use the installer.input's `licensePath` key.  If you want to use this key, you'll need to fork this recipe and adjust the postinstall script.
+
+The following override variables are available to support the installation of Matlab:
+  * INSTALLER_INPUT
+    * As the name suggests, this is the "installer.input" that allows you to customize the install
+      of Matlab.  The available parameters are included; customize for your environment.
+
+This recipe is designed to point a Matlab install to a licnese server. Update LIC_INPUT with your license server details. A example of this is in the recipe. 
+		</string>
+		<key>Input</key>
+		<dict>
+		<key>INSTALLER_INPUT</key>
+		<string>destinationFolder=/Applications
+fileInstallationKey=
+agreeToLicense=yes
+outputFile=/var/log/matlab_installation.log
+mode=silent
+outputFile=/Library/Logs/MATLAB_%MAJOR_VERSION%_Install.log
+licensePath=${pkgDir}/license.dat
+lmgrFiles=false
+
+#product.5G_Toolbox
+#product.AUTOSAR_Blockset
+#product.Aerospace_Blockset
+#product.Aerospace_Toolbox
+#product.Antenna_Toolbox
+#product.Audio_Toolbox
+#product.Automated_Driving_Toolbox
+#product.Bioinformatics_Toolbox
+#product.Bluetooth_Toolbox
+#product.C2000_Microcontroller_Blockset
+#product.Communications_Toolbox
+#product.Computer_Vision_Toolbox
+#product.Control_System_Toolbox
+#product.Curve_Fitting_Toolbox
+#product.DDS_Blockset
+#product.DO_Qualification_Kit
+#product.DSP_HDL_Toolbox
+#product.DSP_System_Toolbox
+#product.Data_Acquisition_Toolbox
+#product.Database_Toolbox
+#product.Datafeed_Toolbox
+#product.Deep_Learning_HDL_Toolbox
+#product.Deep_Learning_Toolbox
+#product.Econometrics_Toolbox
+#product.Embedded_Coder
+#product.Filter_Design_HDL_Coder
+#product.Financial_Instruments_Toolbox
+#product.Financial_Toolbox
+#product.Fixed-Point_Designer
+#product.Fuzzy_Logic_Toolbox
+#product.GPU_Coder
+#product.Global_Optimization_Toolbox
+#product.HDL_Coder
+#product.HDL_Verifier
+#product.IEC_Certification_Kit
+#product.Image_Acquisition_Toolbox
+#product.Image_Processing_Toolbox
+#product.Industrial_Communication_Toolbox
+#product.Instrument_Control_Toolbox
+#product.LTE_Toolbox
+#product.Lidar_Toolbox
+#product.MATLAB
+#product.MATLAB_Coder
+#product.MATLAB_Compiler
+#product.MATLAB_Compiler_SDK
+#product.MATLAB_Parallel_Server
+#product.MATLAB_Production_Server
+#product.MATLAB_Report_Generator
+#product.MATLAB_Test
+#product.MATLAB_Web_App_Server
+#product.Mapping_Toolbox
+#product.Medical_Imaging_Toolbox
+#product.Mixed-Signal_Blockset
+#product.Model_Predictive_Control_Toolbox
+#product.Model-Based_Calibration_Toolbox
+#product.Motor_Control_Blockset
+#product.Navigation_Toolbox
+#product.Optimization_Toolbox
+#product.Parallel_Computing_Toolbox
+#product.Partial_Differential_Equation_Toolbox
+#product.Phased_Array_System_Toolbox
+#product.Polyspace_Bug_Finder
+#product.Polyspace_Bug_Finder_Server
+#product.Polyspace_Code_Prover
+#product.Polyspace_Code_Prover_Server
+#product.Polyspace_Test
+#product.Powertrain_Blockset
+#product.Predictive_Maintenance_Toolbox
+#product.RF_Blockset
+#product.RF_PCB_Toolbox
+#product.RF_Toolbox
+#product.ROS_Toolbox
+#product.Radar_Toolbox
+#product.Reinforcement_Learning_Toolbox
+#product.Requirements_Toolbox
+#product.Risk_Management_Toolbox
+#product.Robotics_System_Toolbox
+#product.Robust_Control_Toolbox
+#product.Satellite_Communications_Toolbox
+#product.Sensor_Fusion_and_Tracking_Toolbox
+#product.SerDes_Toolbox
+#product.Signal_Integrity_Toolbox
+#product.Signal_Processing_Toolbox
+#product.SimBiology
+#product.SimEvents
+#product.Simscape
+#product.Simscape_Battery
+#product.Simscape_Driveline
+#product.Simscape_Electrical
+#product.Simscape_Fluids
+#product.Simscape_Multibody
+#product.Simulink
+#product.Simulink_3D_Animation
+#product.Simulink_Check
+#product.Simulink_Code_Inspector
+#product.Simulink_Coder
+#product.Simulink_Compiler
+#product.Simulink_Control_Design
+#product.Simulink_Coverage
+#product.Simulink_Design_Optimization
+#product.Simulink_Design_Verifier
+#product.Simulink_Desktop_Real-Time
+#product.Simulink_Fault_Analyzer
+#product.Simulink_PLC_Coder
+#product.Simulink_Real-Time
+#product.Simulink_Report_Generator
+#product.Simulink_Test
+#product.SoC_Blockset
+#product.Spreadsheet_Link
+#product.Stateflow
+#product.Statistics_and_Machine_Learning_Toolbox
+#product.Symbolic_Math_Toolbox
+#product.System_Composer
+#product.System_Identification_Toolbox
+#product.Text_Analytics_Toolbox
+#product.UAV_Toolbox
+#product.Vehicle_Dynamics_Blockset
+#product.Vehicle_Network_Toolbox
+#product.Vision_HDL_Toolbox
+#product.WLAN_Toolbox
+#product.Wavelet_Toolbox
+#product.Wireless_HDL_Toolbox
+#product.Wireless_Testbench
+
+</string>
+		<key>LIC_INPUT</key>
+		<string>SERVER mathworks-1.lic.school.edu.au 27000
+SERVER mathworks-2.lic.school.edu.au 27000
+SERVER mathworks-3.lic.school.edu.au 27000 
+USE_SERVER
+</string>
+		<key>NAME</key>
+		<string>Matlab</string>
+		<key>DMG_LOC</key>
+		<string>PATH/TO/MATLAB/INSTALLER/DIRECTORY</string>
+		<key>MAJOR_VERSION</key>
+		<string>R2024b</string>
+		<key>ARCHITECTURE</key>
+		<!-- Must Input either AppleSilicon or IntelProcessor -->
+		<string>AppleSilicon</string>
+		</dict>
+		<key>ParentRecipe</key>
+		<string>local.download.Matlab</string>
+		<key>Process</key>
+		<array>
+			<dict>
+				<key>Arguments</key>
+				<dict>
+					<key>pkgdirs</key>
+					<dict>
+					</dict>
+					<key>pkgroot</key>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+				</dict>
+				<key>Processor</key>
+				<string>PkgRootCreator</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<dict>
+					<key>pkgdirs</key>
+					<dict>
+					</dict>
+					<key>pkgroot</key>
+					<string>%RECIPE_CACHE_DIR%/scripts</string>
+				</dict>
+				<key>Processor</key>
+				<string>PkgRootCreator</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<dict>
+					<key>overwrite</key>
+					<true/>
+					<key>source</key>
+					<string>%RECIPE_CACHE_DIR%/unpack/</string>
+					<key>target</key>
+					<string>%RECIPE_CACHE_DIR%/scripts/InstallForMacOS%ARCHITECTURE%/</string>
+				</dict>
+				<key>Processor</key>
+				<string>FileMover</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<dict>
+					<key>file_content</key>
+					<string>%INSTALLER_INPUT%</string>
+					<key>file_mode</key>
+					<string>0755</string>
+					<key>file_path</key>
+					<string>%RECIPE_CACHE_DIR%/scripts/installer_input.txt</string>
+				</dict>
+				<key>Processor</key>
+				<string>FileCreator</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<dict>
+					<key>file_content</key>
+					<string>%LIC_INPUT%</string>
+					<key>file_mode</key>
+					<string>0755</string>
+					<key>file_path</key>
+					<string>%RECIPE_CACHE_DIR%/scripts/license.dat</string>
+				</dict>
+				<key>Processor</key>
+				<string>FileCreator</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<dict>
+					<key>file_content</key>
+					<string><![CDATA[#!/bin/bash
+
+###################################################################################################
+# Script Name:  Install-MatLabUniversal.sh
+# By:  Zack Thompson / Created:  5/20/2024
+# Version:  1.0.2 / Updated:  5/20/2024 / By:  ZT
+#
+# Description:  "Installs" the appropriate installer type based on the systems' architecture.
+#
+###################################################################################################
+
+# Set up logging
+exec 1> >(tee -a "/var/log/Matlab_Install.Log")
+exec 2>&1
+
+echo "*****  Install MatLab Process:  START  *****"
+
+##################################################
+# Define Variables
+
+# Set working directory
+pkg_dir=$( /usr/bin/dirname "${0}" )
+
+##################################################
+# Bits staged...
+
+if [[ $3 != "/" ]]; then
+    echo "[Error] Target disk is not the startup disk."
+    echo "*****  Install MatLab Process:  FAILED  *****"
+    exit 1
+fi
+
+# Install MatLab with option file.
+# Inject dummy location to the installer.input file -- hacky, but works
+LANG=C /usr/bin/sed -Ei '' 's,(#)? ?licensePath=.*,'"licensePath=${pkg_dir}/installer_input.txt"',' "${pkg_dir}/installer_input.txt"
+
+# Determine which architecture type should be installed
+if [[ $( /usr/bin/arch ) == "arm64" ]]; then
+    arch_type="AppleSilicon"
+else
+    arch_type="IntelProcessor"
+fi
+
+# Set the installer directory path directly
+app_installer="${pkg_dir}/InstallForMacOS${arch_type}"
+
+# Verify the install binary exists and is executable
+if [[ ! -x "${app_installer}/install" ]]; then
+    echo "[Error] Install binary not found or not executable at: ${app_installer}/install"
+    echo "*****  Install MatLab Process:  FAILED  *****"
+    exit 1
+fi
+
+echo "Installing using: ${app_installer}/install"
+exit_status=$( "${app_installer}/install" -inputFile "${pkg_dir}/installer_input.txt" )
+exit_code=$?
+
+if [[ $exit_code != 0 || $exit_status == *"End - Unsuccessful"* ]]; then
+    echo "[Error] Install failed!"
+    echo "Exit Code: ${exit_code}"
+    echo "Results: ${exit_status}"
+    echo "*****  Install Matlab process:  FAILED  *****"
+    exit 2
+fi
+
+echo "*****  Install MatLab Process:  COMPLETE  *****"
+exit 0]]>
+					</string>
+					<key>file_mode</key>
+					<string>0755</string>
+					<key>file_path</key>
+					<string>%RECIPE_CACHE_DIR%/scripts/postinstall</string>
+				</dict>
+				<key>Processor</key>
+				<string>FileCreator</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<dict>
+					<key>pkg_request</key>
+					<dict>
+						<key>id</key>
+						<string>com.mathworks.installer</string>
+						<key>options</key>
+						<string>purge_ds_store</string>
+						<key>pkgname</key>
+						<string>%NAME%-%MAJOR_VERSION%</string>
+						<key>pkgroot</key>
+						<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+						<key>scripts</key>
+						<string>Scripts</string>
+						<key>version</key>
+						<string>%MAJOR_VERSION%</string>
+					</dict>
+				</dict>
+				<key>Processor</key>
+				<string>PkgCreator</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<dict>
+					<key>path_list</key>
+					<array>
+						<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+						<string>%RECIPE_CACHE_DIR%/scripts</string>
+					</array>
+				</dict>
+				<key>Processor</key>
+				<string>PathDeleter</string>
+			</dict>
+		</array>
+	</dict>
+</plist>
