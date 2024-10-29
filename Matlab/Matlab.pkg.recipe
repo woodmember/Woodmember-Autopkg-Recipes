@@ -281,6 +281,27 @@ fi
 # Inject dummy location to the installer.input file -- hacky, but works
 LANG=C /usr/bin/sed -Ei '' 's,(#)? ?licensePath=.*,'"licensePath=${pkg_dir}/installer_input.txt"',' "${pkg_dir}/installer_input.txt"
 
+# Determine which architecture type should be installed
+if [[ $( /usr/bin/arch ) == "arm64" ]]; then
+    arch_type="AppleSilicon"
+else
+    arch_type="IntelProcessor"
+fi
+
+# Set the installer directory path directly
+app_installer="${pkg_dir}/InstallForMacOS${arch_type}"
+
+# Verify the install binary exists and is executable
+if [[ ! -x "${app_installer}/install" ]]; then
+    echo "[Error] Install binary not found or not executable at: ${app_installer}/install"
+    echo "*****  Install MatLab Process:  FAILED  *****"
+    exit 1
+fi
+
+echo "Installing using: ${app_installer}/install"
+exit_status=$( "${app_installer}/install" -inputFile "${pkg_dir}/installer_input.txt" )
+exit_code=$?
+
 # Copy license file to installation directory
 echo "*****  License File Copy Process:  START  *****"
 license_source="${pkg_dir}/license.dat"
@@ -313,27 +334,6 @@ else
     echo "License file successfully copied"
     echo "*****  License File Copy Process:  COMPLETE  *****"
 fi
-
-# Determine which architecture type should be installed
-if [[ $( /usr/bin/arch ) == "arm64" ]]; then
-    arch_type="AppleSilicon"
-else
-    arch_type="IntelProcessor"
-fi
-
-# Set the installer directory path directly
-app_installer="${pkg_dir}/InstallForMacOS${arch_type}"
-
-# Verify the install binary exists and is executable
-if [[ ! -x "${app_installer}/install" ]]; then
-    echo "[Error] Install binary not found or not executable at: ${app_installer}/install"
-    echo "*****  Install MatLab Process:  FAILED  *****"
-    exit 1
-fi
-
-echo "Installing using: ${app_installer}/install"
-exit_status=$( "${app_installer}/install" -inputFile "${pkg_dir}/installer_input.txt" )
-exit_code=$?
 
 if [[ $exit_code != 0 || $exit_status == *"End - Unsuccessful"* ]]; then
     echo "[Error] Install failed!"
