@@ -302,6 +302,14 @@ echo "Installing using: ${app_installer}/install"
 exit_status=$( "${app_installer}/install" -inputFile "${pkg_dir}/installer_input.txt" )
 exit_code=$?
 
+if [[ $exit_code != 0 || $exit_status == *"End - Unsuccessful"* ]]; then
+    echo "[Error] Install failed!"
+    echo "Exit Code: ${exit_code}"
+    echo "Results: ${exit_status}"
+    echo "*****  Install Matlab process:  FAILED  *****"
+    exit 2
+fi
+
 # Copy license file to installation directory
 echo "*****  License File Copy Process:  START  *****"
 license_source="${pkg_dir}/license.dat"
@@ -333,14 +341,6 @@ if [[ $copy_exit_code != 0 ]]; then
 else
     echo "License file successfully copied"
     echo "*****  License File Copy Process:  COMPLETE  *****"
-fi
-
-if [[ $exit_code != 0 || $exit_status == *"End - Unsuccessful"* ]]; then
-    echo "[Error] Install failed!"
-    echo "Exit Code: ${exit_code}"
-    echo "Results: ${exit_status}"
-    echo "*****  Install Matlab process:  FAILED  *****"
-    exit 2
 fi
 
 echo "*****  Install MatLab Process:  COMPLETE  *****"
