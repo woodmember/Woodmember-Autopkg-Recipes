@@ -3,7 +3,7 @@
 <plist version="1.0">
 	<dict>
 		<key>Identifier</key>
-		<string>local.pkg.Matlab</string>
+		<string>com.github.Woodmember-Autopkg-Recipes.pkg.Matlab</string>
 		<key>Description</key>
 		<string>
 Downloads and packages the latest version of Matlab from a local file share.
