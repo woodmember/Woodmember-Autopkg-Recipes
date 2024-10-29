@@ -249,8 +249,11 @@ USE_SERVER
 
 ###################################################################################################
 # Script Name:  Install-MatLabUniversal.sh
-# By:  Zack Thompson / Created:  5/20/2024
-# Version:  1.0.3 / Updated:  5/20/2024 / By:  ZT
+# By:  Daniel Woodcock (Woodmember) / Created:  10/30/2024
+# Version:  1.0.0 / Updated:  10/30/2024 / By:  DW
+#
+# Based on the original work by Zack Thompson
+# This script has been modified with thanks to the original author
 #
 # Description:  "Installs" the appropriate installer type based on the systems' architecture.
 #
@@ -310,7 +313,9 @@ if [[ $exit_code != 0 || $exit_status == *"End - Unsuccessful"* ]]; then
     exit 2
 fi
 
-# Copy license file to installation directory
+echo "*****  Install MatLab Process:  COMPLETE  *****"
+
+# Now that MATLAB is installed, copy the license file
 echo "*****  License File Copy Process:  START  *****"
 license_source="${pkg_dir}/license.dat"
 license_dest="/Applications/MATLAB_R2024b.app/"
@@ -343,7 +348,6 @@ else
     echo "*****  License File Copy Process:  COMPLETE  *****"
 fi
 
-echo "*****  Install MatLab Process:  COMPLETE  *****"
 exit 0]]>
 					</string>
 					<key>file_mode</key>
