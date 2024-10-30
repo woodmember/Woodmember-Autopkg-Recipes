@@ -30,7 +30,7 @@ agreeToLicense=yes
 outputFile=/var/log/matlab_installation.log
 mode=silent
 outputFile=/Library/Logs/MATLAB_%MAJOR_VERSION%_Install.log
-licensePath=${pkgDir}/license.dat
+licensePath=/Applications/%NAME%_%MAJOR_VERSION%.app/license.dat
 lmgrFiles=false
 
 #product.5G_Toolbox
@@ -318,7 +318,7 @@ echo "*****  Install MatLab Process:  COMPLETE  *****"
 # Now that MATLAB is installed, copy the license file
 echo "*****  License File Copy Process:  START  *****"
 license_source="${pkg_dir}/license.dat"
-license_dest="/Applications/MATLAB_R2024b.app/"
+license_dest="/Applications/%NAME%_%MAJOR_VERSION%.app/"
 
 if [[ ! -f "${license_source}" ]]; then
     echo "[Error] License file not found at: ${license_source}"
