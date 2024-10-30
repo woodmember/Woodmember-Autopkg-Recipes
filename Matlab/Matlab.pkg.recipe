@@ -30,7 +30,7 @@ agreeToLicense=yes
 outputFile=/var/log/matlab_installation.log
 mode=silent
 outputFile=/Library/Logs/MATLAB_%MAJOR_VERSION%_Install.log
-licensePath=/Applications/%NAME%_%MAJOR_VERSION%.app/license.dat
+licensePath=/Applications/Library/Management/%NAME%/%NAME%_%MAJOR_VERSION%/license.dat
 lmgrFiles=false
 
 #product.5G_Toolbox
