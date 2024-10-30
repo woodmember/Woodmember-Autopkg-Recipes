@@ -270,9 +270,54 @@ echo "*****  Install MatLab Process:  START  *****"
 
 # Set working directory
 pkg_dir=$( /usr/bin/dirname "${0}" )
+management_dir="/Library/Management/%NAME%/%NAME%_%MAJOR_VERSION%"
 
 ##################################################
-# Bits staged...
+# License File Management
+
+echo "*****  License File Management Process:  START  *****"
+
+# Check and remove existing management directory if it exists
+if [[ -d "${management_dir}" ]]; then
+    echo "Removing existing management directory: ${management_dir}"
+    /bin/rm -rf "${management_dir}"
+    if [[ $? -ne 0 ]]; then
+        echo "[Error] Failed to remove existing management directory"
+        echo "*****  License File Management Process:  FAILED  *****"
+        exit 1
+    fi
+fi
+
+# Create new management directory
+echo "Creating management directory: ${management_dir}"
+/bin/mkdir -p "${management_dir}"
+if [[ $? -ne 0 ]]; then
+    echo "[Error] Failed to create management directory"
+    echo "*****  License File Management Process:  FAILED  *****"
+    exit 1
+fi
+
+# Copy license file to management directory
+echo "Copying license file to management directory"
+license_source="${pkg_dir}/license.dat"
+
+if [[ ! -f "${license_source}" ]]; then
+    echo "[Error] License file not found at: ${license_source}"
+    echo "*****  License File Management Process:  FAILED  *****"
+    exit 1
+fi
+
+/bin/cp "${license_source}" "${management_dir}/"
+if [[ $? -ne 0 ]]; then
+    echo "[Error] Failed to copy license file to management directory"
+    echo "*****  License File Management Process:  FAILED  *****"
+    exit 1
+fi
+
+echo "*****  License File Management Process:  COMPLETE  *****"
+
+##################################################
+# MatLab Installation
 
 if [[ $3 != "/" ]]; then
     echo "[Error] Target disk is not the startup disk."
@@ -314,40 +359,6 @@ if [[ $exit_code != 0 || $exit_status == *"End - Unsuccessful"* ]]; then
 fi
 
 echo "*****  Install MatLab Process:  COMPLETE  *****"
-
-# Now that MATLAB is installed, copy the license file
-echo "*****  License File Copy Process:  START  *****"
-license_source="${pkg_dir}/license.dat"
-license_dest="/Applications/%NAME%_%MAJOR_VERSION%.app/"
-
-if [[ ! -f "${license_source}" ]]; then
-    echo "[Error] License file not found at: ${license_source}"
-    echo "*****  License File Copy Process:  FAILED  *****"
-    exit 1
-fi
-
-if [[ ! -d "${license_dest}" ]]; then
-    echo "[Error] MATLAB application directory not found at: ${license_dest}"
-    echo "*****  License File Copy Process:  FAILED  *****"
-    exit 1
-fi
-
-echo "Copying license file from: ${license_source}"
-echo "To destination: ${license_dest}"
-
-/bin/cp "${license_source}" "${license_dest}" 
-copy_exit_code=$?
-
-if [[ $copy_exit_code != 0 ]]; then
-    echo "[Error] Failed to copy license file"
-    echo "Exit Code: ${copy_exit_code}"
-    echo "*****  License File Copy Process:  FAILED  *****"
-    exit 1
-else
-    echo "License file successfully copied"
-    echo "*****  License File Copy Process:  COMPLETE  *****"
-fi
-
 exit 0]]>
 					</string>
 					<key>file_mode</key>
