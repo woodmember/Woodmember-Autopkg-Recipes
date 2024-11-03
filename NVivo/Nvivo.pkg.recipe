@@ -15,9 +15,7 @@
 		<key>NAME</key>
 		<string>NVivo</string>
 		<key>MAJOR_VERSION</key>
-		<string>14</string>
-		<key>NVIVOURL</key>
-		<string>https://download.qsrinternational.com/Software/NVivo14forMac/NVivo.dmg</string>
+		<string>15</string>
 	</dict>
 	<key>ParentRecipe</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.download.NVivo</string>
