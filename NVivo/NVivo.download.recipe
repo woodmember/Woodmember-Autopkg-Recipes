@@ -15,7 +15,7 @@
 		<key>NAME</key>
 		<string>NVivo</string>
 		<key>MAJOR_VERSION</key>
-		<string>15</string>
+		<string>12</string>
 		<key>NVIVOURL</key>
 		<string>https://download.qsrinternational.com/Software/NVivo%MAJOR_VERSION%forMac/NVivo.dmg</string>
 	</dict>
