@@ -14,8 +14,10 @@
 	<dict>
 		<key>NAME</key>
 		<string>NVivo</string>
+		<key>MAJOR_VERSION</key>
+		<string>15</string>
 		<key>NVIVOURL</key>
-		<string>https://download.qsrinternational.com/Software/NVivo14forMac/NVivo.dmg</string>
+		<string>https://download.qsrinternational.com/Software/NVivo%MAJOR_VERSION%forMac/NVivo.dmg</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.2.0</string>
