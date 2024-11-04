@@ -297,22 +297,6 @@ pkg_dir=$( /usr/bin/dirname "${0}" )
 management_dir="/tmp/%NAME%_%MAJOR_VERSION%"
 
 ##################################################
-# License File Management
-
-echo "*****  License File Management Process:  START  *****"
-
-# Check and remove existing management directory if it exists
-if [[ -d "${management_dir}" ]]; then
-    echo "Removing existing management directory: ${management_dir}"
-    /bin/rm -rf "${management_dir}"
-    if [[ $? -ne 0 ]]; then
-        echo "[Error] Failed to remove existing management directory"
-        echo "*****  License File Management Process:  FAILED  *****"
-        exit 1
-    fi
-fi
-
-echo "*****  License File Management Process:  COMPLETE  *****"
 
 ##################################################
 # MatLab Installation
