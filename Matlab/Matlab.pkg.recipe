@@ -209,7 +209,7 @@ USE_SERVER
 					<dict>
 					</dict>
 					<key>pkgroot</key>
-					<string>%RECIPE_CACHE_DIR%/tmp</string>
+					<string>%RECIPE_CACHE_DIR%/pkgroot/tmp</string>
 				</dict>
 				<key>Processor</key>
 				<string>PkgRootCreator</string>
@@ -221,7 +221,7 @@ USE_SERVER
 					<dict>
 					</dict>
 					<key>pkgroot</key>
-					<string>%RECIPE_CACHE_DIR%/tmp/%NAME%_%MAJOR_VERSION%</string>
+					<string>%RECIPE_CACHE_DIR%/pkgroot/tmp/%NAME%_%MAJOR_VERSION%</string>
 				</dict>
 				<key>Processor</key>
 				<string>PkgRootCreator</string>
