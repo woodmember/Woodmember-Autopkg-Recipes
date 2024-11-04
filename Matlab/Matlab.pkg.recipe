@@ -205,6 +205,30 @@ USE_SERVER
 			<dict>
 				<key>Arguments</key>
 				<dict>
+					<key>pkgdirs</key>
+					<dict>
+					</dict>
+					<key>pkgroot</key>
+					<string>%RECIPE_CACHE_DIR%/tmp</string>
+				</dict>
+				<key>Processor</key>
+				<string>PkgRootCreator</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<dict>
+					<key>pkgdirs</key>
+					<dict>
+					</dict>
+					<key>pkgroot</key>
+					<string>%RECIPE_CACHE_DIR%/tmp/%NAME%_%MAJOR_VERSION%</string>
+				</dict>
+				<key>Processor</key>
+				<string>PkgRootCreator</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<dict>
 					<key>overwrite</key>
 					<true/>
 					<key>source</key>
@@ -223,7 +247,7 @@ USE_SERVER
 					<key>file_mode</key>
 					<string>0755</string>
 					<key>file_path</key>
-					<string>%RECIPE_CACHE_DIR%/scripts/installer_input.txt</string>
+					<string>%RECIPE_CACHE_DIR%/tmp/%NAME%_%MAJOR_VERSION%/installer_input.txt</string>
 				</dict>
 				<key>Processor</key>
 				<string>FileCreator</string>
@@ -236,7 +260,7 @@ USE_SERVER
 					<key>file_mode</key>
 					<string>0755</string>
 					<key>file_path</key>
-					<string>%RECIPE_CACHE_DIR%/scripts/license.dat</string>
+					<string>%RECIPE_CACHE_DIR%/tmp/%NAME%_%MAJOR_VERSION%/license.dat</string>
 				</dict>
 				<key>Processor</key>
 				<string>FileCreator</string>
@@ -270,7 +294,7 @@ echo "*****  Install MatLab Process:  START  *****"
 
 # Set working directory
 pkg_dir=$( /usr/bin/dirname "${0}" )
-management_dir="/Library/Management/%NAME%/%NAME%_%MAJOR_VERSION%"
+management_dir="/tmp/%NAME%_%MAJOR_VERSION%"
 
 ##################################################
 # License File Management
@@ -288,32 +312,6 @@ if [[ -d "${management_dir}" ]]; then
     fi
 fi
 
-# Create new management directory
-echo "Creating management directory: ${management_dir}"
-/bin/mkdir -p "${management_dir}"
-if [[ $? -ne 0 ]]; then
-    echo "[Error] Failed to create management directory"
-    echo "*****  License File Management Process:  FAILED  *****"
-    exit 1
-fi
-
-# Copy license file to management directory
-echo "Copying license file to management directory"
-license_source="${pkg_dir}/license.dat"
-
-if [[ ! -f "${license_source}" ]]; then
-    echo "[Error] License file not found at: ${license_source}"
-    echo "*****  License File Management Process:  FAILED  *****"
-    exit 1
-fi
-
-/bin/cp "${license_source}" "${management_dir}/"
-if [[ $? -ne 0 ]]; then
-    echo "[Error] Failed to copy license file to management directory"
-    echo "*****  License File Management Process:  FAILED  *****"
-    exit 1
-fi
-
 echo "*****  License File Management Process:  COMPLETE  *****"
 
 ##################################################
@@ -327,7 +325,7 @@ fi
 
 # Install MatLab with option file.
 # Inject dummy location to the installer.input file -- hacky, but works
-LANG=C /usr/bin/sed -Ei '' 's,(#)? ?licensePath=.*,'"licensePath=${pkg_dir}/installer_input.txt"',' "${pkg_dir}/installer_input.txt"
+LANG=C /usr/bin/sed -Ei '' 's,(#)? ?licensePath=.*,'"licensePath=${management_dir}/installer_input.txt"',' "${management_dir}/installer_input.txt"
 
 # Determine which architecture type should be installed
 if [[ $( /usr/bin/arch ) == "arm64" ]]; then
@@ -347,7 +345,7 @@ if [[ ! -x "${app_installer}/install" ]]; then
 fi
 
 echo "Installing using: ${app_installer}/install"
-exit_status=$( "${app_installer}/install" -inputFile "${pkg_dir}/installer_input.txt" )
+exit_status=$( "${app_installer}/install" -inputFile "${management_dir}/installer_input.txt" )
 exit_code=$?
 
 if [[ $exit_code != 0 || $exit_status == *"End - Unsuccessful"* ]]; then
