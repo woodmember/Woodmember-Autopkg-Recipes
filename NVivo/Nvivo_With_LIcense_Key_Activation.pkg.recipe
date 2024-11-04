@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.NVivo_With_License_Key_Activation</string>
+    <key>Description</key>
+    <string>Downloads and packages Nvivo from the provided URL. 
+
+You can obtain Nvivo 14 and 15 URL from the following sites:
+https://techcenter.qsrinternational.com/Content/nm14/nm14_standard_installation.htm
+https://techcenter.qsrinternational.com/Content/nm15/nm15_standard_installation.htm
+
+IMPORTANT: Before using this recipe, you must:
+1. Set your NVivo license key in the NVIVO_LKEY input variable
+2. Update the ACTIVATION_INFO input variable with your organization's details. 
+   - Only the CAPITALIZED fields in the XML are mandatory
+   - Replace the capitalized placeholder text with your actual information
+   - Other fields can be left empty or removed from the XML structure
+   - Maintain the exact XML structure and formatting
+
+Example: Replace "YOUR_FIRST_NAME" with "John", "YOUR_LAST_NAME" with "Smith", etc.</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>NVivo</string>
+        <key>MAJOR_VERSION</key>
+        <string>15</string>
+        <key>NVIVO_LKEY</key>
+        <string>XXXX-XXXXX-XXXXX-XXXXX-XXXXX</string>
+        <key>ACTIVATION_INFO</key>
+        <string>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;Activation&gt;
+  &lt;Request&gt;
+    &lt;FirstName&gt;YOUR_FIRST_NAME&lt;/FirstName&gt;
+    &lt;LastName&gt;YOUR_LAST_NAME&lt;/LastName&gt;
+    &lt;Email&gt;YOUR_EMAIL&lt;/Email&gt;
+    &lt;Phone&gt;YOUR_PHONE_NUMBER&lt;/Phone&gt;
+    &lt;Fax&gt;&lt;/Fax&gt;
+    &lt;JobTitle&gt;YOUR_JOB_TITLE&lt;/JobTitle&gt;
+    &lt;Sector&gt;&lt;/Sector&gt;
+    &lt;Industry&gt;YOUR_INDUSTRY&lt;/Industry&gt;
+    &lt;Role&gt;&lt;/Role&gt;
+    &lt;Department&gt;YOUR_DEPARTMENT&lt;/Department&gt;
+    &lt;Organization&gt;YOUR_ORGANIZATION_NAME&lt;/Organization&gt;
+    &lt;City&gt;YOUR_CITY&lt;/City&gt;
+    &lt;Country&gt;YOUR_COUNTRY&lt;/Country&gt;
+    &lt;State&gt;YOUR_STATE_OR_PROVINCE&lt;/State&gt;
+  &lt;/Request&gt;
+&lt;/Activation&gt;</string>
+    </dict>
+    <key>ParentRecipe</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.NVivo</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>AppDmgVersioner</string>
+            <key>Arguments</key>
+            <dict>
+                <key>dmg_path</key>
+                <string>%pathname%</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>PkgRootCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkgroot</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%</string>
+                <key>pkgdirs</key>
+                <dict>
+                    <key>Applications</key>
+                    <string>0775</string>
+                    <key>Scripts</key>
+                    <string>0755</string>
+                </dict>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%/Scripts/postinstall</string>
+                <key>file_mode</key>
+                <string>0755</string>
+                <key>file_content</key>
+                <string>#!/bin/bash
+
+license_key="%NVIVO_LKEY%"
+dst="${2}"
+tgt="${3}"
+
+function setPrefsUser {
+    domain="${tgt}/${home}/Library/Preferences/com.qsrinternational.NVivo-%MAJOR_VERSION%"
+    defaults write "${domain}" "SUEnableAutomaticChecks" -bool false
+    chown ${uid}:${gid} "${domain}.plist"
+}
+
+for RecordName in `dscl -f "${3}/var/db/dslocal/nodes/Default" localonly -list /Local/Target/Users GeneratedUID | grep -v 'FFFFEEEE-DDDD-CCCC-BBBB' | awk '{print $1}'`
+do
+    uid=`dscl -f "${3}/var/db/dslocal/nodes/Default" localonly -read /Local/Target/Users/${RecordName} UniqueID | awk -F ': ' '{print $NF}'`
+    gid=`dscl -f "${3}/var/db/dslocal/nodes/Default" localonly -read /Local/Target/Users/${RecordName} PrimaryGroupID | awk -F ': ' '{print $NF}'`
+    home=`dscl -f "${3}/var/db/dslocal/nodes/Default" localonly -read /Local/Target/Users/${RecordName} NFSHomeDirectory | awk -F ': ' '{print $NF}'`
+    if [ -n "${home}" ]
+    then
+        setPrefsUser
+    fi
+done
+
+uid=0
+gid=0
+home="/System/Library/User Template/Non_localized"
+setPrefsUser
+
+/Applications/NVivo\ %MAJOR_VERSION%.app/Contents/MacOS/NVivo\ %MAJOR_VERSION% -deactivate
+/Applications/NVivo\ %MAJOR_VERSION%.app/Contents/MacOS/NVivo\ %MAJOR_VERSION% -initialize ${license_key} -activate ./Activation.xml
+
+exit 0</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%/Scripts/Activation.xml</string>
+                <key>file_mode</key>
+                <string>0644</string>
+                <key>file_content</key>
+                <string>%ACTIVATION_INFO%</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%/%app_name%</string>
+                <key>destination_path</key>
+                <string>%pkgroot%/Applications/%app_name%</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>PkgCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_request</key>
+                <dict>
+                    <key>pkgname</key>
+                    <string>%NAME%-%version%</string>
+                    <key>version</key>
+                    <string>%version%</string>
+                    <key>id</key>
+                    <string>%bundleid%</string>
+                    <key>options</key>
+                    <string>purge_ds_store</string>
+                    <key>scripts</key>
+                    <string>%RECIPE_CACHE_DIR%/%NAME%/Scripts</string>
+                    <key>chown</key>
+                    <array>
+                        <dict>
+                            <key>path</key>
+                            <string>Applications</string>
+                            <key>user</key>
+                            <string>root</string>
+                            <key>group</key>
+                            <string>admin</string>
+                        </dict>
+                    </array>
+                </dict>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>PathDeleter</string>
+            <key>Arguments</key>
+            <dict>
+                <key>path_list</key>
+                <array>
+                    <string>%RECIPE_CACHE_DIR%/%NAME%</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
