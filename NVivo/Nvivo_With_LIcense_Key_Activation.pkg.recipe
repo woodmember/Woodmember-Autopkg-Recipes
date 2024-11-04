@@ -73,8 +73,6 @@ Example: Replace "YOUR_FIRST_NAME" with "John", "YOUR_LAST_NAME" with "Smith", e
                 <dict>
                     <key>Applications</key>
                     <string>0775</string>
-                    <key>Scripts</key>
-                    <string>0755</string>
                 </dict>
             </dict>
         </dict>
