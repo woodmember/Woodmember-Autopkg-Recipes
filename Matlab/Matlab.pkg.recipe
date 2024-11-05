@@ -270,6 +270,23 @@ USE_SERVER
 				<dict>
 					<key>file_content</key>
 					<string><![CDATA[#!/bin/bash
+rm -frv /tmp/%NAME%_%MAJOR_VERSION%/
+exit 0
+]]>
+					</string>
+					<key>file_mode</key>
+					<string>0755</string>
+					<key>file_path</key>
+					<string>%RECIPE_CACHE_DIR%/scripts/preinstall</string>
+				</dict>
+				<key>Processor</key>
+				<string>FileCreator</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<dict>
+					<key>file_content</key>
+					<string><![CDATA[#!/bin/bash
 
 ###################################################################################################
 # Script Name:  Install-MatLabUniversal.sh
