@@ -247,7 +247,7 @@ USE_SERVER
 					<key>file_mode</key>
 					<string>0755</string>
 					<key>file_path</key>
-					<string>%RECIPE_CACHE_DIR%/tmp/%NAME%_%MAJOR_VERSION%/installer_input.txt</string>
+					<string>%RECIPE_CACHE_DIR%/pkgroot/tmp/%NAME%_%MAJOR_VERSION%/installer_input.txt</string>
 				</dict>
 				<key>Processor</key>
 				<string>FileCreator</string>
@@ -260,7 +260,7 @@ USE_SERVER
 					<key>file_mode</key>
 					<string>0755</string>
 					<key>file_path</key>
-					<string>%RECIPE_CACHE_DIR%/tmp/%NAME%_%MAJOR_VERSION%/license.dat</string>
+					<string>%RECIPE_CACHE_DIR%/pkgroot/tmp/%NAME%_%MAJOR_VERSION%/license.dat</string>
 				</dict>
 				<key>Processor</key>
 				<string>FileCreator</string>
