@@ -326,7 +326,7 @@ fi
 
 # Install MatLab with option file.
 # Inject dummy location to the installer.input file -- hacky, but works
-LANG=C /usr/bin/sed -Ei '' 's,(#)? ?licensePath=.*,'"licensePath=${management_dir}/installer_input.txt"',' "${management_dir}/installer_input.txt"
+LANG=C /usr/bin/sed -Ei '' 's,(#)? ?licensePath=.*,'"licensePath=${management_dir}/license.dat"',' "${management_dir}/license.dat"
 
 # Determine which architecture type should be installed
 if [[ $( /usr/bin/arch ) == "arm64" ]]; then
