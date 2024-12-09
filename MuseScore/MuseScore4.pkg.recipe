@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Downloads MuseScore and creates a package installer for the app.</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember.pkg.MuseScore3</string>
+	<string>com.github.Woodmember.pkg.MuseScore4</string>
 	<key>Input</key>
 	<dict/>
 	<key>MinimumVersion</key>
