@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads MuseScore and creates a package installer for the app.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember.pkg.MuseScore3</string>
+	<key>Input</key>
+	<dict/>
+	<key>MinimumVersion</key>
+	<string>1.0.0</string>
+	<key>ParentRecipe</key>
+	<string>com.github.dataJAR-recipes.download.MuseScore 4</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>AppPkgCreator</string>
+			<key>Arguments</key>
+			<dict/>
+		</dict>
+	</array>
+</dict>
+</plist>
