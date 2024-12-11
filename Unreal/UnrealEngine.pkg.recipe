@@ -58,7 +58,7 @@
 				<key>source_path</key>
 				<string>%UNREALPATH%</string>
 				<key>destination_path</key>
-				<string>%RECIPE_CACHE_DIR%/pkgroot/%NAME%-%UNREALVERSION%/Users/Shared/Epic Games/UE_5.3/</string>
+				<string>%RECIPE_CACHE_DIR%/pkgroot/%NAME%-%UNREALVERSION%/Users/Shared/Epic Games/UE_%UNREALVERSION%/</string>
 			</dict>
 			<key>Processor</key>
 			<string>Copier</string>
