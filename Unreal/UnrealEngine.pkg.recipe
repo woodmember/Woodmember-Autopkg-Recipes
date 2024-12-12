@@ -147,7 +147,7 @@ exit 0</string>
 							<key>options</key>
 							<string>purge_ds_store</string>
 							<key>pkgdir</key>
-							<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+							<string>%RECIPE_CACHE_DIR%</string>
 							<key>pkgroot</key>
 							<string>%RECIPE_CACHE_DIR%/pkgroot/%NAME%-%UNREALVERSION%</string>
 							<key>version</key>
@@ -157,7 +157,7 @@ exit 0</string>
 						</dict>
 					</dict>
 		</dict>
-<!--		<dict>
+		<dict>
 			<key>Processor</key>
 			<string>PathDeleter</string>
 			<key>Arguments</key>
@@ -167,7 +167,7 @@ exit 0</string>
 					<string>%RECIPE_CACHE_DIR%/pkgroot/</string>
 				</array>
 			</dict>
-		</dict>  						-->																
+		</dict>  																				
 	</array>
 </dict>
 </plist>
