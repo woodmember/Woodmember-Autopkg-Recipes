@@ -104,13 +104,13 @@ exit 0</string>
 	                <string>#!/bin/bash 
  
 # get latest version 
-URVERSION=`ls /Users/Shared/Epic\ Games/` 
+URVERSION="%UNREALVERSION%"
  
 # symlink to Applications 
-ln -s /Users/Shared/Epic\ Games/"${URVERSION}"/Engine/Binaries/Mac/UE4Editor.app /Applications/Unreal\ Editor.app 
- 
+ln -s /Users/Shared/Epic\ Games/UE_"${URVERSION}"/Engine/Binaries/Mac/UE4Editor.app /Applications/Unreal\ Editor.app
+
 ## Allows access to create AutomationTool folder when building apps 
-mkdir /Users/Shared/Epic\ Games/"${URVERSION}"/Engine/Programs/AutomationTool 
+mkdir -p /Users/Shared/Epic\ Games/"${URVERSION}"/Engine/Programs/AutomationTool 
 chmod a+rwx /Users/Shared/Epic\ Games/"${URVERSION}"/Engine/Programs/AutomationTool 
  
 exit 0</string>
