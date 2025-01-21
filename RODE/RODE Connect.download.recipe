@@ -3,13 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>Comment</key>
+	<string>Created with Recipe Robot v2.2.0 (https://github.com/homebysix/recipe-robot)</string>
+	<key>Description</key>
 	<string>Downloads the latest version of RODE Connect.</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.download.RODEConnect</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
-		<string>RODE Connect</string>
+		<string>RØDE Connect</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>
@@ -62,7 +64,7 @@
 					<string>Apple Root CA</string>
 				</array>
 				<key>input_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%/RØDE Connect.pkg</string>
+				<string>%found_filename%</string>
 			</dict>
 			<key>Processor</key>
 			<string>CodeSignatureVerifier</string>
@@ -73,7 +75,7 @@
 				<key>destination_path</key>
 				<string>%RECIPE_CACHE_DIR%/unpack</string>
 				<key>flat_pkg_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%/RØDE Connect.pkg</string>
+				<string>%found_filename%</string>
 				<key>purge_destination</key>
 				<true/>
 			</dict>
@@ -93,7 +95,7 @@
 			<key>Processor</key>
 			<string>PkgPayloadUnpacker</string>
 		</dict>
-<!--		<dict>
+		<dict>
 			<key>Arguments</key>
 			<dict>
 				<key>input_plist_path</key>
@@ -103,7 +105,7 @@
 			</dict>
 			<key>Processor</key>
 			<string>Versioner</string>
-		</dict> -->
+		</dict>
         <dict>
             <key>Processor</key>
             <string>PlistReader</string>
