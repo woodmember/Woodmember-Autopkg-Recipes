@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of RODE Connect.</string>
 	<key>Identifier</key>
-	<string>local.download.RODEConnect</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.RODEConnect</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
