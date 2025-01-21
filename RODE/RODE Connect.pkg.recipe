@@ -14,7 +14,7 @@
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>
 	<key>ParentRecipe</key>
-	<string>local.download.RODEConnect</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.RODEConnect</string>
 	<key>Process</key>
 	<array>
     	<dict>
