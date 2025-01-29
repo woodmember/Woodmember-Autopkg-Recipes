@@ -160,7 +160,7 @@ fi
 
 # Activate application
 writelog "Licensing %NAME% %VER%..."
-PIT_FILE=$(/usr/bin/find "/Library/Application Support/Autodesk" -name MudboxConfig.pit)
+PIT_FILE=$(/usr/bin/find "/Library/Application Support/Autodesk" -maxdepth 4 -name MudboxConfig.pit)
 if ! "/Library/Application Support/Autodesk/AdskLicensing/Current/helper/AdskLicensingInstHelper" \
     register \
     --cf "${PIT_FILE}" \
