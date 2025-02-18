@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Packages Reaper from a local DMG</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember.pkg.Reaper</string>
+	<string>com.github.Woodmember.pkg.Reaper_BYO</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
