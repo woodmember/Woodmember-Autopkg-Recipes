@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Packages Reaper from a local DMG</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember.pkg.Reaper</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Reaper</string>
+		<key>DMGLOCATION</key>
+		<string>/PATH/TO/YOUR/REAPER/.DMG</string>
+		<!-- NOTE: Recipe will find and use a dmg in the local file dirctory you point thsi at. Ensure that the reaper .DMG is a directory of its own. -->
+	</dict>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pattern</key>
+				<string>%DMGLOCATION%/.dmg</string>
+			</dict>
+			<key>Processor</key>
+			<string>FileFinder</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>input_plist_path</key>
+				<string>%found_filename%/REAPER.app/Contents/Info.plist</string>
+			</dict>
+			<key>Processor</key>
+			<string>Versioner</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>app_path</key>
+				<string>%found_filename%/REAPER.app</string>
+				<key>pkg_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+			</dict>
+			<key>Processor</key>
+			<string>AppPkgCreator</string>
+		</dict>
+	</array>
+</dict>
+</plist>
