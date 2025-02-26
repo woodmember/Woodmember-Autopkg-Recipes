@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest version of GraphPad Prism and creates a package with enterprise license key. Add your serial to the PRISM_SERIAL variable. 
+  Based on the original recipes by rtrouton.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember.pkg.PrismWithLicense</string>
+	<key>Input</key>
+	<dict>
+		<key>APP_FILENAME</key>
+		<string>Prism %MAJOR_VERSION%</string>
+		<key>BUNDLE_ID</key>
+		<string>com.GraphPad.Prism</string>
+		<key>NAME</key>
+		<string>Prism</string>
+		<key>PRISM_SERIAL</key>
+		<string>YOUR_LICENSE_KEY_HERE</string>
+		<key>MAJOR_VERSION</key>
+		<string>10</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.0.0</string>
+	<key>ParentRecipe</key>
+	<string>com.github.rtrouton.download.Prism</string>
+	<key>Process</key>
+	<array>
+		<!-- Create package root for the application -->
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgdirs</key>
+				<dict>
+					<key>Applications</key>
+					<string>0775</string>
+				</dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%</string>
+			</dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
+		</dict>
+		<!-- Create directory for scripts -->
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgdirs</key>
+				<dict>
+					<key>Scripts</key>
+					<string>0755</string>
+				</dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts</string>
+			</dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
+		</dict>
+		<!-- Copy application -->
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%/Applications/%APP_FILENAME%.app</string>
+				<key>source_path</key>
+				<string>%pathname%/%APP_FILENAME%.app</string>
+			</dict>
+			<key>Processor</key>
+			<string>Copier</string>
+		</dict>
+		<!-- Create license XML file -->
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>file_content</key>
+				<string>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;configuration&gt;
+	&lt;silent-activation&gt;true&lt;/silent-activation&gt;
+	&lt;serial-number&gt;%PRISM_SERIAL%&lt;/serial-number&gt;
+	&lt;check-for-updates&gt;false&lt;/check-for-updates&gt;
+&lt;/configuration&gt;</string>
+				<key>file_mode</key>
+				<string>0644</string>
+				<key>file_path</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts/prism-config.xml</string>
+			</dict>
+			<key>Processor</key>
+			<string>FileCreator</string>
+		</dict>
+		<!-- Create preinstall script -->
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>file_content</key>
+				<string>#!/bin/bash
+wd="$(dirname "$0")"
+ditto "${wd}/prism-config.xml" "${3}/Applications/prism-config.xml"
+chflags hidden "${3}/Applications/prism-config.xml"
+exit 0</string>
+				<key>file_mode</key>
+				<string>0755</string>
+				<key>file_path</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts/preinstall</string>
+			</dict>
+			<key>Processor</key>
+			<string>FileCreator</string>
+		</dict>
+		<!-- Create package -->
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_request</key>
+				<dict>
+					<key>chown</key>
+					<array>
+						<dict>
+							<key>group</key>
+							<string>admin</string>
+							<key>path</key>
+							<string>Applications</string>
+							<key>user</key>
+							<string>root</string>
+						</dict>
+					</array>
+					<key>id</key>
+					<string>%BUNDLE_ID%.licensed</string>
+					<key>options</key>
+					<string>purge_ds_store</string>
+					<key>pkgname</key>
+					<string>%NAME%-%version%</string>
+					<key>pkgroot</key>
+					<string>%RECIPE_CACHE_DIR%/%NAME%</string>
+					<key>scripts</key>
+					<string>%RECIPE_CACHE_DIR%/Scripts</string>
+					<key>version</key>
+					<string>%version%</string>
+				</dict>
+			</dict>
+			<key>Processor</key>
+			<string>PkgCreator</string>
+		</dict>
+	</array>
+</dict>
+</plist>
