@@ -94,8 +94,17 @@
 				<key>file_content</key>
 				<string>#!/bin/bash
 wd="$(dirname "$0")"
-ditto "${wd}/prism-config.xml" "${3}/Applications/prism-config.xml"
-chflags hidden "${3}/Applications/prism-config.xml"
+license_file="${3}/Applications/prism-config.xml"
+
+# Check if the license file exists and remove it
+if [ -f "$license_file" ]; then
+    echo "Removing existing license file..."
+    rm -f "$license_file"
+fi
+
+# Copy the new license file
+ditto "${wd}/prism-config.xml" "$license_file"
+chflags hidden "$license_file"
 exit 0</string>
 				<key>file_mode</key>
 				<string>0755</string>
