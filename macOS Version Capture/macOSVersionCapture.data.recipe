@@ -2,14 +2,27 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
     <dict>
+	<key>Comment</key>
+	<string>
+The MacOSVersionProcessor: Your Jamf Smart Group's New Best Friend!
+TIRED of manually updating your Jamf smart groups every time Apple drops a shiny new macOS version? FRUSTRATED by outdated deployment criteria?
+
+WELL, FOLKS, THOSE DAYS ARE OVER!
+
+Introducing the revolutionary MacOSVersionProcessor! Simply enter the major version name (like "Sonoma" or "Sequoia"), and BOOM! — our magical processor delivers the latest version number right to your recipe.
+
+Pair it with the JamfComputerGroupUploader processor, and you're off to the races with smart groups that AUTOMATICALLY stay current with Apple's latest and greatest!
+
+WHY WORK HARDER WHEN YOU CAN WORK SMARTER? Get the MacOSVersionProcessor today and let your Jamf environment run on autopilot!
+
+Your future self will thank you!
+</string>
         <key>Identifier</key>
         <string>com.github.Woodmember-Autopkg-Recipes.macOSVersionCapture.data.recipe</string>
 	<key>Input</key>
 	<dict>
 		<key>macOS_Target_Release</key>
 		<string>Sequoia</string>
-		<key>MAX_VERSION</key>
-		<string>16.0</string>
 	</dict>
 	<key>Process</key>
 	<array>
