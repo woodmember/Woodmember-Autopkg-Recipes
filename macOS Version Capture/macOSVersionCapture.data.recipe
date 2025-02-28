@@ -3,7 +3,7 @@
 <plist version="1.0">
     <dict>
         <key>Identifier</key>
-        <string>com.github.Woodmember-Autopkg-Recipes.data.recipe</string>
+        <string>com.github.Woodmember-Autopkg-Recipes.macOSVersionCapture.data.recipe</string>
 	<key>Input</key>
 	<dict>
 		<key>macOS_Target_Release</key>
