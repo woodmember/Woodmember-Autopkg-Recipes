@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>Identifier</key>
+        <string>com.github.Woodmember-Autopkg-Recipes.data.recipe</string>
+	<key>Input</key>
+	<dict>
+		<key>macOS_Target_Release</key>
+		<string>Sequoia</string>
+		<key>MAX_VERSION</key>
+		<string>16.0</string>
+	</dict>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>MAC_VERSION</key>
+				<string>%macOS_Target_Release%</string>
+			</dict>
+			<key>Processor</key>
+			<string>MacOSVersionProcessor</string>
+		</dict>
+	</array>
+</dict>
+</plist>
