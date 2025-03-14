@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+	<key>Comment</key>
+	<string>IOSVersionProcessor: iOS Management Made EASY!
+TIRED of chasing iOS updates? EXHAUSTED by constant Jamf group updates?
+YOUR TROUBLES ARE OVER!
+This REVOLUTIONARY processor taps into the MacAdmins SoFa feed and INSTANTLY identifies the latest version numbers!
+Just specify your major iOS version (17 or 18 for example) and KAPOW! — version data flows directly into your Jamf workflow!
+BONUS! Get build numbers and release dates ABSOLUTELY FREE!
+WHY WASTE TIME when this processor does it in SECONDS? Pair with JamfMobileDeviceGroupUploader and watch your tedious tasks become TERRIFIC!
+GET IT TODAY and join the elite admins who've unlocked effortless iOS management!
+</string>
+        <key>Identifier</key>
+        <string>com.github.Woodmember-Autopkg-Recipes.iOSVersionCapture.data.recipe</string>
+	<key>Input</key>
+	<dict>
+		<key>IOS_VERSION</key>
+		<string>18</string>
+	</dict>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>IOS_MAJOR_VERSION</key>
+				<string>%IOS_VERSION%</string>
+			</dict>
+			<key>Processor</key>
+			<string>IOSVersionProcessor</string>
+		</dict>
+	</array>
+</dict>
+</plist>
