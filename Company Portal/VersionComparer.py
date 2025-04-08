@@ -1,7 +1,18 @@
 #!/bin/bash
 
-# Version comparison processor for AutoPkg
-# Filename: VersionComparer.py
+# VersionComparer.py
+# AutoPkg processor that compares current and previous versions to avoid 
+# repackaging unchanged software.
+#
+# This processor is specifically designed for packages with static filenames
+# that don't include version numbers in their names. It's ideal for packages
+# used in MDM prestage enrollments where the same filename must be maintained
+# across updates.
+#
+# The processor stores the last processed version in a plist file and compares
+# it with newly downloaded versions, allowing AutoPkg to skip unnecessary 
+# repackaging when the version hasn't changed. It can also be used for version
+# control, to set a maximum version to package.
 
 from autopkglib import Processor, ProcessorError
 import os
@@ -11,6 +22,7 @@ __all__ = ["VersionComparer"]
 
 class VersionComparer(Processor):
     """Compares version of current package with previously processed version."""
+    
     input_variables = {
         "version": {
             "required": True,
@@ -18,13 +30,17 @@ class VersionComparer(Processor):
         },
         "version_file": {
             "required": False,
-            "description": "Path to plist file storing previous version",
+            "description": ("Path to plist file storing previous version. "
+                            "If not specified, a default path will be used in "
+                            "the RECIPE_CACHE_DIR. Use this parameter if you need "
+                            "to store version information in a custom location or "
+                            "share version tracking across multiple recipes."),
             "default": "",
         },
     }
     output_variables = {
         "version_changed": {
-            "description": "Boolean indicating if version has changed",
+            "description": "Boolean indicating if version has changed (TRUE) or remained the same (FALSE)",
         },
     }
     
