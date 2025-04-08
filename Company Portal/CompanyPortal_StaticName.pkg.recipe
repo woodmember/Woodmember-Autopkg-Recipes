@@ -3,12 +3,10 @@
 <plist version="1.0">
    <dict>
       <key>Description</key>
-      <string>Downloads the latest version of Microsofts Intune Company Portal installer package and extracts the version information from the installer package.
+      <string>Downloads the latest version of Microsoft's Intune Company Portal installer package and extracts the version information from the installer package.
 		   
-              This recipe will package Company Portal without a version naumber in the name. This is designed to work with Jamf for prestage enrollment packages. 
-              It is advised then that you have replace_package set to True in your Jamf upload policy. This means that your prestage enrollment package will be 
-              updated every time Jamf release a new version. Do not use for patching purposes.
-      </string>
+This recipe will package Company Portal without a version naumber in the name. This is designed to work with Jamf for prestage enrollment packages. It is advised then that you have replace_package set to True in your Jamf upload policy. This means that your prestage enrollment package will be 
+    updated every time Jamf release a new version. Do not use for patching purposes.</string>
       <key>Identifier</key>
       <string>com.github.Woodmember.pkg.MicrosoftIntuneCompanyPortal_StaticName</string>
       <key>Input</key>
@@ -65,19 +63,21 @@
             <key>Processor</key>
             <string>Versioner</string>
          </dict>
-        <dict>
+         <!-- After Versioner processor -->
+         <dict>
             <key>Processor</key>
             <string>VersionComparer</string>
-        </dict>
-        <dict>
-             <key>Processor</key>
+         </dict>
+         <dict>
+            <key>Processor</key>
             <string>StopProcessingIf</string>
             <key>Arguments</key>
-       <dict>
-      <key>predicate</key>
-      <string>version_changed == FALSE</string>
-   </dict>
-  </dict>
+            <dict>
+               <key>predicate</key>
+               <string>version_changed == FALSE</string>
+            </dict>
+         </dict>
+         <!-- Continue with PkgCopier only if version_changed is TRUE -->
          <dict>
             <key>Processor</key>
             <string>PkgCopier</string>
