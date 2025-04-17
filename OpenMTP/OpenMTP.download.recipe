@@ -47,7 +47,7 @@ x64 - macOS Intel 64 Bit
 			<key>Arguments</key>
 			<dict>
 				<key>input_path</key>
-				<string>%pathname%/OpenMT.app</string>
+				<string>%pathname%/OpenMTP.app</string>
 				<key>requirement</key>
 				<string>identifier "io.ganeshrvel.openmtp" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "6UR4H85SA2"</string>
 			</dict>
@@ -58,7 +58,7 @@ x64 - macOS Intel 64 Bit
 			<key>Arguments</key>
 			<dict>
 				<key>input_plist_path</key>
-				<string>%pathname%/OpenMT.app/Contents/Info.plist</string>
+				<string>%pathname%/OpenMTP.app/Contents/Info.plist</string>
 				<key>plist_version_key</key>
 				<string>CFBundleShortVersionString</string>
 			</dict>
