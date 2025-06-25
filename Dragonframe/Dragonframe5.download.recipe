@@ -9,7 +9,7 @@
     <key>Input</key>
     <dict>
         <key>NAME</key>
-        <string>Dragonframe 5</string>
+        <string>Dragonframe</string>
         <key>CHECK_PAGE_URL</key>
         <string>https://www.dragonframe.com/downloads</string>
         <key>CHECK_PAGE_PATTERN</key>
