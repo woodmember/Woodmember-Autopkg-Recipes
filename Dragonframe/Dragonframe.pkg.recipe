@@ -5,7 +5,7 @@
     <key>Identifier</key>
     <string>com.github.Woodmember-Autopkg-Recipes.pkg.Dragonframe</string>
     <key>Description</key>
-    <string>Downloadd the defined year of release of Dragonframe and turns it into a package</string>
+    <string>Downloads the defined year of release of Dragonframe and turns it into a package</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -63,6 +63,18 @@
             </dict>
             <key>Processor</key>
             <string>PkgCopier</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>path_list</key>
+                <array>
+                    <string>%RECIPE_CACHE_DIR%/expanded</string>
+                    <string>%RECIPE_CACHE_DIR%/unpack</string>
+                </array>
+            </dict>
+            <key>Processor</key>
+            <string>PathDeleter</string>
         </dict>
     </array>
 </dict>
