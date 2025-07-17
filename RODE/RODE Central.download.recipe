@@ -104,7 +104,7 @@
 					<string>Apple Root CA</string>
 				</array>
 				<key>input_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%/RØDE Central Installer (%version%).pkg</string>
+				<string>%found_filename%</string>
 			</dict>
 			<key>Processor</key>
 			<string>CodeSignatureVerifier</string>
