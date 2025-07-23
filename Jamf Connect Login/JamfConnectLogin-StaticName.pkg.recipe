@@ -15,8 +15,6 @@
     <string>com.github.Woodmember.pkg.JamfConnectLogin</string>
     <key>Input</key>
     <dict>
-        <key>APP_FILENAME</key>
-        <string>Jamf Connect Login</string>
         <key>BUNDLE_ID</key>
         <string>com.jamf.connect.login</string>
         <key>NAME</key>
