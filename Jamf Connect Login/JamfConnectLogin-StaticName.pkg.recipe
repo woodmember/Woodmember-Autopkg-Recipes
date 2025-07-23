@@ -12,7 +12,7 @@
 		Do not use for patching purposes.
 	  </string>
     <key>Identifier</key>
-    <string>local.pkg.JamfConnectLogin</string>
+    <string>com.github.Woodmember.pkg.JamfConnectLogin</string>
     <key>Input</key>
     <dict>
         <key>APP_FILENAME</key>
