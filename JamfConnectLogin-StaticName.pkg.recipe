@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Transfers the package from the pre-downloaded DMG. Creates a Package with a static name for use in Jamf Prestages.
+	
+		This recipe will package Jamf Connect without a version naumber in the name. This is designed to work Jamf for prestage enrollment packages. 
+    It is advised then that you have replace_package set to True in your Jamf upload policy. This means that your prestage enrollment package 
+    will be updated every time Jamf release a new version.
+		
+		Do not use for patching purposes.
+	  </string>
+    <key>Identifier</key>
+    <string>local.pkg.JamfConnectLogin</string>
+    <key>Input</key>
+    <dict>
+        <key>APP_FILENAME</key>
+        <string>Jamf Connect Login</string>
+        <key>BUNDLE_ID</key>
+        <string>com.jamf.connect.login</string>
+        <key>NAME</key>
+        <string>JamfConnectLogin</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.0</string>
+    <key>ParentRecipe</key>
+    <string>com.github.yohan460-recipes.download.JamfConnect</string>
+    <key>Process</key>
+    <array>
+        <dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>input_path</key>
+				<string>%pathname%/Resources/JamfConnectLaunchAgent.pkg</string>
+                <key>expected_authority_names</key>
+                <array>
+                    <string>Developer ID Installer: JAMF Software (483DWKW443)</string>
+                    <string>Developer ID Certification Authority</string>
+                    <string>Apple Root CA</string>
+                </array>
+			</dict>
+		</dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%_AutoPKG.pkg</string>
+                <key>source_pkg</key>
+                <string>%pathname%/JamfConnectLogin.pkg</string>
+            </dict>
+            <key>Processor</key>
+            <string>PkgCopier</string>
+        </dict>
+    </array>
+</dict>
+</plist>
