@@ -23,7 +23,7 @@
 				<key>url</key>
 				<string>%DDPM_URL%</string>
 				<key>re_pattern</key>
-				<string>href="(https://dl\.dell\.com/FOLDER.*DDPMv.*\.zip)"</string>
+				<string>(https://dl\.dell\.com/[^"]+\.zip)</string>
 				<key>result_output_var_name</key>
 				<string>url</string>
 			</dict>
