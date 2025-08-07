@@ -13,7 +13,7 @@
 		<key>NAME</key>
 		<string>Dell Display and Peripheral Manager (DDPM)</string>
 		<key>DDPM_URL</key>
-		<string>https://www.delldisplaymanagermac.com/</string>
+		<string>https://www.dell.com/support/product-details/en-au/product/dell-display-peripheral-manager/drivers</string>
 		<key>PKGSHORTNAME</key>
 		<string>Dell Display and Peripheral Manager</string>
 	</dict>
