@@ -11,7 +11,7 @@
 		<key>NAME</key>
 		<string>Dell Display and Peripheral Manager (DDPM)</string>
 		<key>DDPM_URL</key>
-		<string>https://www.delldisplaymanagermac.com/</string>
+		<string>https://www.dell.com/support/product-details/en-au/product/dell-display-peripheral-manager/drivers</string>
 	</dict>
 	<key>Process</key>
 	<array>
@@ -23,7 +23,7 @@
 				<key>url</key>
 				<string>%DDPM_URL%</string>
 				<key>re_pattern</key>
-				<string>(%DDPM_URL%DDPM/DDPMv*.*.zip)</string>
+				<string>(https://dl\.dell\.com/FOLDER.*\.zip)</string>
 				<key>result_output_var_name</key>
 				<string>url</string>
 			</dict>
