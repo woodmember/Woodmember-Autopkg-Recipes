@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest Blackmagic RAW SDK.</string>
+    <key>Identifier</key>
+    <string>local.download.BlackmagicRAW</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>BlackmagicRAW</string>
+        <key>product_name</key>
+        <string>Blackmagic RAW</string>
+        <key>product_name_pattern</key>
+        <string>^Blackmagic RAW (?P&lt;version&gt;[0-9]+(?:\.[0-9]+)*)$</string>
+        <key>registration_info</key>
+        <dict>
+            <key>firstname</key>
+            <string>FirstName</string>
+            <key>lastname</key>
+            <string>LastName</string>
+            <key>email</key>
+            <string>user@example.com</string>
+            <key>phone</key>
+            <string>555-123-4567</string>
+            <key>city</key>
+            <string>YourCity</string>
+            <key>street</key>
+            <string>123 Your Street</string>
+            <key>country</key>
+            <string>us</string>
+        </dict>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.2.0</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.nielshojen.SharedProcessors/BlackMagicURLProvider</string>
+            <key>Arguments</key>
+            <dict>
+                <key>product_name</key>
+                <string>%product_name%</string>
+                <key>product_name_pattern</key>
+                <string>%product_name_pattern%</string>
+                <key>registration_info</key>
+                <dict>
+                    <key>firstname</key>
+                    <string>%registration_info/firstname%</string>
+                    <key>lastname</key>
+                    <string>%registration_info/lastname%</string>
+                    <key>email</key>
+                    <string>%registration_info/email%</string>
+                    <key>phone</key>
+                    <string>%registration_info/phone%</string>
+                    <key>city</key>
+                    <string>%registration_info/city%</string>
+                    <key>street</key>
+                    <string>%registration_info/street%</string>
+                    <key>country</key>
+                    <string>%registration_info/country%</string>
+                </dict>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>
