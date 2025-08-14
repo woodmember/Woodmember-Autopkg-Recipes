@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads and repackages the latest Blackmagic RAW SDK installer. This product requires registration in order to download, so you _must_ override all input variables beginning with 'REG_' and they must contain valid registration data.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.BlackmagicRAW</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>BlackmagicRAW</string>
+        <key>PRODUCT_VERSION</key>
+        <string>Blackmagic RAW</string>
+        <key>REG_CITY</key>
+        <string>YourCity</string>
+        <key>REG_COUNTRY</key>
+        <string>us</string>
+        <key>REG_EMAIL</key>
+        <string>user@example.com</string>
+        <key>REG_FIRSTNAME</key>
+        <string>FirstName</string>
+        <key>REG_LASTNAME</key>
+        <string>LastName</string>
+        <key>REG_PHONE</key>
+        <string>555-123-4567</string>
+        <key>REG_STATE</key>
+        <string>YourState</string>
+        <key>REG_STREET</key>
+        <string>123 Your Street</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.6.1</string>
+    <key>ParentRecipe</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.BlackmagicRAW</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>Unarchiver</string>
+            <key>Arguments</key>
+            <dict>
+                <key>archive_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/unpack</string>
+                <key>purge_destination</key>
+                <true/>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>FileFinder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pattern</key>
+                <string>%RECIPE_CACHE_DIR%/unpack/*.dmg</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>InstallFromDMG</string>
+            <key>Arguments</key>
+            <dict>
+                <key>dmg_path</key>
+                <string>%found_filename%</string>
+                <key>items_to_copy</key>
+                <array>
+                    <dict>
+                        <key>source_item</key>
+                        <string>Install Blackmagic RAW %version%.pkg</string>
+                        <key>destination_path</key>
+                        <string>%RECIPE_CACHE_DIR%</string>
+                        <key>destination_item</key>
+                        <string>%NAME%-%version%.pkg</string>
+                    </dict>
+                </array>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>PathDeleter</string>
+            <key>Arguments</key>
+            <dict>
+                <key>path_list</key>
+                <array>
+                    <string>%RECIPE_CACHE_DIR%/unpack</string>
+                </array>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>
