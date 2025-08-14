@@ -162,8 +162,10 @@ class BlackMagicURLProvider(URLGetter):
                        not self.env["registration_info"][key]:
                         raise ProcessorError(errormsg)
             # then add the registration info to req_data
-            for k in self.env["registration_info"]:
-                req_data[k] = self.env["registration_info"][k]
+            if latest_prod.get("requiresTermsAndConditions"):
+    req_data["hasAgreedToTerms"] = True
+    if latest_prod.get("termsAndConditions"):
+        req_data["termsAndConditions"] = latest_prod["termsAndConditions"]
         req_data = json.dumps(req_data)
 
         url = "https://www.blackmagicdesign.com/api/register/us/download/"
