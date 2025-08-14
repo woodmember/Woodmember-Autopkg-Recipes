@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest Blackmagic RAW SDK.</string>
     <key>Identifier</key>
-    <string>local.download.BlackmagicRAW</string>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.BlackmagicRAW</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
