@@ -3,68 +3,72 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads the latest Blackmagic RAW SDK.</string>
+    <string>Downloads the latest Blackmagic RAW SDK. This product requires registration in order to download, so you _must_ override all input variables beginning with 'REG_' and they must contain data.</string>
     <key>Identifier</key>
     <string>com.github.Woodmember-Autopkg-Recipes.download.BlackmagicRAW</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
         <string>BlackmagicRAW</string>
-        <key>product_name</key>
-        <string>Blackmagic RAW</string>
-        <key>product_name_pattern</key>
+        <key>PRODUCT_NAME_PATTERN</key>
         <string>^Blackmagic RAW (?P&lt;version&gt;[0-9]+(?:\.[0-9]+)*)$</string>
-        <key>registration_info</key>
-        <dict>
-            <key>firstname</key>
-            <string>FirstName</string>
-            <key>lastname</key>
-            <string>LastName</string>
-            <key>email</key>
-            <string>user@example.com</string>
-            <key>phone</key>
-            <string>555-123-4567</string>
-            <key>city</key>
-            <string>YourCity</string>
-            <key>street</key>
-            <string>123 Your Street</string>
-            <key>country</key>
-            <string>us</string>
-        </dict>
+        <key>PRODUCT_VERSION</key>
+        <string>Blackmagic RAW</string>
+        <key>REG_CITY</key>
+        <string></string>
+        <key>REG_COUNTRY</key>
+        <string></string>
+        <key>REG_EMAIL</key>
+        <string></string>
+        <key>REG_FIRSTNAME</key>
+        <string></string>
+        <key>REG_LASTNAME</key>
+        <string></string>
+        <key>REG_PHONE</key>
+        <string></string>
+        <key>REG_STATE</key>
+        <string></string>
+        <key>REG_STREET</key>
+        <string></string>
     </dict>
     <key>MinimumVersion</key>
     <string>0.2.0</string>
     <key>Process</key>
     <array>
         <dict>
-            <key>Processor</key>
-            <string>com.github.nielshojen.SharedProcessors/BlackMagicURLProvider</string>
             <key>Arguments</key>
             <dict>
                 <key>product_name</key>
-                <string>%product_name%</string>
+                <string>%PRODUCT_VERSION%</string>
                 <key>product_name_pattern</key>
-                <string>%product_name_pattern%</string>
+                <string>%PRODUCT_NAME_PATTERN%</string>
                 <key>registration_info</key>
                 <dict>
                     <key>firstname</key>
-                    <string>%registration_info/firstname%</string>
+                    <string>%REG_FIRSTNAME%</string>
                     <key>lastname</key>
-                    <string>%registration_info/lastname%</string>
+                    <string>%REG_LASTNAME%</string>
                     <key>email</key>
-                    <string>%registration_info/email%</string>
+                    <string>%REG_EMAIL%</string>
                     <key>phone</key>
-                    <string>%registration_info/phone%</string>
+                    <string>%REG_PHONE%</string>
                     <key>city</key>
-                    <string>%registration_info/city%</string>
+                    <string>%REG_CITY%</string>
                     <key>street</key>
-                    <string>%registration_info/street%</string>
+                    <string>%REG_STREET%</string>
                     <key>country</key>
-                    <string>%registration_info/country%</string>
+                    <string>%REG_COUNTRY%</string>
                 </dict>
             </dict>
+            <key>Processor</key>
+            <string>com.github.nielshojen.SharedProcessors/BlackMagicURLProvider</string>
         </dict>
         <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>filename</key>
+                <string>%NAME%-%version%.zip</string>
+            </dict>
             <key>Processor</key>
             <string>URLDownloader</string>
         </dict>
