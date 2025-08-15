@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads and Packages the latest Avogadro App release from GitHub based on architecture.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.Avogadro2</string>
+    <key>Input</key>
+    <dict>
+        <key>ARCHITECTURE</key>
+        <string>arm64</string>
+        <key>NAME</key>
+        <string>Avogadro2</string>
+    </dict>
+	<key>ParentRecipe</key>
+	<string>local.download.Avogadro2</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>AppPkgCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
