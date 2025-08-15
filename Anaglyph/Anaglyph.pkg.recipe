@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest version of Anaglyph and creates a package.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.Anaglyph</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Anaglyph</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>ParentRecipe</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.Anaglyph</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>PkgRootCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkgroot</key>
+                <string>%RECIPE_CACHE_DIR%/pkgroot</string>
+                <key>pkgdirs</key>
+                <dict>
+                    <key>Library</key>
+                    <string>0755</string>
+                    <key>Library/Audio</key>
+                    <string>0755</string>
+                    <key>Library/Audio/Plug-Ins</key>
+                    <string>0755</string>
+                    <key>Library/Audio/Plug-Ins/VST3</key>
+                    <string>0755</string>
+                    <key>Library/Audio/Plug-Ins/Components</key>
+                    <string>0755</string>
+                </dict>
+            </dict>
+        </dict>
+        
+        <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%RECIPE_CACHE_DIR%/payload/Anaglyph.vst3</string>
+                <key>destination_path</key>
+                <string>%pkgroot%/Library/Audio/Plug-Ins/VST3/Anaglyph.vst3</string>
+            </dict>
+        </dict>
+        
+        <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%RECIPE_CACHE_DIR%/payload/Anaglyph.component</string>
+                <key>destination_path</key>
+                <string>%pkgroot%/Library/Audio/Plug-Ins/Components/Anaglyph.component</string>
+            </dict>
+        </dict>
+        
+        <dict>
+            <key>Processor</key>
+            <string>PkgCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_request</key>
+                <dict>
+                    <key>pkgname</key>
+                    <string>%NAME%-%version%</string>
+                    <key>version</key>
+                    <string>%version%</string>
+                    <key>id</key>
+                    <string>com.cnrs.anaglyph.pkg</string>
+                    <key>options</key>
+                    <string>purge_ds_store</string>
+                    <key>chown</key>
+                    <array>
+                        <dict>
+                            <key>path</key>
+                            <string>Library</string>
+                            <key>user</key>
+                            <string>root</string>
+                            <key>group</key>
+                            <string>wheel</string>
+                        </dict>
+                    </array>
+                </dict>
+            </dict>
+        </dict>
+        
+        <dict>
+            <key>Processor</key>
+            <string>PathDeleter</string>
+            <key>Arguments</key>
+            <dict>
+                <key>path_list</key>
+                <array>
+                    <string>%RECIPE_CACHE_DIR%/unarchived</string>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+					<string>%RECIPE_CACHE_DIR%/payload</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
