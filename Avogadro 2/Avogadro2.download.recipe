@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest AvogadroApp release from GitHub based on architecture.</string>
     <key>Identifier</key>
-    <string>local.download.Avogadro2</string>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.Avogadro2</string>
     <key>Input</key>
     <dict>
         <key>ARCHITECTURE</key>
