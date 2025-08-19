@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads & packages the latest version of ChemDraw</string>
+	<string>Downloads and packages the latest version of ChemDraw</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.pkg.ChemDraw</string>
 	<key>Input</key>
