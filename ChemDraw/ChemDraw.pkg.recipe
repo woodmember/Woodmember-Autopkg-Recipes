@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Downloads and packages the latest version of ChemDraw</string>
 	<key>Identifier</key>
-	<string>com.github.Woodmember-Autopkg-Recipes.pkg.ChemDraw</string>
+	<string>com.github.Woodmember.pkg.ChemDraw</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
