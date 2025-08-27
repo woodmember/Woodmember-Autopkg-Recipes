@@ -14,7 +14,7 @@
         <string>Avogadro2</string>
     </dict>
 	<key>ParentRecipe</key>
-	<string>local.download.Avogadro2</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.Avogadro2</string>
 	<key>Process</key>
 	<array>
 		<dict>
