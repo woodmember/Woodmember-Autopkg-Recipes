@@ -17,8 +17,10 @@
     <string>2.3</string>
     <key>Process</key>
     <array>
-		
+        <!-- Download the main page to find the latest download link -->
         <dict>
+            <key>Comment</key>
+            <string>Download the main page to find the latest macOS download link</string>
             <key>Processor</key>
             <string>URLDownloader</string>
             <key>Arguments</key>
@@ -32,12 +34,15 @@
                     <string>--insecure</string>
                     <string>--location</string>
                     <string>--max-time</string>
-                    <string>120</string>
+                    <string>30</string>
                 </array>
             </dict>
         </dict>
         
+        <!-- Search the downloaded HTML for the macOS download link -->
         <dict>
+            <key>Comment</key>
+            <string>Search downloaded HTML for macOS download URL</string>
             <key>Processor</key>
             <string>URLTextSearcher</string>
             <key>Arguments</key>
@@ -51,7 +56,10 @@
             </dict>
         </dict>
         
+        <!-- Extract just the version number for later use -->
         <dict>
+            <key>Comment</key>
+            <string>Extract version number from URL</string>
             <key>Processor</key>
             <string>URLTextSearcher</string>
             <key>Arguments</key>
@@ -64,8 +72,11 @@
                 <string>url_version</string>
             </dict>
         </dict>
-
+        
+        <!-- Download the actual plugin file using URLDownloader with insecure option -->
         <dict>
+            <key>Comment</key>
+            <string>Download the plugin zip file</string>
             <key>Processor</key>
             <string>URLDownloader</string>
             <key>Arguments</key>
@@ -80,6 +91,7 @@
                     <string>--location</string>
                     <string>--max-time</string>
                     <string>120</string>
+                    <string>--http1.1</string>
                 </array>
             </dict>
         </dict>
@@ -104,6 +116,8 @@
         </dict>
         
         <dict>
+            <key>Comment</key>
+            <string>Find the extracted directory name</string>
             <key>Processor</key>
             <string>FileFinder</string>
             <key>Arguments</key>
@@ -114,6 +128,8 @@
         </dict>
         
         <dict>
+            <key>Comment</key>
+            <string>Extract detailed version info from VST3 plugin</string>
             <key>Processor</key>
             <string>PlistReader</string>
             <key>Arguments</key>
@@ -133,6 +149,8 @@
         </dict>
         
         <dict>
+            <key>Comment</key>
+            <string>Verify VST3 plugin code signature</string>
             <key>Processor</key>
             <string>CodeSignatureVerifier</string>
             <key>Arguments</key>
@@ -147,6 +165,8 @@
         </dict>
         
         <dict>
+            <key>Comment</key>
+            <string>Verify Audio Unit component code signature</string>
             <key>Processor</key>
             <string>CodeSignatureVerifier</string>
             <key>Arguments</key>
@@ -159,8 +179,11 @@
                 <false/>
             </dict>
         </dict>
-
+        
+        <!-- Copy plugins to staging for later packaging -->
         <dict>
+            <key>Comment</key>
+            <string>Copy VST3 plugin to staging</string>
             <key>Processor</key>
             <string>Copier</string>
             <key>Arguments</key>
@@ -173,6 +196,8 @@
         </dict>
         
         <dict>
+            <key>Comment</key>
+            <string>Copy Audio Unit to staging</string>
             <key>Processor</key>
             <string>Copier</string>
             <key>Arguments</key>
