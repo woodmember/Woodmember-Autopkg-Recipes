@@ -74,36 +74,29 @@
         </dict>
         
         <!-- Download the actual plugin file using URLDownloader with insecure option -->
-        <!-- Download with resume capability and no compression -->
+        <!-- Try URLDownloaderPython with SSL bypass environment variables -->
         <dict>
             <key>Comment</key>
-            <string>Download the plugin zip file with resume capability</string>
+            <string>Download the plugin zip file using Python downloader</string>
             <key>Processor</key>
-            <string>URLDownloader</string>
+            <string>URLDownloaderPython</string>
             <key>Arguments</key>
             <dict>
                 <key>url</key>
                 <string>%DOWNLOAD_PAGE_URL%%match_url%</string>
                 <key>filename</key>
                 <string>%NAME%-%url_version%.zip</string>
-                <key>curl_opts</key>
-                <array>
-                    <string>--insecure</string>
-                    <string>--location</string>
-                    <string>--continue-at</string>
-                    <string>-</string>
-                    <string>--retry</string>
-                    <string>10</string>
-                    <string>--retry-delay</string>
-                    <string>5</string>
-                    <string>--retry-max-time</string>
+                <key>env</key>
+                <dict>
+                    <key>PYTHONHTTPSVERIFY</key>
                     <string>0</string>
-                    <string>--max-time</string>
-                    <string>0</string>
-                    <string>--http1.1</string>
-                    <string>--user-agent</string>
-                    <string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36</string>
-                </array>
+                    <key>SSL_CERT_FILE</key>
+                    <string></string>
+                    <key>REQUESTS_CA_BUNDLE</key>
+                    <string></string>
+                    <key>CURL_CA_BUNDLE</key>
+                    <string></string>
+                </dict>
             </dict>
         </dict>
         
