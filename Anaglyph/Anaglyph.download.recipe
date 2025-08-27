@@ -74,9 +74,10 @@
         </dict>
         
         <!-- Download the actual plugin file using URLDownloader with insecure option -->
+        <!-- Download with resume capability and no compression -->
         <dict>
             <key>Comment</key>
-            <string>Download the plugin zip file</string>
+            <string>Download the plugin zip file with resume capability</string>
             <key>Processor</key>
             <string>URLDownloader</string>
             <key>Arguments</key>
@@ -89,18 +90,19 @@
                 <array>
                     <string>--insecure</string>
                     <string>--location</string>
-                    <string>--max-time</string>
-                    <string>600</string>
-                    <string>--http1.1</string>
+                    <string>--continue-at</string>
+                    <string>-</string>
                     <string>--retry</string>
-                    <string>5</string>
-                    <string>--retry-delay</string>
                     <string>10</string>
+                    <string>--retry-delay</string>
+                    <string>5</string>
                     <string>--retry-max-time</string>
                     <string>0</string>
-                    <string>--compressed</string>
-                    <string>--connect-timeout</string>
-                    <string>60</string>
+                    <string>--max-time</string>
+                    <string>0</string>
+                    <string>--http1.1</string>
+                    <string>--user-agent</string>
+                    <string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36</string>
                 </array>
             </dict>
         </dict>
