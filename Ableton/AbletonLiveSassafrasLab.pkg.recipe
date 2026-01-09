@@ -136,6 +136,8 @@ cp -a "$cfg_dir/Library.cfg" /Library/Preferences/Ableton/Live\ %version%/
 				<array>
 					<string>%RECIPE_CACHE_DIR%/%NAME%/Applications/%app_name%/Contents/App-Resources/Extensions/SoundCloud</string>
 				</array>
+				<key>path_list_required</key>
+        		<false/>
 			</dict>
 		</dict>
 		<dict>
