@@ -10,44 +10,25 @@
 	<dict>
 		<key>NAME</key>
 		<string>Dell Display and Peripheral Manager (DDPM)</string>
-		<key>DDPM_URL</key>
-		<string>https://www.dell.com/support/product-details/en-au/product/dell-display-peripheral-manager/drivers</string>
 	</dict>
 	<key>Process</key>
 	<array>
 		<dict>
-			<key>Processor</key>
-			<string>URLTextSearcher</string>
-			<key>Arguments</key>
-			<dict>
-				<key>url</key>
-				<string>%DDPM_URL%</string>
-				<key>re_pattern</key>
-				<string>(https://dl\.dell\.com/[^"]+\.zip)</string>
-				<key>result_output_var_name</key>
-				<string>url</string>
-			</dict>
+		    <key>Processor</key>
+		    <string>DDPMDownloader</string>
+		    <key>Arguments</key>
+		    <dict>
+		        <key>download</key>
+		        <true/>
+		    </dict>
 		</dict>
-		<dict>
-			<key>Processor</key>
-			<string>URLDownloader</string>
-			<key>Arguments</key>
-            <dict>
-                <key>filename</key>
-                <string>DDPM.zip</string>
-            </dict>
-		</dict>
-		<dict>
-			<key>Processor</key>
-			<string>EndOfCheckPhase</string>
-		</dict>
-	<dict>
+	<dict>	
 		<key>Arguments</key>
 		<dict>
 			<key>archive_path</key>
-			<string>%RECIPE_CACHE_DIR%/downloads/DDPM.zip</string>
+			<string>%ddpm_filepath%</string>
 			<key>destination_path</key>
-			<string>%RECIPE_CACHE_DIR%/%NAME%</string>
+			<string>%RECIPE_CACHE_DIR%/UnZip/DDPM</string>
 			<key>purge_destination</key>
 			<true/>
 		</dict>
@@ -57,23 +38,14 @@
 	<dict>
 		<key>Arguments</key>
 		<dict>
-			<key>pattern</key>
-			<string>%RECIPE_CACHE_DIR%/%NAME%/DDPM*.pkg</string>
-		</dict>
-		<key>Processor</key>
-		<string>FileFinder</string>
-	</dict>
-	<dict>
-		<key>Arguments</key>
-		<dict>
 			<key>expected_authority_names</key>
 			<array>
-				<string>Developer ID Installer: Yufu Fan (S3YBM9ALKM)</string>
+				<string>Developer ID Installer: Qisda Corp. (76K5J93FY6)</string>
 				<string>Developer ID Certification Authority</string>
 				<string>Apple Root CA</string>
 			</array>
 			<key>input_path</key>
-			<string>%found_filename%</string>
+			<string>%RECIPE_CACHE_DIR%/UnZip/DDPM/DDPM_Installer.pkg</string>
 		</dict>
 		<key>Processor</key>
 		<string>CodeSignatureVerifier</string>
@@ -84,7 +56,7 @@
 			<key>destination_path</key>
 			<string>%RECIPE_CACHE_DIR%/unpack</string>
 			<key>flat_pkg_path</key>
-			<string>%found_filename%</string>
+			<string>%RECIPE_CACHE_DIR%/UnZip/DDPM/DDPM_Installer.pkg</string>
 		</dict>
 		<key>Processor</key>
 		<string>FlatPkgUnpacker</string>
