@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest macOS Nessus Agent DMG from the Tenable downloads API.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.NessusAgent</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>NessusAgent</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>Process</key>
+    <array>
+
+        <dict>
+            <key>Comment</key>
+            <string>Extract version from Tenable downloads API JSON</string>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://www.tenable.com/downloads/api/v2/pages/nessus-agents</string>
+                <key>re_pattern</key>
+                <string>NessusAgent-([\d.]+)\.dmg</string>
+                <key>result_output_var_name</key>
+                <string>version</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Download the latest Nessus Agent DMG via the stable latest redirect URL</string>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://www.tenable.com/downloads/api/v2/pages/nessus-agents/files/NessusAgent-latest.dmg</string>
+                <key>filename</key>
+                <string>%NAME%-%version%.dmg</string>
+                <key>curl_opts</key>
+                <array>
+                    <string>--location</string>
+                    <string>--max-time</string>
+                    <string>120</string>
+                </array>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+
+    </array>
+</dict>
+</plist>
