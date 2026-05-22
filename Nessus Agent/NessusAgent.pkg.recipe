@@ -5,6 +5,8 @@
     <key>Description</key>
     <string>Copies "Install Nessus Agent.pkg" from the downloaded DMG and renames it
 following the %NAME%-%version% convention for Jamf Pro deployment.
+PkgCopier is used instead of Copier to ensure pkg_path is set as an output
+variable for use by jamfuploader and other downstream recipes.
 </string>
     <key>Identifier</key>
     <string>com.github.Woodmember-Autopkg-Recipes.pkg.NessusAgent</string>
@@ -23,21 +25,20 @@ following the %NAME%-%version% convention for Jamf Pro deployment.
         <!-- ============================================================ -->
         <!-- Copy "Install Nessus Agent.pkg" from inside the DMG and      -->
         <!-- rename it to follow the %NAME%-%version% convention required -->
-        <!-- by jamfuploader.                                             -->
+        <!-- by jamfuploader. PkgCopier sets pkg_path as an output        -->
+        <!-- variable for use by downstream recipes.                      -->
         <!-- ============================================================ -->
         <dict>
             <key>Comment</key>
             <string>Copy Install Nessus Agent.pkg from DMG, rename for Jamf</string>
             <key>Processor</key>
-            <string>Copier</string>
+            <string>PkgCopier</string>
             <key>Arguments</key>
             <dict>
-                <key>source_path</key>
+                <key>source_pkg</key>
                 <string>%pathname%/Install Nessus Agent.pkg</string>
-                <key>destination_path</key>
+                <key>pkg_path</key>
                 <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
-                <key>overwrite</key>
-                <true/>
             </dict>
         </dict>
 
