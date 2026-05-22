@@ -3,7 +3,24 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads the latest macOS Nessus Agent DMG from the Tenable downloads API.</string>
+    <string>Downloads the latest Tenable Nessus Agent DMG for macOS from the Tenable
+public Downloads API (no authentication required).
+
+The API JSON response is queried to extract:
+  - The version number from the macOS DMG filename
+  - The numeric download ID used to construct the download URL
+  - The SHA256 checksum published by Tenable (stored in env for reference)
+
+The download uses URLDownloader (curl) with a browser User-Agent and Referer
+header to satisfy Tenable CDN requirements.
+
+Code signature is verified against "Install Nessus Agent.pkg" inside the DMG.
+
+IMPORTANT: Confirm the expected_authority_names below by running:
+  hdiutil attach NessusAgent-version.dmg
+  pkgutil -check-signature "/Volumes/Nessus Agent Install/Install Nessus Agent.pkg"
+  hdiutil detach "/Volumes/Nessus Agent Install"
+</string>
     <key>Identifier</key>
     <string>com.github.Woodmember-Autopkg-Recipes.download.NessusAgent</string>
     <key>Input</key>
@@ -12,49 +29,135 @@
         <string>NessusAgent</string>
     </dict>
     <key>MinimumVersion</key>
-    <string>2.3</string>
+    <string>1.0.0</string>
     <key>Process</key>
     <array>
 
+        <!-- ============================================================ -->
+        <!-- STEP 1: Extract version from the macOS DMG filename in the   -->
+        <!-- Tenable Downloads API JSON response. The macOS DMG is the    -->
+        <!-- only download with the bare pattern NessusAgent-X.X.X.dmg   -->
+        <!-- (all other platforms have additional suffixes).               -->
+        <!-- ============================================================ -->
         <dict>
             <key>Comment</key>
-            <string>Extract version from Tenable downloads API JSON</string>
+            <string>Extract version number from Tenable Downloads API</string>
             <key>Processor</key>
             <string>URLTextSearcher</string>
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <string>https://www.tenable.com/downloads/api/v2/pages/nessus-agents</string>
+                <string>https://www.tenable.com/downloads/api/v1/public/pages/nessus-agents</string>
                 <key>re_pattern</key>
-                <string>NessusAgent-([\d.]+)\.dmg</string>
+                <string>"file":"NessusAgent-([\d.]+)\.dmg"</string>
                 <key>result_output_var_name</key>
                 <string>version</string>
             </dict>
         </dict>
 
+        <!-- ============================================================ -->
+        <!-- STEP 2: Extract the numeric download ID for the macOS DMG.   -->
+        <!-- The Tenable API JSON has "id" immediately before "file" in   -->
+        <!-- each download object. If this step fails, inspect the raw    -->
+        <!-- API JSON at the URL above and adjust the regex field order.  -->
+        <!-- ============================================================ -->
         <dict>
             <key>Comment</key>
-            <string>Download the latest Nessus Agent DMG via the stable latest redirect URL</string>
+            <string>Extract macOS DMG numeric download ID from Tenable API</string>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://www.tenable.com/downloads/api/v1/public/pages/nessus-agents</string>
+                <key>re_pattern</key>
+                <string>"id":(\d+),"file":"NessusAgent-[\d.]+\.dmg"</string>
+                <key>result_output_var_name</key>
+                <string>download_id</string>
+            </dict>
+        </dict>
+
+        <!-- ============================================================ -->
+        <!-- STEP 3: Extract the Tenable-published SHA256 checksum for    -->
+        <!-- the macOS DMG. Stored in the AutoPkg environment for manual  -->
+        <!-- reference. The pattern uses DOTALL mode to span fields       -->
+        <!-- within the same JSON object up to the closing brace.         -->
+        <!-- ============================================================ -->
+        <dict>
+            <key>Comment</key>
+            <string>Extract SHA256 checksum for macOS DMG from Tenable API</string>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://www.tenable.com/downloads/api/v1/public/pages/nessus-agents</string>
+                <key>re_pattern</key>
+                <string>(?s)"file":"NessusAgent-[\d.]+\.dmg"[^}]*"sha256":"([a-f0-9]{64})"</string>
+                <key>result_output_var_name</key>
+                <string>tenable_sha256</string>
+            </dict>
+        </dict>
+
+        <!-- ============================================================ -->
+        <!-- STEP 4: Download the macOS DMG using curl via URLDownloader. -->
+        <!-- A browser-style User-Agent and Referer header are required   -->
+        <!-- to pass Tenable CDN validation. The license agreement query  -->
+        <!-- parameter is included in the URL as required by the API.     -->
+        <!-- ============================================================ -->
+        <dict>
+            <key>Comment</key>
+            <string>Download macOS DMG via URLDownloader with required headers</string>
             <key>Processor</key>
             <string>URLDownloader</string>
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <string>https://www.tenable.com/downloads/api/v2/pages/nessus-agents/files/NessusAgent-latest.dmg</string>
+                <string>https://www.tenable.com/downloads/api/v1/public/pages/nessus-agents/downloads/%download_id%/download?i_agree_to_tenable_license_agreement=true</string>
                 <key>filename</key>
                 <string>%NAME%-%version%.dmg</string>
-                <key>curl_opts</key>
-                <array>
-                    <string>--location</string>
-                    <string>--max-time</string>
-                    <string>120</string>
-                </array>
+                <key>request_headers</key>
+                <dict>
+                    <key>User-Agent</key>
+                    <string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15</string>
+                    <key>Referer</key>
+                    <string>https://www.tenable.com/downloads/nessus-agents</string>
+                </dict>
             </dict>
         </dict>
 
         <dict>
             <key>Processor</key>
             <string>EndOfCheckPhase</string>
+        </dict>
+
+        <!-- ============================================================ -->
+        <!-- STEP 5: Verify the code signature of "Install Nessus         -->
+        <!-- Agent.pkg" inside the DMG. AutoPkg mounts the DMG and        -->
+        <!-- resolves the path via the temp mount point.                  -->
+        <!--                                                              -->
+        <!-- Confirm authority names before deploying by running:         -->
+        <!--   hdiutil attach NessusAgent-version.dmg                     -->
+        <!--   pkgutil -check-signature                                  -->
+        <!--   "/Volumes/Nessus Agent Install/Install Nessus Agent.pkg"   -->
+        <!--   hdiutil detach "/Volumes/Nessus Agent Install"             -->
+        <!-- ============================================================ -->
+        <dict>
+            <key>Comment</key>
+            <string>Verify code signature of Install Nessus Agent.pkg inside DMG</string>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%/Install Nessus Agent.pkg</string>
+                <key>expected_authority_names</key>
+                <array>
+                    <string>Developer ID Installer: Tenable, Inc. (4B8J598M7U)</string>
+                    <string>Developer ID Certification Authority</string>
+                    <string>Apple Root CA</string>
+                </array>
+            </dict>
         </dict>
 
     </array>
