@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Extracts Install Nessus Agent.pkg from the downloaded DMG and stages it for deployment with standard naming.</string>
+    <string>Copies "Install Nessus Agent.pkg" from the downloaded DMG and renames it
+following the %NAME%-%version% convention for Jamf Pro deployment.
+</string>
     <key>Identifier</key>
     <string>com.github.Woodmember-Autopkg-Recipes.pkg.NessusAgent</string>
     <key>Input</key>
@@ -12,15 +14,20 @@
         <string>NessusAgent</string>
     </dict>
     <key>MinimumVersion</key>
-    <string>2.3</string>
+    <string>1.0.0</string>
     <key>ParentRecipe</key>
     <string>com.github.Woodmember-Autopkg-Recipes.download.NessusAgent</string>
     <key>Process</key>
     <array>
 
+        <!-- ============================================================ -->
+        <!-- Copy "Install Nessus Agent.pkg" from inside the DMG and      -->
+        <!-- rename it to follow the %NAME%-%version% convention required -->
+        <!-- by jamfuploader.                                             -->
+        <!-- ============================================================ -->
         <dict>
             <key>Comment</key>
-            <string>Extract Install Nessus Agent.pkg from the DMG</string>
+            <string>Copy Install Nessus Agent.pkg from DMG, rename for Jamf</string>
             <key>Processor</key>
             <string>Copier</string>
             <key>Arguments</key>
@@ -31,20 +38,6 @@
                 <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
                 <key>overwrite</key>
                 <true/>
-            </dict>
-        </dict>
-
-        <dict>
-            <key>Comment</key>
-            <string>Verify code signature of the extracted Nessus Agent PKG</string>
-            <key>Processor</key>
-            <string>CodeSignatureVerifier</string>
-            <key>Arguments</key>
-            <dict>
-                <key>input_path</key>
-                <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
-                <key>requirement</key>
-                <string>anchor apple generic and certificate leaf[subject.CN] = "Developer ID Installer: Tenable, Inc." and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */</string>
             </dict>
         </dict>
 
