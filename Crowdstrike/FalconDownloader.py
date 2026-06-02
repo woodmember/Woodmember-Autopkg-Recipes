@@ -1,6 +1,6 @@
 #!/usr/local/autopkg/python
 #
-# Copyright 2024 Woodmember
+# Copyright 2026 Woodmember
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# v2 changes:
+#   - Added sort=version|desc to the sensor list API query so that offset
+#     positions reflect version order, not publication date. This corrects
+#     an issue where hotfix packages released out of sequence were inserted
+#     at the wrong offset position when sorted by release_date (the prior
+#     implicit default).
 
 import os
 import json
@@ -35,7 +42,7 @@ class FalconDownloader(Processor):
         },
         "version": {
             "required": False,
-            "description": "Version to download. 0 for latest, 1 for N-1, etc.",
+            "description": "Version offset to download. 0 for latest (N), 1 for N-1, etc. Results are sorted by version descending, so this offset reliably reflects version lineage rather than publication date.",
             "default": "1",
         },
     }
@@ -75,12 +82,12 @@ class FalconDownloader(Processor):
         base_url = "https://api.crowdstrike.com"
         token_cmd = self.curl_cmd(f"{base_url}/oauth2/token", method="POST", data=f"client_id={client_id}&client_secret={client_secret}")
         _, token_stderr = self.run_curl(token_cmd)
-        
+
         for line in token_stderr.splitlines():
             if "Location:" in line:
                 base_url = line.split()[2].strip().rsplit("/", 2)[0]
                 break
-        
+
         if not base_url:
             base_url = "https://api.crowdstrike.com"
 
@@ -89,7 +96,14 @@ class FalconDownloader(Processor):
         # API endpoints
         oauth_token = f"{base_url}/oauth2/token"
         oauth_revoke = f"{base_url}/oauth2/revoke"
-        sensor_list = f"{base_url}/sensors/combined/installers/v2?offset={version}&limit=1&filter=platform%3A%22mac%22"
+
+        # Sort by version|desc so that offset positions reflect version lineage
+        # rather than publication date. Without this, hotfix packages published
+        # out of sequence appear at the wrong offset.
+        sensor_list = (
+            f"{base_url}/sensors/combined/installers/v2"
+            f"?offset={version}&limit=1&filter=platform%3A%22mac%22&sort=version%7Cdesc"
+        )
         sensor_dl = f"{base_url}/sensors/entities/download-installer/v2"
 
         # Get bearer token
@@ -97,7 +111,7 @@ class FalconDownloader(Processor):
         token_stdout, _ = self.run_curl(token_cmd)
         token_data = json.loads(token_stdout)
         bearer = token_data.get("access_token")
-        
+
         if not bearer:
             raise ProcessorError("Failed to obtain bearer token")
 
@@ -111,6 +125,8 @@ class FalconDownloader(Processor):
 
         sensor_name = sensor_data["resources"][0]["name"]
         sensor_sha = sensor_data["resources"][0]["sha256"]
+
+        self.output(f"Sensor identified: {sensor_name} (SHA256: {sensor_sha})")
 
         # Create downloads folder in the recipe cache directory
         downloads_dir = os.path.join(self.env["RECIPE_CACHE_DIR"], "downloads")
