@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest RØDECaster App and copies the vendor-supplied pkg with standardised NAME-version naming for deployment via Jamf Pro.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.RODECaster</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>RODECaster</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>ParentRecipe</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.RODECaster</string>
+    <key>Process</key>
+    <array>
+
+        <!-- Copy the vendor-supplied pkg to the recipe cache with standardised
+             %NAME%-%version%.pkg naming expected by jamfuploader. -->
+        <dict>
+            <key>Comment</key>
+            <string>Copy vendor pkg to cache with standardised NAME-version naming</string>
+            <key>Processor</key>
+            <string>PkgCopier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_pkg</key>
+                <string>%found_filename%</string>
+                <key>pkg_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+            </dict>
+        </dict>
+
+        <!-- Clean up working directories -->
+        <dict>
+            <key>Comment</key>
+            <string>Remove unarchived, pkg_expanded and payload working directories</string>
+            <key>Processor</key>
+            <string>PathDeleter</string>
+            <key>Arguments</key>
+            <dict>
+                <key>path_list</key>
+                <array>
+                    <string>%RECIPE_CACHE_DIR%/unarchived</string>
+                    <string>%RECIPE_CACHE_DIR%/pkg_expanded</string>
+                    <string>%RECIPE_CACHE_DIR%/payload</string>
+                </array>
+            </dict>
+        </dict>
+
+    </array>
+</dict>
+</plist>
