@@ -89,8 +89,8 @@
                 <dict>
                     <key>CFBundleIdentifier</key>
                     <string>bundleid</string>
-                    <key>CFBundleVersion</key>
-                    <string>CFBundleShortVersionString</string>
+                    <key>CFBundleShortVersionString</key>
+                    <string>version</string>
                 </dict>
             </dict>
         </dict>
