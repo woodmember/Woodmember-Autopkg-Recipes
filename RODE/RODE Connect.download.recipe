@@ -118,7 +118,7 @@
                     <key>CFBundleIdentifier</key>
                     <string>bundleid</string>
                     <key>CFBundleVersion</key>
-                    <string>version</string>
+                    <string>CFBundleShortVersionString</string>
                 </dict>
             </dict>
         </dict>
