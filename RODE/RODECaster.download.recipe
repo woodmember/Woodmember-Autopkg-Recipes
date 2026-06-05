@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest version of the RØDECaster App for macOS from the RODE update server. The zip contains a flat pkg named RØDECaster App (version).pkg. Version is extracted from CFBundleVersion in the app bundle Info.plist inside the pkg payload.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.RODECaster</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>RODECaster</string>
+        <key>DOWNLOAD_URL</key>
+        <string>https://update.rode.com/rc-app/RODECaster_App_MACOS.zip</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>Process</key>
+    <array>
+
+        <!-- Download the zip from the RODE update server.
+             Change detection is handled via ETag/Last-Modified since the URL is static. -->
+        <dict>
+            <key>Comment</key>
+            <string>Download the RODECaster App zip from the RODE update server</string>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%DOWNLOAD_URL%</string>
+                <key>filename</key>
+                <string>RODECaster_App_MACOS.zip</string>
+                <key>curl_opts</key>
+                <array>
+                    <string>--location</string>
+                    <string>--max-time</string>
+                    <string>120</string>
+                </array>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+
+        <!-- Unarchive the downloaded zip -->
+        <dict>
+            <key>Comment</key>
+            <string>Unarchive the RODECaster zip</string>
+            <key>Processor</key>
+            <string>Unarchiver</string>
+            <key>Arguments</key>
+            <dict>
+                <key>archive_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/unarchived</string>
+                <key>purge_destination</key>
+                <true/>
+            </dict>
+        </dict>
+
+        <!-- Locate the vendor pkg by matching on the RØDECaster name.
+             The pkg is named: RØDECaster App (version).pkg
+             found_filename is set to the vendor pkg path here and used immediately
+             for code signature verification before subsequent FileFinder calls
+             overwrite the variable. -->
+        <dict>
+            <key>Comment</key>
+            <string>Find the RØDECaster App pkg inside the unarchived folder</string>
+            <key>Processor</key>
+            <string>FileFinder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pattern</key>
+                <string>%RECIPE_CACHE_DIR%/unarchived/RØDECaster App*.pkg</string>
+            </dict>
+        </dict>
+
+        <!-- Verify the pkg code signature against Freedman Electronics' Developer ID Installer
+             certificate (FREEDMAN ELECTRONICS PTY LTD, team ID Z9T72PWTJA).
+             Placed here while found_filename still points to the vendor pkg. -->
+        <dict>
+            <key>Comment</key>
+            <string>Verify RØDECaster App pkg code signature against Freedman Electronics Developer ID</string>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%found_filename%</string>
+                <key>requirement</key>
+                <string>anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "Z9T72PWTJA"</string>
+                <key>strict_verification</key>
+                <false/>
+            </dict>
+        </dict>
+
+        <!-- Expand the flat distribution pkg to access the component pkg directories inside -->
+        <dict>
+            <key>Comment</key>
+            <string>Expand the flat vendor pkg to access component packages</string>
+            <key>Processor</key>
+            <string>FlatPkgUnpacker</string>
+            <key>Arguments</key>
+            <dict>
+                <key>flat_pkg_path</key>
+                <string>%found_filename%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/pkg_expanded</string>
+                <key>purge_destination</key>
+                <true/>
+            </dict>
+        </dict>
+
+        <!-- Find the component pkg directory inside the expanded structure.
+             FlatPkgUnpacker produces a directory per component (e.g. pkg_expanded/RODECaster App.pkg/).
+             found_filename is now set to the component pkg directory path. -->
+        <dict>
+            <key>Comment</key>
+            <string>Find the component pkg directory inside the expanded pkg</string>
+            <key>Processor</key>
+            <string>FileFinder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pattern</key>
+                <string>%RECIPE_CACHE_DIR%/pkg_expanded/*.pkg</string>
+            </dict>
+        </dict>
+
+        <!-- Extract the component pkg payload so we can access the app bundle.
+             found_filename points to the component pkg directory (e.g. pkg_expanded/RODECaster App.pkg/).
+             PkgPayloadUnpacker requires pkg_payload_path to be the Payload file inside that directory. -->
+        <dict>
+            <key>Comment</key>
+            <string>Extract the pkg payload to access the RODECaster App.app bundle</string>
+            <key>Processor</key>
+            <string>PkgPayloadUnpacker</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_payload_path</key>
+                <string>%found_filename%/Payload</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/payload</string>
+                <key>purge_destination</key>
+                <true/>
+            </dict>
+        </dict>
+
+        <!-- Find RODECaster App.app inside the extracted payload.
+             The app installs to /Applications so the payload path mirrors that. -->
+        <dict>
+            <key>Comment</key>
+            <string>Find RODECaster App.app in the extracted payload</string>
+            <key>Processor</key>
+            <string>FileFinder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pattern</key>
+                <string>%RECIPE_CACHE_DIR%/payload/Applications/RODECaster App.app</string>
+            </dict>
+        </dict>
+
+        <!-- Read CFBundleVersion from the app Info.plist.
+             The Info.plist for this app only contains CFBundleVersion (e.g. 2.0.111). -->
+        <dict>
+            <key>Comment</key>
+            <string>Read version from RODECaster App.app Info.plist</string>
+            <key>Processor</key>
+            <string>PlistReader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>info_path</key>
+                <string>%found_filename%/Contents/Info.plist</string>
+                <key>plist_keys</key>
+                <dict>
+                    <key>CFBundleVersion</key>
+                    <string>version</string>
+                </dict>
+            </dict>
+        </dict>
+
+    </array>
+</dict>
+</plist>
