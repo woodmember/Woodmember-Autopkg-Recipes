@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest version of Zen Browser and creates a package.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.ZenBrowser</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>ZenBrowser</string>
+        <key>pkginfo</key>
+        <dict>
+            <key>catalogs</key>
+            <array>
+                <string>testing</string>
+            </array>
+            <key>description</key>
+            <string>Zen Browser is a privacy-focused, open-source web browser built on Firefox, designed to be calmer and more customizable with features such as workspaces, split views and a minimal interface.</string>
+            <key>developer</key>
+            <string>Mauro Balades</string>
+            <key>display_name</key>
+            <string>Zen Browser</string>
+            <key>name</key>
+            <string>%NAME%</string>
+            <key>unattended_install</key>
+            <true/>
+        </dict>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>ParentRecipe</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.ZenBrowser</string>
+    <key>Process</key>
+    <array>
+        <!-- Create the package from the app inside the mounted DMG.
+             AppDmgVersioner sets app_name; AutoPkg auto-mounts the DMG
+             when a path points inside it. -->
+        <dict>
+            <key>Comment</key>
+            <string>Create Zen Browser package</string>
+            <key>Processor</key>
+            <string>AppPkgCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>app_path</key>
+                <string>%pathname%/%app_name%</string>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
