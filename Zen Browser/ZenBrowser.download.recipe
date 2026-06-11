@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest version of Zen Browser (universal macOS DMG) from GitHub releases.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.ZenBrowser</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>ZenBrowser</string>
+        <key>GITHUB_REPO</key>
+        <string>zen-browser/desktop</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>Process</key>
+    <array>
+        <!-- Get the latest release info and version from GitHub.
+             Set GITHUB_TOKEN in AutoPkg preferences to avoid the 60 req/hr
+             unauthenticated rate limit. -->
+        <dict>
+            <key>Comment</key>
+            <string>Get latest release version and asset URL from GitHub</string>
+            <key>Processor</key>
+            <string>GitHubReleasesInfoProvider</string>
+            <key>Arguments</key>
+            <dict>
+                <key>github_repo</key>
+                <string>%GITHUB_REPO%</string>
+                <key>asset_regex</key>
+                <string>^zen\.macos-universal\.dmg$</string>
+            </dict>
+        </dict>
+
+        <!-- Download the universal macOS DMG -->
+        <dict>
+            <key>Comment</key>
+            <string>Download the Zen Browser universal DMG</string>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%url%</string>
+                <key>filename</key>
+                <string>%NAME%-%version%.dmg</string>
+                <key>curl_opts</key>
+                <array>
+                    <string>--location</string>
+                    <string>--max-time</string>
+                    <string>120</string>
+                </array>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+
+        <!-- Mount the DMG and read the app name/bundleid/version -->
+        <dict>
+            <key>Comment</key>
+            <string>Mount DMG and extract app name, bundleid and version</string>
+            <key>Processor</key>
+            <string>AppDmgVersioner</string>
+            <key>Arguments</key>
+            <dict>
+                <key>dmg_path</key>
+                <string>%pathname%</string>
+            </dict>
+        </dict>
+
+        <!-- Verify Zen Browser code signature. The DMG is auto-mounted by
+             AutoPkg when a path points inside it, so reference the app via
+             the dmg pathname. AppDmgVersioner does not set found_filename. -->
+        <dict>
+            <key>Comment</key>
+            <string>Verify Zen Browser code signature</string>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%/%app_name%</string>
+                <key>requirement</key>
+                <string>identifier "app.zen-browser.zen" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "9V5K9TP787"</string>
+                <key>strict_verification</key>
+                <false/>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
