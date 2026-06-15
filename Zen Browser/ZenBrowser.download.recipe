@@ -3,38 +3,23 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads the latest version of Zen Browser (universal macOS DMG) from GitHub releases.</string>
+    <string>Downloads the latest version of Zen Browser (universal macOS DMG) directly from the vendor's static GitHub latest-release URL, as linked from https://zen-browser.app/download/. Version is read from the app bundle inside the DMG.</string>
     <key>Identifier</key>
     <string>com.github.Woodmember-Autopkg-Recipes.download.ZenBrowser</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
         <string>ZenBrowser</string>
-        <key>GITHUB_REPO</key>
-        <string>zen-browser/desktop</string>
+        <key>DOWNLOAD_URL</key>
+        <string>https://github.com/zen-browser/desktop/releases/latest/download/zen.macos-universal.dmg</string>
     </dict>
     <key>MinimumVersion</key>
     <string>2.3</string>
     <key>Process</key>
     <array>
-        <!-- Get the latest release info and version from GitHub.
-             Set GITHUB_TOKEN in AutoPkg preferences to avoid the 60 req/hr
-             unauthenticated rate limit. -->
-        <dict>
-            <key>Comment</key>
-            <string>Get latest release version and asset URL from GitHub</string>
-            <key>Processor</key>
-            <string>GitHubReleasesInfoProvider</string>
-            <key>Arguments</key>
-            <dict>
-                <key>github_repo</key>
-                <string>%GITHUB_REPO%</string>
-                <key>asset_regex</key>
-                <string>^zen\.macos-universal\.dmg$</string>
-            </dict>
-        </dict>
-
-        <!-- Download the universal macOS DMG -->
+        <!-- Download the universal macOS DMG from the vendor static URL.
+             This URL always redirects to the newest release asset, so no
+             GitHub API call (and no rate limiting) is involved. -->
         <dict>
             <key>Comment</key>
             <string>Download the Zen Browser universal DMG</string>
@@ -43,9 +28,9 @@
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <string>%url%</string>
+                <string>%DOWNLOAD_URL%</string>
                 <key>filename</key>
-                <string>%NAME%-%version%.dmg</string>
+                <string>%NAME%.dmg</string>
                 <key>curl_opts</key>
                 <array>
                     <string>--location</string>
