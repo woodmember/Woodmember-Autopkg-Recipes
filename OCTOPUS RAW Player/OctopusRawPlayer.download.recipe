@@ -17,58 +17,20 @@
     <string>2.3</string>
     <key>Process</key>
     <array>
-        <!-- Get the latest release info from GitHub API -->
+        <!-- Get the latest release info from GitHub -->
         <dict>
             <key>Comment</key>
-            <string>Get the latest release info from GitHub API</string>
+            <string>Get the latest release info from GitHub</string>
             <key>Processor</key>
-            <string>URLDownloader</string>
+            <string>GitHubReleasesInfoProvider</string>
             <key>Arguments</key>
             <dict>
-                <key>url</key>
-                <string>https://api.github.com/repos/%GITHUB_REPO%/releases/latest</string>
-                <key>filename</key>
-                <string>release_info.json</string>
-                <key>curl_opts</key>
-                <array>
-                    <string>--location</string>
-                    <string>--max-time</string>
-                    <string>30</string>
-                </array>
-            </dict>
-        </dict>
-        
-        <!-- Extract the download URL for macOS pkg -->
-        <dict>
-            <key>Comment</key>
-            <string>Extract macOS pkg download URL from GitHub release info</string>
-            <key>Processor</key>
-            <string>URLTextSearcher</string>
-            <key>Arguments</key>
-            <dict>
-                <key>url</key>
-                <string>file://%pathname%</string>
-                <key>re_pattern</key>
-                <string>"browser_download_url":\s*"([^"]*OCTOPUS-RAW-Player-macOS[^"]*\.pkg)"</string>
-                <key>result_output_var_name</key>
-                <string>download_url</string>
-            </dict>
-        </dict>
-        
-        <!-- Extract version from the download URL -->
-        <dict>
-            <key>Comment</key>
-            <string>Extract version from release tag</string>
-            <key>Processor</key>
-            <string>URLTextSearcher</string>
-            <key>Arguments</key>
-            <dict>
-                <key>url</key>
-                <string>file://%pathname%</string>
-                <key>re_pattern</key>
-                <string>"tag_name":\s*"v?([^"]+)"</string>
-                <key>result_output_var_name</key>
-                <string>version</string>
+                <key>github_repo</key>
+                <string>%GITHUB_REPO%</string>
+                <key>asset_regex</key>
+                <string>OCTOPUS-RAW-Player-macOS.*\.pkg</string>
+                <key>include_prereleases</key>
+                <string>false</string>
             </dict>
         </dict>
         
@@ -81,15 +43,9 @@
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <string>%download_url%</string>
+                <string>%url%</string>
                 <key>filename</key>
                 <string>%NAME%-%version%.pkg</string>
-                <key>curl_opts</key>
-                <array>
-                    <string>--location</string>
-                    <string>--max-time</string>
-                    <string>120</string>
-                </array>
             </dict>
         </dict>
         
