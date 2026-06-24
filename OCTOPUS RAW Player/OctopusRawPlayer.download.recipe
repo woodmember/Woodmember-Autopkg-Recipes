@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest version of OCTOPUS RAW Player from GitHub releases and extracts the app from the pkg.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.OctopusRawPlayer</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>OctopusRawPlayer</string>
+        <key>GITHUB_REPO</key>
+        <string>octopuscinema/raw-player</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>Process</key>
+    <array>
+        <!-- Get the latest release info from GitHub API -->
+        <dict>
+            <key>Comment</key>
+            <string>Get the latest release info from GitHub API</string>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://api.github.com/repos/%GITHUB_REPO%/releases/latest</string>
+                <key>filename</key>
+                <string>release_info.json</string>
+                <key>curl_opts</key>
+                <array>
+                    <string>--location</string>
+                    <string>--max-time</string>
+                    <string>30</string>
+                </array>
+            </dict>
+        </dict>
+        
+        <!-- Extract the download URL for macOS pkg -->
+        <dict>
+            <key>Comment</key>
+            <string>Extract macOS pkg download URL from GitHub release info</string>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>file://%pathname%</string>
+                <key>re_pattern</key>
+                <string>"browser_download_url":\s*"([^"]*OCTOPUS-RAW-Player-macOS[^"]*\.pkg)"</string>
+                <key>result_output_var_name</key>
+                <string>download_url</string>
+            </dict>
+        </dict>
+        
+        <!-- Extract version from the download URL -->
+        <dict>
+            <key>Comment</key>
+            <string>Extract version from release tag</string>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>file://%pathname%</string>
+                <key>re_pattern</key>
+                <string>"tag_name":\s*"v?([^"]+)"</string>
+                <key>result_output_var_name</key>
+                <string>version</string>
+            </dict>
+        </dict>
+        
+        <!-- Download the actual pkg file -->
+        <dict>
+            <key>Comment</key>
+            <string>Download the OCTOPUS RAW Player pkg file</string>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%download_url%</string>
+                <key>filename</key>
+                <string>%NAME%-%version%.pkg</string>
+                <key>curl_opts</key>
+                <array>
+                    <string>--location</string>
+                    <string>--max-time</string>
+                    <string>120</string>
+                </array>
+            </dict>
+        </dict>
+        
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+        
+        <!-- Extract the pkg file to access the inner pkg -->
+        <dict>
+            <key>Comment</key>
+            <string>Unpack the flat package</string>
+            <key>Processor</key>
+            <string>FlatPkgUnpacker</string>
+            <key>Arguments</key>
+            <dict>
+                <key>flat_pkg_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/unpack</string>
+                <key>purge_destination</key>
+                <true/>
+            </dict>
+        </dict>
+        
+        <!-- Unpack the inner component pkg payload -->
+        <dict>
+            <key>Comment</key>
+            <string>Unpack the component package payload</string>
+            <key>Processor</key>
+            <string>PkgPayloadUnpacker</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_payload_path</key>
+                <string>%RECIPE_CACHE_DIR%/unpack/com.octopus.rawplayer.pkg/Payload</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/extracted</string>
+                <key>purge_destination</key>
+                <true/>
+            </dict>
+        </dict>
+        
+        <!-- Find the OCTOPUS RAW Player.app -->
+        <dict>
+            <key>Comment</key>
+            <string>Find OCTOPUS RAW Player.app in extracted folder</string>
+            <key>Processor</key>
+            <string>FileFinder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pattern</key>
+                <string>%RECIPE_CACHE_DIR%/extracted/**/OCTOPUS RAW Player.app</string>
+            </dict>
+        </dict>
+        
+        <!-- Read version info from app bundle -->
+        <dict>
+            <key>Comment</key>
+            <string>Extract version info from OCTOPUS RAW Player.app</string>
+            <key>Processor</key>
+            <string>PlistReader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>info_path</key>
+                <string>%found_filename%/Contents/Info.plist</string>
+                <key>plist_keys</key>
+                <dict>
+                    <key>CFBundleVersion</key>
+                    <string>bundleid_version</string>
+                    <key>CFBundleShortVersionString</key>
+                    <string>app_version</string>
+                    <key>CFBundleIdentifier</key>
+                    <string>bundleid</string>
+                </dict>
+            </dict>
+        </dict>
+        
+        <!-- Verify code signature -->
+        <dict>
+            <key>Comment</key>
+            <string>Verify OCTOPUS RAW Player.app code signature</string>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%found_filename%</string>
+                <key>requirement</key>
+                <string>identifier "com.octopus.rawplayer" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "978UCD44M6"</string>
+                <key>strict_verification</key>
+                <false/>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
