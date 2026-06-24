@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads the latest version of OCTOPUS RAW Player and creates a repackaged installer.</string>
+    <string>Downloads the latest version of Octopus Raw Player and creates a repackaged installer.</string>
     <key>Identifier</key>
     <string>com.github.Woodmember-Autopkg-Recipes.pkg.OctopusRawPlayer</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
-        <string>OctopusRawPlayer</string>
+        <string>Octopus Raw Player</string>
         <key>pkginfo</key>
         <dict>
             <key>catalogs</key>
@@ -17,13 +17,13 @@
                 <string>testing</string>
             </array>
             <key>description</key>
-            <string>OCTOPUS RAW Player is a lightweight multi-platform video player for reviewing RAW video footage from professional cameras. It supports CinemaDNG RAW sequences with advanced color science processing and various output formats including Log gamma/wide gamut options.</string>
+            <string>%NAME% is a lightweight multi-platform video player for reviewing RAW video footage from professional cameras. It supports CinemaDNG RAW sequences with advanced color science processing and various output formats including Log gamma/wide gamut options.</string>
             <key>developer</key>
             <string>OCTOPUS CINEMA</string>
             <key>display_name</key>
-            <string>OCTOPUS RAW Player</string>
-            <key>name</key>
             <string>%NAME%</string>
+            <key>name</key>
+            <string>OctopusRawPlayer</string>
             <key>unattended_install</key>
             <true/>
         </dict>
@@ -34,10 +34,9 @@
     <string>com.github.Woodmember-Autopkg-Recipes.download.OctopusRawPlayer</string>
     <key>Process</key>
     <array>
-        <!-- Create the package using AppPkgCreator -->
         <dict>
             <key>Comment</key>
-            <string>Create OCTOPUS RAW Player package</string>
+            <string>Create Octopus Raw Player package</string>
             <key>Processor</key>
             <string>AppPkgCreator</string>
             <key>Arguments</key>
@@ -47,7 +46,6 @@
             </dict>
         </dict>
         
-        <!-- Clean up temporary directories from download recipe -->
         <dict>
             <key>Comment</key>
             <string>Clean up unpack directory</string>
@@ -75,7 +73,6 @@
                 </array>
             </dict>
         </dict>
-
     </array>
 </dict>
 </plist>
