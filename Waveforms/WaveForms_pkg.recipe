@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest version of Digilent WaveForms and builds a package that installs WaveForms.app into /Applications and dwf.framework into /Library/Frameworks.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.WaveForms</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>WaveForms</string>
+        <key>pkginfo</key>
+        <dict>
+            <key>catalogs</key>
+            <array>
+                <string>testing</string>
+            </array>
+            <key>description</key>
+            <string>WaveForms is the virtual instrument suite for Digilent Test and Measurement devices, including the Analog Discovery family, Analog Discovery Studio, Analog Discovery Pro and Digital Discovery. It provides an oscilloscope, logic analyzer, waveform generator, pattern generator, power supplies, spectrum, network and impedance analyzers, and includes the WaveForms SDK for building custom applications.</string>
+            <key>developer</key>
+            <string>Digilent</string>
+            <key>display_name</key>
+            <string>WaveForms</string>
+            <key>name</key>
+            <string>%NAME%</string>
+            <key>unattended_install</key>
+            <true/>
+        </dict>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>ParentRecipe</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.WaveForms</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Comment</key>
+            <string>Build the package root with the two install destinations</string>
+            <key>Processor</key>
+            <string>PkgRootCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkgroot</key>
+                <string>%RECIPE_CACHE_DIR%/pkgroot</string>
+                <key>pkgdirs</key>
+                <dict>
+                    <key>Applications</key>
+                    <string>0775</string>
+                    <key>Library</key>
+                    <string>0755</string>
+                    <key>Library/Frameworks</key>
+                    <string>0755</string>
+                </dict>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Copy WaveForms.app from the mounted DMG into the package root</string>
+            <key>Processor</key>
+            <string>Copier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%/%app_name%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/pkgroot/Applications/%app_name%</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Copy dwf.framework from the mounted DMG into the package root</string>
+            <key>Processor</key>
+            <string>Copier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%/dwf.framework</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/pkgroot/Library/Frameworks/dwf.framework</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Build the flat package</string>
+            <key>Processor</key>
+            <string>PkgCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_request</key>
+                <dict>
+                    <key>pkgroot</key>
+                    <string>%RECIPE_CACHE_DIR%/pkgroot</string>
+                    <key>pkgname</key>
+                    <string>%NAME%-%version%</string>
+                    <key>pkgdir</key>
+                    <string>%RECIPE_CACHE_DIR%</string>
+                    <key>id</key>
+                    <string>%bundleid%</string>
+                    <key>version</key>
+                    <string>%version%</string>
+                    <key>chown</key>
+                    <array>
+                        <dict>
+                            <key>path</key>
+                            <string>Applications</string>
+                            <key>user</key>
+                            <string>root</string>
+                            <key>group</key>
+                            <string>admin</string>
+                        </dict>
+                        <dict>
+                            <key>path</key>
+                            <string>Library</string>
+                            <key>user</key>
+                            <string>root</string>
+                            <key>group</key>
+                            <string>wheel</string>
+                        </dict>
+                    </array>
+                </dict>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Clean up the package root</string>
+            <key>Processor</key>
+            <string>PathDeleter</string>
+            <key>Arguments</key>
+            <dict>
+                <key>path_list</key>
+                <array>
+                    <string>%RECIPE_CACHE_DIR%/pkgroot</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
