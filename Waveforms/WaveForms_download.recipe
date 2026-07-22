@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest version of Digilent WaveForms for macOS as a DMG. The DMG contains WaveForms.app and the dwf.framework used by the WaveForms SDK. Version detection reads the published version folders directly from Digilent's S3 bucket. The changelog.txt that the application polls for its update check lags behind actual releases, so it is not used. The digilent.com web site sits behind a Cloudflare challenge and cannot be scraped.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.WaveForms</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>WaveForms</string>
+        <key>BUCKET_LIST_URL</key>
+        <string>https://digilent.s3.us-west-2.amazonaws.com/?list-type=2&amp;prefix=Software/Waveforms/&amp;delimiter=/</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Comment</key>
+            <string>List the published version folders in Digilent's S3 bucket</string>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%BUCKET_LIST_URL%</string>
+                <key>filename</key>
+                <string>waveforms-listing.xml</string>
+                <key>curl_opts</key>
+                <array>
+                    <string>--location</string>
+                    <string>--max-time</string>
+                    <string>60</string>
+                </array>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>S3 returns prefixes in sort order, so the greedy leading match lands on the last and therefore newest 3.x version folder. The 2.x folders and the mathworks folder are excluded by the pattern.</string>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>file://%pathname%</string>
+                <key>re_pattern</key>
+                <string>[\s\S]*&lt;Prefix&gt;Software/Waveforms/(3\.[0-9]+\.[0-9]+)/&lt;/Prefix&gt;</string>
+                <key>result_output_var_name</key>
+                <string>url_version</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Download the universal macOS DMG from the same S3 bucket</string>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://digilent.s3.us-west-2.amazonaws.com/Software/Waveforms/%url_version%/digilent.waveforms_v%url_version%.dmg</string>
+                <key>filename</key>
+                <string>%NAME%-%url_version%.dmg</string>
+                <key>curl_opts</key>
+                <array>
+                    <string>--location</string>
+                    <string>--max-time</string>
+                    <string>600</string>
+                </array>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Read app_name, bundleid and version from the app inside the mounted DMG</string>
+            <key>Processor</key>
+            <string>AppDmgVersioner</string>
+            <key>Arguments</key>
+            <dict>
+                <key>dmg_path</key>
+                <string>%pathname%</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Verify the code signature of WaveForms.app inside the DMG</string>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%/%app_name%</string>
+                <key>requirement</key>
+                <string>identifier "com.digilent.waveforms" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "3GQCL4AKGN"</string>
+                <key>strict_verification</key>
+                <false/>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Verify the code signature of dwf.framework at the root of the DMG</string>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%/dwf.framework</string>
+                <key>requirement</key>
+                <string>identifier "com.digilent.dwf" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "3GQCL4AKGN"</string>
+                <key>strict_verification</key>
+                <false/>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
