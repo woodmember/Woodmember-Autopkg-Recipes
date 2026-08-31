@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest release of Node.js for macOS as a universal (Intel + Apple silicon) installer package. Reads the version from the nodejs.org /dist/latest/ directory listing, which always points at the newest release.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.NodeJS</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>NodeJS</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Comment</key>
+            <string>Read the newest version from the always-current /dist/latest/ listing</string>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://nodejs.org/dist/latest/</string>
+                <key>re_pattern</key>
+                <string>node-v([0-9]+\.[0-9]+\.[0-9]+)\.pkg</string>
+                <key>result_output_var_name</key>
+                <string>version</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Download the universal macOS installer package</string>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://nodejs.org/dist/v%version%/node-v%version%.pkg</string>
+                <key>filename</key>
+                <string>%NAME%-%version%.pkg</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Verify the vendor package is signed and notarized by the Node.js Foundation</string>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_authority_names</key>
+                <array>
+                    <string>Developer ID Installer: Node.js Foundation (HX7739G8FX)</string>
+                    <string>Developer ID Certification Authority</string>
+                    <string>Apple Root CA</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>

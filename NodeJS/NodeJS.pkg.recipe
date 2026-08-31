@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest Node.js release for macOS and copies the vendor's signed, notarized universal package to a standard NodeJS-&lt;version&gt;.pkg name. The vendor package is not rebuilt, which would break its notarization.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.NodeJS</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>NodeJS</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>ParentRecipe</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.NodeJS</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Comment</key>
+            <string>Standardise the vendor package name without repackaging</string>
+            <key>Processor</key>
+            <string>PkgCopier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_pkg</key>
+                <string>%pathname%</string>
+                <key>pkg_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
