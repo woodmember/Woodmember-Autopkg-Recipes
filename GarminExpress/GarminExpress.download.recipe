@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest version of Garmin Express for macOS. The unversioned GarminExpress.dmg carries no usable version (its installer package declares only version="0"), so the versioned filename is scraped from the vendor download page instead.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.GarminExpress</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>GarminExpress</string>
+		<key>DOWNLOAD_PAGE_URL</key>
+		<string>https://www.garmin.com/en-US/software/express/mac/</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>garmin-index.html</string>
+				<key>url</key>
+				<string>%DOWNLOAD_PAGE_URL%</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>file://%pathname%</string>
+				<key>re_pattern</key>
+				<string>GarminExpress_([0-9.]+)_OS10x\.dmg</string>
+				<key>result_output_var_name</key>
+				<string>version</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%-%version%.dmg</string>
+				<key>url</key>
+				<string>https://download.garmin.com/omt/express/GarminExpress_%version%_OS10x.dmg</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>input_path</key>
+				<string>%pathname%/Install Garmin Express.pkg</string>
+				<key>expected_authority_names</key>
+				<array>
+					<string>Developer ID Installer: Garmin International (72ES32VZUA)</string>
+					<string>Developer ID Certification Authority</string>
+					<string>Apple Root CA</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest Apple silicon build of Sonic Pi. The version is scraped from the vendor home page. aanklewicz's community recipe runs but downloads nothing and produces no package; the GitHub releases for sonic-pi-net/sonic-pi carry no macOS assets, so the vendor site is the only usable source.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.SonicPi</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>SonicPi</string>
+		<key>DOWNLOAD_PAGE_URL</key>
+		<string>https://sonic-pi.net/</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>sonicpi-index.html</string>
+				<key>url</key>
+				<string>%DOWNLOAD_PAGE_URL%</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>file://%pathname%</string>
+				<key>re_pattern</key>
+				<string>Sonic-Pi-for-Mac-arm64-v([0-9.]+)\.dmg</string>
+				<key>result_output_var_name</key>
+				<string>version</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%-%version%.dmg</string>
+				<key>url</key>
+				<string>https://sonic-pi.net/files/releases/v%version%/Sonic-Pi-for-Mac-arm64-v%version%.dmg</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>input_path</key>
+				<string>%pathname%/Sonic Pi.app</string>
+				<key>requirement</key>
+				<string>identifier "net.sonic-pi.app" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = MM65S3L4NG</string>
+			</dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>

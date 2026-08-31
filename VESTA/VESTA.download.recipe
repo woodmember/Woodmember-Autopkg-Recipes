@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the current release of VESTA (visualisation for structural models). Community coverage is download-only (vmiller); this adds the packaging step.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.VESTA</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>VESTA</string>
+		<key>DOWNLOAD_PAGE_URL</key>
+		<string>https://jp-minerals.org/vesta/en/download.html</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>vesta-index.html</string>
+				<key>url</key>
+				<string>%DOWNLOAD_PAGE_URL%</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Comment</key>
+			<string>The page lists the newest release FIRST, so a plain first match selects it; a greedy leading match would wrongly pick the older 3.4.4 entry. Only vmiller's download recipe exists upstream; there is no community pkg recipe.</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>file://%pathname%</string>
+				<key>re_pattern</key>
+				<string>archives/([0-9][0-9.]*)/VESTA\.dmg</string>
+				<key>result_output_var_name</key>
+				<string>version</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%-%version%.dmg</string>
+				<key>url</key>
+				<string>https://jp-minerals.org/vesta/archives/%version%/VESTA.dmg</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>input_path</key>
+				<string>%pathname%/VESTA/VESTA.app</string>
+				<key>requirement</key>
+				<string>identifier VESTA and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = Y66LM3WNCW</string>
+			</dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>

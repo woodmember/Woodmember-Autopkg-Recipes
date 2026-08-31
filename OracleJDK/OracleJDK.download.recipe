@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the current Oracle JDK (Apple silicon) for the configured major version. Oracle serves this without a licence click-through under the NFTC. Note the Jamf App Catalog lists Oracle VirtualBox but NOT Oracle JDK, and community recipes named *JDK* build OpenJDK or SapMachine, which are different products.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.OracleJDK</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>OracleJDK</string>
+		<key>JDK_MAJOR</key>
+		<string>21</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%.dmg</string>
+				<key>url</key>
+				<string>https://download.oracle.com/java/%JDK_MAJOR%/latest/jdk-%JDK_MAJOR%_macos-aarch64_bin.dmg</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>input_path</key>
+				<string>%pathname%/JDK*.pkg</string>
+				<key>expected_authority_names</key>
+				<array>
+					<string>Developer ID Installer: Oracle America, Inc. (VB5E2TV963)</string>
+					<string>Developer ID Certification Authority</string>
+					<string>Apple Root CA</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
+		</dict>
+		<dict>
+			<key>Comment</key>
+			<string>Oracle's own Distribution declares version="21.0.12.1." with a trailing dot, which would produce a malformed package name. The pkg-ref id (com.oracle.jdk-21.0.12.1) carries the same version cleanly, so match on that instead.</string>
+			<key>Arguments</key>
+			<dict>
+				<key>flat_pkg_path</key>
+				<string>%pathname%/JDK*.pkg</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/unpack</string>
+			</dict>
+			<key>Processor</key>
+			<string>FlatPkgUnpacker</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>file://%RECIPE_CACHE_DIR%/unpack/Distribution</string>
+				<key>re_pattern</key>
+				<string>pkg-ref id="com\.oracle\.jdk-([0-9][0-9.]*[0-9])"</string>
+				<key>result_output_var_name</key>
+				<string>version</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+		</dict>
+	</array>
+</dict>
+</plist>

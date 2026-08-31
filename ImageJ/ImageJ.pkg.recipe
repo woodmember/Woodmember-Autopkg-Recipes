@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads ImageJ and creates a package. NOTE: this ImageJ build is unsigned, so the recipe performs no signature verification. The community recipes (hansen-m, moofit, n8felton) all fail on a dead vendor-page scrape.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.ImageJ</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>ImageJ</string>
+		<key>pkginfo</key>
+		<dict>
+			<key>catalogs</key>
+			<array>
+				<string>testing</string>
+			</array>
+			<key>description</key>
+			<string>ImageJ is a public-domain image processing program for scientific multidimensional images.</string>
+			<key>developer</key>
+			<string>Wayne Rasband, NIH</string>
+			<key>display_name</key>
+			<string>ImageJ</string>
+			<key>name</key>
+			<string>%NAME%</string>
+			<key>unattended_install</key>
+			<true/>
+		</dict>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>ParentRecipe</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.ImageJ</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Comment</key>
+			<string>ImageJ's CFBundleIdentifier is the bare string "ImageJ", which pkgbuild rejects as a package id, so a reverse-DNS bundleid is supplied explicitly.</string>
+			<key>Arguments</key>
+			<dict>
+				<key>app_path</key>
+				<string>%RECIPE_CACHE_DIR%/unarchived/ImageJ.app</string>
+				<key>bundleid</key>
+				<string>gov.nih.imagej</string>
+				<key>pkg_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+			</dict>
+			<key>Processor</key>
+			<string>AppPkgCreator</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>path_list</key>
+				<array>
+					<string>%RECIPE_CACHE_DIR%/unarchived</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>PathDeleter</string>
+		</dict>
+	</array>
+</dict>
+</plist>
