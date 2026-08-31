@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>Scrivener</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Scrivener is a long-form writing and manuscript composition tool.</string>
-			<key>developer</key>
-			<string>Literature &amp; Latte Ltd</string>
-			<key>display_name</key>
-			<string>Scrivener</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

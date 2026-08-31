@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>Steam</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Steam is a digital distribution platform and game client from Valve.</string>
-			<key>developer</key>
-			<string>Valve Corporation</string>
-			<key>display_name</key>
-			<string>Steam</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

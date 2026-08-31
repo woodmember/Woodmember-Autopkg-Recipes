@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>GarminExpress</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Garmin Express manages map and software updates for Garmin devices. NOTE: the vendor installer package ships only Garmin Express Service.app; the main Garmin Express application is placed by the installer at run time, so the packaged payload is the vendor package as-shipped.</string>
-			<key>developer</key>
-			<string>Garmin International</string>
-			<key>display_name</key>
-			<string>Garmin Express</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

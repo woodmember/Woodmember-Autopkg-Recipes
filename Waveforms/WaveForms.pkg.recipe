@@ -10,23 +10,6 @@
     <dict>
         <key>NAME</key>
         <string>WaveForms</string>
-        <key>pkginfo</key>
-        <dict>
-            <key>catalogs</key>
-            <array>
-                <string>testing</string>
-            </array>
-            <key>description</key>
-            <string>WaveForms is the virtual instrument suite for Digilent Test and Measurement devices, including the Analog Discovery family, Analog Discovery Studio, Analog Discovery Pro and Digital Discovery. It provides an oscilloscope, logic analyzer, waveform generator, pattern generator, power supplies, spectrum, network and impedance analyzers, and includes the WaveForms SDK for building custom applications.</string>
-            <key>developer</key>
-            <string>Digilent</string>
-            <key>display_name</key>
-            <string>WaveForms</string>
-            <key>name</key>
-            <string>%NAME%</string>
-            <key>unattended_install</key>
-            <true/>
-        </dict>
     </dict>
     <key>MinimumVersion</key>
     <string>2.3</string>

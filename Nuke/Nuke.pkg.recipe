@@ -18,23 +18,6 @@ an unrelated font-cache cleaner.</string>
 	<dict>
 		<key>NAME</key>
 		<string>Nuke</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Foundry Nuke is a node-based compositing and finishing application for film and television. The package installs the full Nuke family (Nuke, NukeX, NukeStudio, NukeAssist, NukeIndie, Hiero and HieroPlayer).</string>
-			<key>developer</key>
-			<string>The Foundry</string>
-			<key>display_name</key>
-			<string>Nuke</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

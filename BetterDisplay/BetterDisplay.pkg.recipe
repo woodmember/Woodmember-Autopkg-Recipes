@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>BetterDisplay</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>BetterDisplay gives fine-grained control over display resolution, scaling and brightness.</string>
-			<key>developer</key>
-			<string>Istvan Toth</string>
-			<key>display_name</key>
-			<string>BetterDisplay</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>OracleJDK</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Oracle JDK is Oracle's distribution of the Java Development Kit.</string>
-			<key>developer</key>
-			<string>Oracle America, Inc.</string>
-			<key>display_name</key>
-			<string>Oracle JDK</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

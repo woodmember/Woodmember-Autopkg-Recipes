@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>LaTeXiT</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>LaTeXiT turns LaTeX equations into graphics that can be dragged into other applications.</string>
-			<key>developer</key>
-			<string>Pierre Chatelier</string>
-			<key>display_name</key>
-			<string>LaTeXiT</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>Mactracker</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Mactracker is a reference database of every Apple product ever made.</string>
-			<key>developer</key>
-			<string>Ian Page</string>
-			<key>display_name</key>
-			<string>Mactracker</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

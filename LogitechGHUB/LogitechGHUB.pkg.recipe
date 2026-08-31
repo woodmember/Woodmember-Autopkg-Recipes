@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>LogitechGHUB</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Logitech G HUB configures Logitech G gaming peripherals. NOTE: Logitech ships this as a network installer; the package deploys lghub_installer.app, which must be run to install G HUB itself.</string>
-			<key>developer</key>
-			<string>Logitech Inc.</string>
-			<key>display_name</key>
-			<string>Logitech G HUB</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>
