@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the current Oracle JDK and copies the signed vendor installer package with standardised naming. Do not substitute an OpenJDK or SapMachine recipe: those are different products under different licences, and every community recipe matching "JDK" builds one of those instead.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.OracleJDK</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>OracleJDK</string>
+		<key>pkginfo</key>
+		<dict>
+			<key>catalogs</key>
+			<array>
+				<string>testing</string>
+			</array>
+			<key>description</key>
+			<string>Oracle JDK is Oracle's distribution of the Java Development Kit.</string>
+			<key>developer</key>
+			<string>Oracle America, Inc.</string>
+			<key>display_name</key>
+			<string>Oracle JDK</string>
+			<key>name</key>
+			<string>%NAME%</string>
+			<key>unattended_install</key>
+			<true/>
+		</dict>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>ParentRecipe</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.OracleJDK</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>source_pkg</key>
+				<string>%pathname%/JDK*.pkg</string>
+				<key>pkg_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+			</dict>
+			<key>Processor</key>
+			<string>PkgCopier</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>path_list</key>
+				<array>
+					<string>%RECIPE_CACHE_DIR%/unpack</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>PathDeleter</string>
+		</dict>
+	</array>
+</dict>
+</plist>

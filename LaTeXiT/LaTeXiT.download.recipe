@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest version of LaTeXiT from the vendor download page.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.LaTeXiT</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>LaTeXiT</string>
+		<key>DOWNLOAD_PAGE_URL</key>
+		<string>https://pierre.chachatelier.fr/latexit/latexit-downloads.php</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>latexit-downloads.html</string>
+				<key>url</key>
+				<string>%DOWNLOAD_PAGE_URL%</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Comment</key>
+			<string>Capture the dmg filename version form, e.g. 2_16_6</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>file://%pathname%</string>
+				<key>re_pattern</key>
+				<string>LaTeXiT-([0-9]+(?:_[0-9]+)+)\.dmg</string>
+				<key>result_output_var_name</key>
+				<string>file_version</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%-%file_version%.dmg</string>
+				<key>url</key>
+				<string>https://pierre.chachatelier.fr/latexit/downloads/LaTeXiT-%file_version%.dmg</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>input_path</key>
+				<string>%pathname%/LaTeXiT.app</string>
+				<key>requirement</key>
+				<string>anchor apple generic and identifier "fr.chachatelier.pierre.LaTeXiT" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "7SFX84GNR7")</string>
+			</dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>input_plist_path</key>
+				<string>%pathname%/LaTeXiT.app/Contents/Info.plist</string>
+				<key>plist_version_key</key>
+				<string>CFBundleShortVersionString</string>
+			</dict>
+			<key>Processor</key>
+			<string>Versioner</string>
+		</dict>
+	</array>
+</dict>
+</plist>

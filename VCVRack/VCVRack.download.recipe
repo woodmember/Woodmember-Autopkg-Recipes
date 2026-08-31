@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest version of VCV Rack 2 Free for macOS. The vendor ships a signed universal installer package; the version is scraped from the Rack download page.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.VCVRack</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>VCVRack</string>
+		<key>DOWNLOAD_PAGE_URL</key>
+		<string>https://vcvrack.com/Rack</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>rack-download.html</string>
+				<key>url</key>
+				<string>%DOWNLOAD_PAGE_URL%</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>file://%pathname%</string>
+				<key>re_pattern</key>
+				<string>RackFree-([0-9.]+)-mac-x64\+arm64\.pkg</string>
+				<key>result_output_var_name</key>
+				<string>version</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%-%version%.pkg</string>
+				<key>url</key>
+				<string>https://vcvrack.com/downloads/RackFree-%version%-mac-x64+arm64.pkg</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>input_path</key>
+				<string>%pathname%</string>
+				<key>expected_authority_names</key>
+				<array>
+					<string>Developer ID Installer: Andrew Belt (V8SW9J626X)</string>
+					<string>Developer ID Certification Authority</string>
+					<string>Apple Root CA</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>
