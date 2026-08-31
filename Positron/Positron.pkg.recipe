@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>Positron</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Positron is a next-generation data science IDE from Posit.</string>
-			<key>developer</key>
-			<string>Posit Software, PBC</string>
-			<key>display_name</key>
-			<string>Positron</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

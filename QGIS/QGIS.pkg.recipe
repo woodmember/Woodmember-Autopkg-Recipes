@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>QGIS</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>QGIS is a free and open source geographic information system.</string>
-			<key>developer</key>
-			<string>Open Source Geospatial Foundation</string>
-			<key>display_name</key>
-			<string>QGIS</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>R</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>R is a free software environment for statistical computing and graphics.</string>
-			<key>developer</key>
-			<string>R Foundation</string>
-			<key>display_name</key>
-			<string>R</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

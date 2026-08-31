@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>TeXShop</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>TeXShop is a TeX previewer and editor for macOS.</string>
-			<key>developer</key>
-			<string>Richard Koch</string>
-			<key>display_name</key>
-			<string>TeXShop</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>LogiOptionsPlus</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Logitech Options+ configures Logitech mice and keyboards. NOTE: Logitech ships this as a network installer stub; the package deploys logioptionsplus_installer.app, which must be run to install Options+ itself.</string>
-			<key>developer</key>
-			<string>Logitech Inc.</string>
-			<key>display_name</key>
-			<string>Logi Options+</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

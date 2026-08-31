@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>Pd</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Pure Data (Pd) is a visual programming language for interactive computer music and multimedia.</string>
-			<key>developer</key>
-			<string>IEM Kunstuniversitaet Graz</string>
-			<key>display_name</key>
-			<string>Pure Data</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

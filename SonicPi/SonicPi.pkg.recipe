@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>SonicPi</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Sonic Pi is a live-coding environment for creating music with code, widely used in education.</string>
-			<key>developer</key>
-			<string>Samuel Aaron</string>
-			<key>display_name</key>
-			<string>Sonic Pi</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

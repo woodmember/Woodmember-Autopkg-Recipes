@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>Pulsar</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Pulsar is a community-led hyper-hackable text editor, a continuation of Atom.</string>
-			<key>developer</key>
-			<string>Pulsar Edit</string>
-			<key>display_name</key>
-			<string>Pulsar</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

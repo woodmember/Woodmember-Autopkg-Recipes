@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>Skim</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Skim is a PDF reader and note-taker for macOS, aimed at reading scientific papers.</string>
-			<key>developer</key>
-			<string>Skim project</string>
-			<key>display_name</key>
-			<string>Skim</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

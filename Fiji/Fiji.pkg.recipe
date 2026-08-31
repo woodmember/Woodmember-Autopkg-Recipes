@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>Fiji</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>Fiji is an ImageJ distribution bundled with plugins for scientific image analysis.</string>
-			<key>developer</key>
-			<string>Curtis Rueden / Fiji project</string>
-			<key>display_name</key>
-			<string>Fiji</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

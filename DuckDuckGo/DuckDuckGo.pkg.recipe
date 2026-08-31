@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>DuckDuckGo</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>The DuckDuckGo browser for macOS, with built-in tracker blocking.</string>
-			<key>developer</key>
-			<string>Duck Duck Go, Inc.</string>
-			<key>display_name</key>
-			<string>DuckDuckGo</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

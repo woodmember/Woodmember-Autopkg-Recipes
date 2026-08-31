@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>FlowJo</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>FlowJo is an analysis platform for single-cell flow cytometry data.</string>
-			<key>developer</key>
-			<string>FlowJo LLC</string>
-			<key>display_name</key>
-			<string>FlowJo</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

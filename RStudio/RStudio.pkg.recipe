@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>RStudio</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>RStudio is an integrated development environment (IDE) for the R programming language.</string>
-			<key>developer</key>
-			<string>Posit Software, PBC</string>
-			<key>display_name</key>
-			<string>RStudio</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>

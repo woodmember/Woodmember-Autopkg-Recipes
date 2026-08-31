@@ -10,23 +10,6 @@
 	<dict>
 		<key>NAME</key>
 		<string>VCVRack</string>
-		<key>pkginfo</key>
-		<dict>
-			<key>catalogs</key>
-			<array>
-				<string>testing</string>
-			</array>
-			<key>description</key>
-			<string>VCV Rack is a virtual Eurorack modular synthesizer.</string>
-			<key>developer</key>
-			<string>Andrew Belt</string>
-			<key>display_name</key>
-			<string>VCV Rack 2 Free</string>
-			<key>name</key>
-			<string>%NAME%</string>
-			<key>unattended_install</key>
-			<true/>
-		</dict>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>
