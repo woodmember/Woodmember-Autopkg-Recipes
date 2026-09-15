@@ -3,68 +3,52 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the latest version of Garmin Express for macOS. The unversioned GarminExpress.dmg carries no usable version (its installer package declares only version="0"), so the versioned filename is scraped from the vendor download page instead.</string>
+	<string>Downloads the current version of Garmin Express for macOS.
+
+The vendor page offers two files: GarminExpress_7.18.0_OS10x.dmg, a legacy
+macOS 10.x build frozen since January 2024, and the unversioned
+GarminExpress.dmg, which is the current release. An earlier revision of this
+recipe scraped the versioned filename and therefore pinned itself to 7.18.0.
+
+The current disk image is used instead. Its installer package declares
+version="0" at the pkg-ref level, but the enclosed com.garmin.renu.service
+bundle carries the real version, so the flat package is expanded and the
+version read from its Distribution file.</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.download.GarminExpress</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
 		<string>GarminExpress</string>
-		<key>DOWNLOAD_PAGE_URL</key>
-		<string>https://www.garmin.com/en-US/software/express/mac/</string>
+		<key>DOWNLOAD_URL</key>
+		<string>https://download.garmin.com/omt/express/GarminExpress.dmg</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>
 	<key>Process</key>
 	<array>
 		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
 			<key>Arguments</key>
 			<dict>
-				<key>filename</key>
-				<string>garmin-index.html</string>
 				<key>url</key>
-				<string>%DOWNLOAD_PAGE_URL%</string>
+				<string>%DOWNLOAD_URL%</string>
+				<key>filename</key>
+				<string>%NAME%.dmg</string>
 				<key>curl_opts</key>
 				<array>
 					<string>--location</string>
 				</array>
 			</dict>
-			<key>Processor</key>
-			<string>URLDownloader</string>
-		</dict>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>url</key>
-				<string>file://%pathname%</string>
-				<key>re_pattern</key>
-				<string>GarminExpress_([0-9.]+)_OS10x\.dmg</string>
-				<key>result_output_var_name</key>
-				<string>version</string>
-			</dict>
-			<key>Processor</key>
-			<string>URLTextSearcher</string>
-		</dict>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>filename</key>
-				<string>%NAME%-%version%.dmg</string>
-				<key>url</key>
-				<string>https://download.garmin.com/omt/express/GarminExpress_%version%_OS10x.dmg</string>
-				<key>curl_opts</key>
-				<array>
-					<string>--location</string>
-				</array>
-			</dict>
-			<key>Processor</key>
-			<string>URLDownloader</string>
 		</dict>
 		<dict>
 			<key>Processor</key>
 			<string>EndOfCheckPhase</string>
 		</dict>
 		<dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
 			<key>Arguments</key>
 			<dict>
 				<key>input_path</key>
@@ -76,8 +60,34 @@
 					<string>Apple Root CA</string>
 				</array>
 			</dict>
+		</dict>
+		<dict>
 			<key>Processor</key>
-			<string>CodeSignatureVerifier</string>
+			<string>FlatPkgUnpacker</string>
+			<key>Arguments</key>
+			<dict>
+				<key>flat_pkg_path</key>
+				<string>%pathname%/Install Garmin Express.pkg</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/unpacked</string>
+				<key>purge_destination</key>
+				<true/>
+				<key>skip_payload</key>
+				<true/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Comment</key>
+			<string>Anchor on com.garmin.renu.service; the ApplicationUpdater bundle in the same file reports 1.0.</string>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>file://%RECIPE_CACHE_DIR%/unpacked/Distribution</string>
+				<key>re_pattern</key>
+				<string>CFBundleShortVersionString="(?P&lt;version&gt;[0-9.]+)"[^&gt;]*id="com\.garmin\.renu\.service"</string>
+			</dict>
 		</dict>
 	</array>
 </dict>
