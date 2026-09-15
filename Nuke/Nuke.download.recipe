@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads a specified release of Foundry Nuke (Apple silicon) from the Foundry S3 distribution bucket.
+
+VERSION IS PINNED, NOT DISCOVERED. Foundry publishes no machine-readable release index: the S3 bucket denies ListBucket (403) and the download page is rendered client-side. Set NUKE_VERSION to the release you want (e.g. 16.0v6) and bump it manually when Foundry ships a new build.
+
+Note also that no community recipe exists for Foundry Nuke. Recipes matching the name "Nuke" in the community repos build FontNuke, an unrelated font-cache cleaner.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.Nuke</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Nuke</string>
+		<key>NUKE_VERSION</key>
+		<string>16.0v6</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%-%NUKE_VERSION%.dmg</string>
+				<key>url</key>
+				<string>https://thefoundry.s3.amazonaws.com/products/nuke/releases/%NUKE_VERSION%/Nuke%NUKE_VERSION%-mac-arm64.dmg</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--location</string>
+				</array>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+		<dict>
+			<key>Comment</key>
+			<string>All ten bundled applications are signed by the same Foundry certificate; verifying the flagship Nuke app is representative.</string>
+			<key>Arguments</key>
+			<dict>
+				<key>input_path</key>
+				<string>%pathname%/Nuke%NUKE_VERSION%/Nuke%NUKE_VERSION%.app</string>
+				<key>requirement</key>
+				<string>anchor apple generic and certificate leaf[subject.OU] = "82R497YNSK"</string>
+			</dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>

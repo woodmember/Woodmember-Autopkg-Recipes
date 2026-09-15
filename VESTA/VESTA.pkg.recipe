@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads VESTA and creates a package. Community coverage upstream is download-only (vmiller); this adds the packaging step.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.VESTA</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>VESTA</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>ParentRecipe</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.VESTA</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Comment</key>
+			<string>VESTA's CFBundleIdentifier is the bare string "VESTA", which pkgbuild rejects as a package id, so a reverse-DNS bundleid is supplied explicitly. The app also exposes no CFBundleShortVersionString, so %version% comes from the download page scrape.</string>
+			<key>Arguments</key>
+			<dict>
+				<key>app_path</key>
+				<string>%pathname%/VESTA/VESTA.app</string>
+				<key>bundleid</key>
+				<string>org.jp-minerals.vesta</string>
+				<key>pkg_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+			</dict>
+			<key>Processor</key>
+			<string>AppPkgCreator</string>
+		</dict>
+	</array>
+</dict>
+</plist>
