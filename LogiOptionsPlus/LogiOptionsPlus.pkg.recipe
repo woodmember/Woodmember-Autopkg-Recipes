@@ -3,7 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the Logitech Options+ installer and creates a package. Logitech does not publish a standalone Options+ application bundle, only this network installer, so the packaged payload is the installer app.</string>
+	<string>Downloads the Logitech Options+ installer and wraps it in a payload-free
+package that runs the vendor installer from a postinstall script.
+
+Logitech ships only a network installer, not a standalone app bundle. Packaging
+logioptionsplus_installer.app into /Applications would deploy the installer
+rather than the software, so it is carried in the package Scripts directory and
+invoked with --quiet at install time instead.
+
+Note: the vendor installer downloads the application payload at install time, so
+target machines need network access to Logitech during installation.</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.pkg.LogiOptionsPlus</string>
 	<key>Input</key>
@@ -18,26 +27,114 @@
 	<key>Process</key>
 	<array>
 		<dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
 			<key>Arguments</key>
 			<dict>
-				<key>app_path</key>
-				<string>%RECIPE_CACHE_DIR%/unarchived/logioptionsplus_installer.app</string>
-				<key>pkg_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+				<key>pkgdirs</key>
+				<dict/>
 			</dict>
-			<key>Processor</key>
-			<string>AppPkgCreator</string>
 		</dict>
 		<dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts</string>
+				<key>pkgdirs</key>
+				<dict/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>Copier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>source_path</key>
+				<string>%RECIPE_CACHE_DIR%/unarchived/logioptionsplus_installer.app</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts/logioptionsplus_installer.app</string>
+				<key>overwrite</key>
+				<true/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>FileCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>file_mode</key>
+				<string>0755</string>
+				<key>file_path</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts/postinstall</string>
+				<key>file_content</key>
+				<string>#!/bin/bash
+# Runs the Logitech Options+ installer bundled alongside this script.
+
+if [[ "$3" != "/" ]]; then
+	echo "ERROR: target disk is not the startup disk."
+	exit 1
+fi
+
+pkgDir=$(/usr/bin/dirname "$0")
+installer="$pkgDir/logioptionsplus_installer.app/Contents/MacOS/logioptionsplus_installer"
+
+if [[ ! -x "$installer" ]]; then
+	echo "ERROR: installer not found at $installer."
+	exit 1
+fi
+
+"$installer" --quiet
+exitcode=$?
+
+if [[ $exitcode -ne 0 ]]; then
+	echo "ERROR: Logi Options+ installation failed (exit $exitcode)."
+fi
+
+exit $exitcode</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PkgCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_request</key>
+				<dict>
+					<key>pkgname</key>
+					<string>%NAME%-%version%</string>
+					<key>pkgdir</key>
+					<string>%RECIPE_CACHE_DIR%</string>
+					<key>pkgroot</key>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+					<key>id</key>
+					<string>com.logi.optionsplus</string>
+					<key>version</key>
+					<string>%version%</string>
+					<key>pkgtype</key>
+					<string>flat</string>
+					<key>scripts</key>
+					<string>Scripts</string>
+					<key>chown</key>
+					<array/>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PathDeleter</string>
 			<key>Arguments</key>
 			<dict>
 				<key>path_list</key>
 				<array>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+					<string>%RECIPE_CACHE_DIR%/Scripts</string>
 					<string>%RECIPE_CACHE_DIR%/unarchived</string>
 				</array>
 			</dict>
-			<key>Processor</key>
-			<string>PathDeleter</string>
 		</dict>
 	</array>
 </dict>

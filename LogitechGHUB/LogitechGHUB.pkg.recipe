@@ -3,7 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the latest version of Logitech G HUB and creates a package.</string>
+	<string>Downloads the latest version of Logitech G HUB and wraps it in a payload-free
+package that runs the vendor installer from a postinstall script.
+
+Logitech ships only an installer, not a standalone app bundle. Packaging
+lghub_installer.app into /Applications would deploy the installer rather than
+the software, so it is carried in the package Scripts directory and invoked
+with --silent at install time instead.
+
+The installer launches G HUB on completion, so the postinstall stops it again.</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.pkg.LogitechGHUB</string>
 	<key>Input</key>
@@ -18,26 +26,120 @@
 	<key>Process</key>
 	<array>
 		<dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
 			<key>Arguments</key>
 			<dict>
-				<key>app_path</key>
-				<string>%RECIPE_CACHE_DIR%/unarchived/lghub_installer.app</string>
-				<key>pkg_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+				<key>pkgdirs</key>
+				<dict/>
 			</dict>
-			<key>Processor</key>
-			<string>AppPkgCreator</string>
 		</dict>
 		<dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts</string>
+				<key>pkgdirs</key>
+				<dict/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>Copier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>source_path</key>
+				<string>%RECIPE_CACHE_DIR%/unarchived/lghub_installer.app</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts/lghub_installer.app</string>
+				<key>overwrite</key>
+				<true/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>FileCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>file_mode</key>
+				<string>0755</string>
+				<key>file_path</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts/postinstall</string>
+				<key>file_content</key>
+				<string>#!/bin/bash
+# Runs the Logitech G HUB installer bundled alongside this script.
+
+if [[ "$3" != "/" ]]; then
+	echo "ERROR: target disk is not the startup disk."
+	exit 1
+fi
+
+pkgDir=$(/usr/bin/dirname "$0")
+installer="$pkgDir/lghub_installer.app/Contents/MacOS/lghub_installer"
+
+if [[ ! -x "$installer" ]]; then
+	echo "ERROR: installer not found at $installer."
+	exit 1
+fi
+
+"$installer" --silent
+exitcode=$?
+
+if [[ $exitcode -ne 0 ]]; then
+	echo "ERROR: Logitech G HUB installation failed (exit $exitcode)."
+	exit $exitcode
+fi
+
+# The installer launches G HUB when it finishes; leave the machine idle.
+/bin/sleep 2
+/usr/bin/pkill lghub_agent
+/usr/bin/pkill lghub
+
+exit 0</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PkgCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_request</key>
+				<dict>
+					<key>pkgname</key>
+					<string>%NAME%-%version%</string>
+					<key>pkgdir</key>
+					<string>%RECIPE_CACHE_DIR%</string>
+					<key>pkgroot</key>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+					<key>id</key>
+					<string>com.logi.ghub</string>
+					<key>version</key>
+					<string>%version%</string>
+					<key>pkgtype</key>
+					<string>flat</string>
+					<key>scripts</key>
+					<string>Scripts</string>
+					<key>chown</key>
+					<array/>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PathDeleter</string>
 			<key>Arguments</key>
 			<dict>
 				<key>path_list</key>
 				<array>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+					<string>%RECIPE_CACHE_DIR%/Scripts</string>
 					<string>%RECIPE_CACHE_DIR%/unarchived</string>
 				</array>
 			</dict>
-			<key>Processor</key>
-			<string>PathDeleter</string>
 		</dict>
 	</array>
 </dict>
