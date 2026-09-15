@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest en-US macOS build of Apache OpenOffice.
+
+Version is read from the SourceForge project's best_release.json, which names the
+current recommended download per platform. The project RSS feed used by older
+recipes no longer returns the macOS en-US installer.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.OpenOffice</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>OpenOffice</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Comment</key>
+			<string>Read the current macOS en-US installer from the SourceForge best_release feed.</string>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>https://sourceforge.net/projects/openofficeorg.mirror/best_release.json</string>
+				<key>re_pattern</key>
+				<string>"/(?P&lt;version&gt;[0-9.]+)/binaries/en-US/(?P&lt;filename&gt;Apache_OpenOffice_[0-9.]+_MacOS_x86-64_install_en-US\.dmg)"</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>https://downloads.sourceforge.net/project/openofficeorg.mirror/%version%/binaries/en-US/%filename%</string>
+				<key>filename</key>
+				<string>%NAME%-%version%.dmg</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+	</array>
+</dict>
+</plist>

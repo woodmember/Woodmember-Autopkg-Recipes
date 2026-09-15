@@ -3,7 +3,10 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads the latest FileMaker Pro (Claris) and creates a package suitable for deployment.</string>
+    <string>Downloads the latest FileMaker Pro (Claris) and creates a package suitable for deployment.
+
+PRODUCT_ID selects the major release from https://www.filemaker.com/redirects/ss.txt.
+PRO26MAC is FileMaker Pro 26, the current shipping release; Claris jumped from 22 to 26.</string>
     <key>Identifier</key>
     <string>com.github.Woodmember-Autopkg-Recipes.pkg.FileMakerProClaris</string>
     <key>Input</key>
@@ -11,12 +14,10 @@
         <key>NAME</key>
         <string>FileMakerPro</string>
         <key>PRODUCT_ID</key>
-        <string>PRO21MAC</string>
-        <key>VERSION_KEY</key>
-        <string>BuildVersion</string>
+        <string>PRO26MAC</string>
     </dict>
     <key>MinimumVersion</key>
-    <string>1.0.0</string>
+    <string>2.3</string>
     <key>ParentRecipe</key>
     <string>com.github.apizz.download.FileMakerProClaris</string>
     <key>Process</key>
@@ -29,7 +30,7 @@
                 <key>input_plist_path</key>
                 <string>%pathname%/FileMaker Pro.app/Contents/Info.plist</string>
                 <key>plist_version_key</key>
-                <string>%VERSION_KEY%</string>
+                <string>BuildVersion</string>
             </dict>
         </dict>
         <dict>

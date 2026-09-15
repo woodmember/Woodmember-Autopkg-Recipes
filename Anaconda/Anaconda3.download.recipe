@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest Anaconda3 Apple Silicon CLI (.sh) installer.
+
+Version comes from the repo.anaconda.com archive listing, which is ordered newest
+first, so the first regex match is the current release. The anaconda.com marketing
+page used by older recipes no longer carries an Intel build, a .sh link, or the
+"Python 3.x" text those recipes match on.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.Anaconda3</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Anaconda3</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>https://repo.anaconda.com/archive/</string>
+				<key>re_pattern</key>
+				<string>&lt;a href="(?P&lt;filename&gt;Anaconda3-(?P&lt;version&gt;[0-9.]+(?:-[0-9]+)?)-MacOSX-arm64\.sh)"</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>https://repo.anaconda.com/archive/%filename%</string>
+				<key>filename</key>
+				<string>%NAME%-%version%.sh</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+	</array>
+</dict>
+</plist>

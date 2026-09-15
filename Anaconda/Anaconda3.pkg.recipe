@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest Anaconda3 Apple Silicon CLI installer and wraps it in a
+payload-free package that runs the vendor installer from a postinstall script.
+
+Installs to /Users/Shared/anaconda3.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.pkg.Anaconda3</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Anaconda3</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>ParentRecipe</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.Anaconda3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+				<key>pkgdirs</key>
+				<dict/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts</string>
+				<key>pkgdirs</key>
+				<dict/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>Copier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>source_path</key>
+				<string>%pathname%</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts/%NAME%-%version%.sh</string>
+				<key>overwrite</key>
+				<true/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Comment</key>
+			<string>Invoke the installer via bash so it does not need the execute bit set.</string>
+			<key>Processor</key>
+			<string>FileCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>file_mode</key>
+				<string>0755</string>
+				<key>file_path</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts/postinstall</string>
+				<key>file_content</key>
+				<string>#!/bin/bash
+# Installs Anaconda3 from the CLI installer bundled alongside this script.
+
+if [[ "$3" != "/" ]]; then
+	echo "ERROR: target disk is not the startup disk."
+	exit 1
+fi
+
+pkgDir=$(/usr/bin/dirname "$0")
+installer=$(/bin/ls "$pkgDir"/Anaconda3-*.sh 2&gt;/dev/null | /usr/bin/head -n 1)
+
+if [[ -z "$installer" ]]; then
+	echo "ERROR: no Anaconda3 installer found in $pkgDir."
+	exit 1
+fi
+
+echo "Running $installer ..."
+/bin/bash "$installer" -b -u -p /Users/Shared/anaconda3 || {
+	echo "ERROR: Anaconda3 installation failed."
+	exit 2
+}
+
+echo "Anaconda3 installed to /Users/Shared/anaconda3"
+exit 0</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PkgCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_request</key>
+				<dict>
+					<key>pkgname</key>
+					<string>%NAME%-%version%</string>
+					<key>pkgdir</key>
+					<string>%RECIPE_CACHE_DIR%</string>
+					<key>pkgroot</key>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+					<key>id</key>
+					<string>com.anaconda.anaconda3</string>
+					<key>version</key>
+					<string>%version%</string>
+					<key>pkgtype</key>
+					<string>flat</string>
+					<key>scripts</key>
+					<string>Scripts</string>
+					<key>chown</key>
+					<array/>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PathDeleter</string>
+			<key>Arguments</key>
+			<dict>
+				<key>path_list</key>
+				<array>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+					<string>%RECIPE_CACHE_DIR%/Scripts</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
