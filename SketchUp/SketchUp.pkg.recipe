@@ -3,13 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the current SketchUp release and creates a package. The disk image ships two applications inside a "SketchUp 2025" folder (SketchUp and LayOut), so a package root is built and both are copied into /Applications rather than using AppPkgCreator. The community recipes (ygini, dataJAR) fail on a dead vendor-page scrape.</string>
+	<string>Downloads the current SketchUp release and creates a package. The disk image ships two applications inside a "SketchUp %YEAR%" folder (SketchUp and LayOut), so a package root is built and both are copied into /Applications rather than using AppPkgCreator. YEAR selects the major release and must match the parent download recipe.</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.pkg.SketchUp</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
 		<string>SketchUp</string>
+		<key>YEAR</key>
+		<string>2026</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>
@@ -35,7 +37,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>source_path</key>
-				<string>%pathname%/SketchUp 2025/SketchUp.app</string>
+				<string>%pathname%/SketchUp %YEAR%/SketchUp.app</string>
 				<key>destination_path</key>
 				<string>%RECIPE_CACHE_DIR%/pkgroot/Applications/SketchUp.app</string>
 			</dict>
@@ -46,7 +48,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>source_path</key>
-				<string>%pathname%/SketchUp 2025/LayOut.app</string>
+				<string>%pathname%/SketchUp %YEAR%/LayOut.app</string>
 				<key>destination_path</key>
 				<string>%RECIPE_CACHE_DIR%/pkgroot/Applications/LayOut.app</string>
 			</dict>
@@ -65,7 +67,7 @@
 					<key>pkgname</key>
 					<string>%NAME%-%version%</string>
 					<key>id</key>
-					<string>com.sketchup.SketchUp.2025</string>
+					<string>com.sketchup.SketchUp.%YEAR%</string>
 					<key>version</key>
 					<string>%version%</string>
 					<key>chown</key>

@@ -3,79 +3,72 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the current SketchUp release for macOS. The community recipes (ygini, dataJAR) fail because their vendor page scrape no longer matches.</string>
+	<string>Downloads the SketchUp release for macOS named by YEAR.
+
+Trimble no longer publishes a direct .dmg link for the current release on the
+download page: that page still lists only the 2024 and 2025 images, so an
+earlier revision of this recipe scraped it and pinned itself to 2025. The
+current release is reachable only through a redirect endpoint, which is used
+here, with YEAR selecting the major release the way PRODUCT_ID does for
+FileMaker.
+
+https://sketchup.trimble.com/sketchup/2026/SketchUpPro-dmg currently redirects
+to SketchUp-2026-2-242-76.dmg. Note that the endpoint serves SketchUp Pro.</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.download.SketchUp</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
 		<string>SketchUp</string>
-		<key>DOWNLOAD_PAGE_URL</key>
-		<string>https://www.sketchup.com/en/download/all</string>
+		<key>YEAR</key>
+		<string>2026</string>
+		<key>DOWNLOAD_URL</key>
+		<string>https://sketchup.trimble.com/sketchup/%YEAR%/SketchUpPro-dmg</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>
 	<key>Process</key>
 	<array>
 		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
 			<key>Arguments</key>
 			<dict>
-				<key>filename</key>
-				<string>sketchup-index.html</string>
 				<key>url</key>
-				<string>%DOWNLOAD_PAGE_URL%</string>
+				<string>%DOWNLOAD_URL%</string>
+				<key>filename</key>
+				<string>%NAME%-%YEAR%.dmg</string>
 				<key>curl_opts</key>
 				<array>
 					<string>--location</string>
 				</array>
 			</dict>
-			<key>Processor</key>
-			<string>URLDownloader</string>
-		</dict>
-		<dict>
-			<key>Comment</key>
-			<string>The page lists the newest release first, so a plain (non-greedy) first match selects it. A greedy leading match would wrongly pick the oldest entry.</string>
-			<key>Arguments</key>
-			<dict>
-				<key>url</key>
-				<string>file://%pathname%</string>
-				<key>re_pattern</key>
-				<string>download\.sketchup\.com/SketchUp-([0-9-]+)\.dmg</string>
-				<key>result_output_var_name</key>
-				<string>version</string>
-			</dict>
-			<key>Processor</key>
-			<string>URLTextSearcher</string>
-		</dict>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>filename</key>
-				<string>%NAME%-%version%.dmg</string>
-				<key>url</key>
-				<string>https://download.sketchup.com/SketchUp-%version%.dmg</string>
-				<key>curl_opts</key>
-				<array>
-					<string>--location</string>
-				</array>
-			</dict>
-			<key>Processor</key>
-			<string>URLDownloader</string>
 		</dict>
 		<dict>
 			<key>Processor</key>
 			<string>EndOfCheckPhase</string>
 		</dict>
 		<dict>
+			<key>Processor</key>
+			<string>Versioner</string>
+			<key>Arguments</key>
+			<dict>
+				<key>input_plist_path</key>
+				<string>%pathname%/SketchUp %YEAR%/SketchUp.app/Contents/Info.plist</string>
+				<key>plist_version_key</key>
+				<string>CFBundleShortVersionString</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
 			<key>Arguments</key>
 			<dict>
 				<key>input_path</key>
-				<string>%pathname%/SketchUp 2025/SketchUp.app</string>
+				<string>%pathname%/SketchUp %YEAR%/SketchUp.app</string>
 				<key>requirement</key>
-				<string>identifier "com.sketchup.SketchUp.2025" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = J8PVMCY7KL</string>
+				<string>identifier "com.sketchup.SketchUp.%YEAR%" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = J8PVMCY7KL</string>
 			</dict>
-			<key>Processor</key>
-			<string>CodeSignatureVerifier</string>
 		</dict>
 	</array>
 </dict>
