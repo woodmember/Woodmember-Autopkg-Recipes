@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest Unity Hub DMG for macOS (Apple Silicon) from Unity's CDN. Replaces the hansen-m community recipe whose URL is now 404. The ARCH variable accepts "arm64" (Apple Silicon) or "x64" (Intel).</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.UnityHub</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Unity Hub</string>
+        <key>ARCH</key>
+        <string>arm64</string>
+        <key>VERSION_URL</key>
+        <string>https://public-cdn.cloud.unity3d.com/hub/prod/latest-mac.yml</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%VERSION_URL%</string>
+                <key>re_pattern</key>
+                <string>^version: (?P&lt;version&gt;[\d.]+)</string>
+                <key>re_flags</key>
+                <array>
+                    <string>MULTILINE</string>
+                </array>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup-%ARCH%.dmg</string>
+                <key>filename</key>
+                <string>%NAME%-%version%-%ARCH%.dmg</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%/Unity Hub.app</string>
+                <key>requirement</key>
+                <string>anchor apple generic and identifier "com.unity3d.unityhub" and certificate leaf[subject.OU] = "9QW8UQUTAA"</string>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>

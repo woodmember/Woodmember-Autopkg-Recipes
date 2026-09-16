@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads TDR Molotok compressor plugin from Tokyo Dawn Records. Free download, no account required. Update VERSION in Input when TDR releases a new version — the Molotok page does not expose static download links for scraping.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.TDRMolotok</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>TDR Molotok</string>
+		<key>VERSION</key>
+		<string>1.0.7</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%_%VERSION%.zip</string>
+				<key>url</key>
+				<string>https://www.tokyodawn.net/labs/Molotok/%VERSION%/TDR%20Molotok.zip</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest Epic Games Launcher DMG for macOS. Uses the EpicGamesLauncher.dmg endpoint (not EpicGamesLauncherInstaller.dmg) which redirects via 303 to the current versioned installer on the Akamai CDN (e.g. EpicInstaller-20.1.0.dmg). The versioned Akamai URL pattern is: epicgames-download1.akamaized.net/Builds/UnrealEngineLauncher/Installers/Mac/EpicInstaller-VERSION.dmg. CFBundleShortVersionString in the app bundle matches the installer version number.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.EpicGamesLauncher</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Epic Games Launcher</string>
+        <key>DOWNLOAD_URL</key>
+        <string>https://launcher-public-service-prod06.ol.epicgames.com/launcher/api/installer/download/EpicGamesLauncher.dmg</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%DOWNLOAD_URL%</string>
+                <key>filename</key>
+                <string>%NAME%.dmg</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%/Epic Games Launcher.app</string>
+                <key>requirement</key>
+                <string>anchor apple generic and certificate leaf[subject.OU] = "96DBZ92D3Y"</string>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
