@@ -63,8 +63,9 @@ class MacOSVersionProcessor(Processor):
                 base_cmd.append("--include-betas")
             
             # Execute the softwareupdate command
+            # Titles gained a major-version prefix ("macOS 27 Golden Gate"), so allow one.
             cmd = ["/bin/bash", "-c", 
-                   f"{' '.join(base_cmd)} | grep 'macOS {mac_version}' | cut -d: -f3 | cut -d, -f1 | head -1"]
+                   f"{' '.join(base_cmd)} | grep -E 'macOS ([0-9]+ )?{mac_version}' | cut -d: -f3 | cut -d, -f1 | head -1"]
             
             proc = subprocess.Popen(
                 cmd, 
