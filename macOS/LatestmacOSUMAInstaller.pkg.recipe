@@ -11,7 +11,7 @@
 		<key>NAME</key>
 		<string>macOS Installer</string>
 		<key>SOFA_URL</key>
-		<string>https://sofa.macadmins.io/v1/macos_data_feed.json</string>
+		<string>https://sofafeed.macadmins.io/v1/macos_data_feed.json</string>
 		<key>APPLE_URL</key>
 		<string>https://swcdn.apple.com/content/downloads/</string>
 		<key>URL_PATTERN</key>

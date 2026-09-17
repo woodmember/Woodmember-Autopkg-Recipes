@@ -2,8 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Comment</key>
-	<string>Downloads the latest version of Adobe AIR Installer and creates a package.</string>
+	<key>Description</key>
+	<string>Downloads the latest Adobe AIR runtime from HARMAN and wraps the vendor installer
+in a payload-free package that runs it silently from a postinstall script.
+
+The DMG ships "Adobe AIR Installer.app", which is an installer, not the runtime -
+copying it to /Applications would deploy the installer rather than Adobe AIR. The
+installer places Adobe AIR.framework in /Library/Frameworks; it is invoked here with
+the vendor's -silent -eulaAccepted flags.</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember.pkg.AdobeAIR</string>
 	<key>Input</key>
@@ -12,14 +18,124 @@
 		<string>Adobe AIR Installer</string>
 	</dict>
 	<key>MinimumVersion</key>
-	<string>1.0.0</string>
+	<string>2.3</string>
 	<key>ParentRecipe</key>
 	<string>com.github.Woodmember.download.AdobeAIRInstaller</string>
 	<key>Process</key>
 	<array>
 		<dict>
 			<key>Processor</key>
-			<string>AppPkgCreator</string>
+			<string>PkgRootCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+				<key>pkgdirs</key>
+				<dict/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts</string>
+				<key>pkgdirs</key>
+				<dict/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>Copier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>source_path</key>
+				<string>%pathname%/Adobe AIR Installer.app</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts/Adobe AIR Installer.app</string>
+				<key>overwrite</key>
+				<true/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>FileCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>file_mode</key>
+				<string>0755</string>
+				<key>file_path</key>
+				<string>%RECIPE_CACHE_DIR%/Scripts/postinstall</string>
+				<key>file_content</key>
+				<string>#!/bin/bash
+# Installs the Adobe AIR runtime using the vendor installer bundled alongside this script.
+
+if [[ "$3" != "/" ]]; then
+	echo "ERROR: target disk is not the startup disk."
+	exit 1
+fi
+
+pkgDir=$(/usr/bin/dirname "$0")
+installer="$pkgDir/Adobe AIR Installer.app/Contents/MacOS/Adobe AIR Installer"
+
+if [[ ! -x "$installer" ]]; then
+	echo "ERROR: no Adobe AIR installer found in $pkgDir."
+	exit 1
+fi
+
+echo "Running Adobe AIR Installer ..."
+"$installer" -silent -eulaAccepted || {
+	echo "ERROR: Adobe AIR installation failed."
+	exit 2
+}
+
+if [[ ! -d "/Library/Frameworks/Adobe AIR.framework" ]]; then
+	echo "ERROR: Adobe AIR.framework was not installed."
+	exit 3
+fi
+
+echo "Adobe AIR installed to /Library/Frameworks/Adobe AIR.framework"
+exit 0</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PkgCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_request</key>
+				<dict>
+					<key>pkgname</key>
+					<string>%NAME%-%version%</string>
+					<key>pkgdir</key>
+					<string>%RECIPE_CACHE_DIR%</string>
+					<key>pkgroot</key>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+					<key>id</key>
+					<string>com.adobe.air</string>
+					<key>version</key>
+					<string>%version%</string>
+					<key>pkgtype</key>
+					<string>flat</string>
+					<key>scripts</key>
+					<string>Scripts</string>
+					<key>chown</key>
+					<array/>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PathDeleter</string>
+			<key>Arguments</key>
+			<dict>
+				<key>path_list</key>
+				<array>
+					<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+					<string>%RECIPE_CACHE_DIR%/Scripts</string>
+				</array>
+			</dict>
 		</dict>
 	</array>
 </dict>

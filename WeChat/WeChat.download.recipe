@@ -3,34 +3,54 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the latest version of WeChat.</string>
+	<string>Downloads the latest version of WeChat for macOS.
+
+The old fixed URL (dldir1.qq.com/weixin/mac/WeChatMac.dmg) now returns 404. Tencent
+publishes a versioned filename on a different host instead, so the download link is read
+off the official Mac download page. That also gives a real version in the filename rather
+than an evergreen URL with no version history.</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.download.WeChat</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
 		<string>WeChat</string>
+		<key>DOWNLOAD_PAGE</key>
+		<string>https://mac.weixin.qq.com/</string>
 	</dict>
 	<key>MinimumVersion</key>
-	<string>1.0.0</string>
+	<string>2.3</string>
 	<key>Process</key>
 	<array>
 		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
 			<key>Arguments</key>
 			<dict>
-				<key>filename</key>
-				<string>%NAME%.dmg</string>
 				<key>url</key>
-				<string>https://dldir1.qq.com/weixin/mac/WeChatMac.dmg</string>
+				<string>%DOWNLOAD_PAGE%</string>
+				<key>re_pattern</key>
+				<string>(?P&lt;match&gt;https://dldir1v6\.qq\.com/weixin/Universal/Mac/WeChatMac_(?P&lt;wechat_version&gt;[0-9.]+)\.dmg)</string>
 			</dict>
+		</dict>
+		<dict>
 			<key>Processor</key>
 			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>%match%</string>
+				<key>filename</key>
+				<string>%NAME%-%wechat_version%.dmg</string>
+			</dict>
 		</dict>
 		<dict>
 			<key>Processor</key>
 			<string>EndOfCheckPhase</string>
 		</dict>
 		<dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
 			<key>Arguments</key>
 			<dict>
 				<key>input_path</key>
@@ -38,10 +58,10 @@
 				<key>requirement</key>
 				<string>anchor apple generic and identifier "com.tencent.xinWeChat" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "5A4RE8SF68")</string>
 			</dict>
-			<key>Processor</key>
-			<string>CodeSignatureVerifier</string>
 		</dict>
 		<dict>
+			<key>Processor</key>
+			<string>Versioner</string>
 			<key>Arguments</key>
 			<dict>
 				<key>input_plist_path</key>
@@ -49,8 +69,6 @@
 				<key>plist_version_key</key>
 				<string>CFBundleShortVersionString</string>
 			</dict>
-			<key>Processor</key>
-			<string>Versioner</string>
 		</dict>
 	</array>
 </dict>

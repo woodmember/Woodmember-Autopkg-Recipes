@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest Jamf Connect DMG and reports its version.
+
+Replaces com.github.yohan460-recipes.download.JamfConnect, which only fetched the DMG:
+no signature verification and no version output, so every child recipe had to unpack the
+payload itself to learn the version.
+
+Note on layout: Jamf's public DMG no longer ships JamfConnect.pkg or JamfConnectMenubar.pkg.
+It now ships a single distribution package, JamfConnectLogin.pkg, containing the login window
+(com.jamf.connect.login) and the daemon (com.jamf.connect.daemon). The Jamf Connect menu bar
+app is not in this download.
+
+The URL is evergreen, so it can only ever yield the current release - there is no version
+history to pin or roll back to.</string>
+	<key>Identifier</key>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.JamfConnect</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Jamf Connect</string>
+		<key>DOWNLOAD_URL</key>
+		<string>https://files.jamfconnect.com/JamfConnect.dmg</string>
+		<key>PKG_IN_DMG</key>
+		<string>JamfConnectLogin.pkg</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>%DOWNLOAD_URL%</string>
+				<key>filename</key>
+				<string>JamfConnect.dmg</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>input_path</key>
+				<string>%pathname%/%PKG_IN_DMG%</string>
+				<key>expected_authority_names</key>
+				<array>
+					<string>Developer ID Installer: JAMF Software (483DWKW443)</string>
+					<string>Developer ID Certification Authority</string>
+					<string>Apple Root CA</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>Comment</key>
+			<string>Unpack far enough to read a real version out of the login bundle.</string>
+			<key>Processor</key>
+			<string>FlatPkgUnpacker</string>
+			<key>Arguments</key>
+			<dict>
+				<key>flat_pkg_path</key>
+				<string>%pathname%/%PKG_IN_DMG%</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/unpack</string>
+				<key>purge_destination</key>
+				<true/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PkgPayloadUnpacker</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_payload_path</key>
+				<string>%RECIPE_CACHE_DIR%/unpack/JamfConnectLogin.pkg/Payload</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/payload</string>
+				<key>purge_destination</key>
+				<true/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PlistReader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>info_path</key>
+				<string>%RECIPE_CACHE_DIR%/payload/Library/Security/SecurityAgentPlugins/JamfConnectLogin.bundle/Contents/Info.plist</string>
+				<key>plist_keys</key>
+				<dict>
+					<key>CFBundleShortVersionString</key>
+					<string>version</string>
+					<key>LSMinimumSystemVersion</key>
+					<string>min_os_version</string>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PathDeleter</string>
+			<key>Arguments</key>
+			<dict>
+				<key>path_list</key>
+				<array>
+					<string>%RECIPE_CACHE_DIR%/unpack</string>
+					<string>%RECIPE_CACHE_DIR%/payload</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

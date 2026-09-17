@@ -3,7 +3,12 @@
 <plist version="1.0">
 	<dict>
 		<key>Description</key>
-		<string>Downloads the latest version of the DisplayLink Manager App.</string>
+		<string>Downloads the latest version of the DisplayLink Manager App.
+
+Synaptics moved the download links from /node/&lt;id&gt;?filetype=exe to
+/products/displaylink-manager-graphics-connectivity-&lt;ver&gt;?filetype=exe, and dropped the
+"Accept" anchor text on the file link, so both searches were rewritten. The current release
+is the first match on the page; the Legacy Releases section follows it.</string>
 		<key>Identifier</key>
 		<string>com.github.Woodmember-Autopkg-Recipes.download.DisplayLink_Manager</string>
 		<key>Input</key>
@@ -27,7 +32,7 @@
 				<key>Arguments</key>
 				<dict>
 					<key>re_pattern</key>
-					<string>(&lt;.*&gt;DisplayLink Manager Graphics Connectivity&lt;\/.*&gt;)((.|\n)*?)a href=\"(\/node\/\d*\?filetype=exe)</string>
+					<string>DisplayLink Manager Graphics Connectivity&lt;/h4&gt;[\s\S]*?Release: (?P&lt;version&gt;[0-9.]+)[\s\S]*?href=\"(?P&lt;match&gt;/products/[^\"]*?\?filetype=exe)\"</string>
 					<key>url</key>
 					<string>%BASE_URL%/%SEARCH_URL%</string>
 				</dict>
@@ -38,7 +43,7 @@
 				<key>Arguments</key>
 				<dict>
 					<key>re_pattern</key>
-					<string>&lt;a.*href="(?P&lt;download_url&gt;.*[.]pkg)" download&gt;Accept&lt;\/a&gt;</string>
+					<string>href=\"(?P&lt;download_url&gt;/sites/default/files/exe_files/[^\"]*\.pkg)\"</string>
 					<key>url</key>
 					<string>%BASE_URL%%match%</string>
 				</dict>

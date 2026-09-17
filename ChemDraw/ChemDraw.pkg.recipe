@@ -12,14 +12,14 @@
 		<string>ChemDraw</string>
 	</dict>
 	<key>ParentRecipe</key>
-	<string>com.github.vmiller.download.ChemDraw</string>
+	<string>com.github.Woodmember-Autopkg-Recipes.download.ChemDraw</string>
 	<key>Process</key>
 	<array>
 		<dict>
 			<key>Arguments</key>
 			<dict>
 				<key>app_path</key>
-				<string>%pathname%/ChemDraw*.app</string>
+				<string>%pathname%/%found_basename%</string>
 				<key>bundleid</key>
 				<string>com.revvity.ChemDraw</string>
 				<key>pkg_path</key>

@@ -14,7 +14,7 @@
 		<key>NAME</key>
 		<string>macOS Installer</string>
 		<key>SOFA_URL</key>
-		<string>https://sofa.macadmins.io/v1/macos_data_feed.json</string>
+		<string>https://sofafeed.macadmins.io/v1/macos_data_feed.json</string>
 		<key>URL_PATTERN</key>
 		<string>"LatestUMA"\s*:\s*{\s*"title"\s*:\s*"([^"]+)"\s*,\s*"version"\s*:\s*"([^"]+)"\s*,\s*"build"\s*:\s*"([^"]+)"\s*,\s*"apple_slug"\s*:\s*"([^"]+)"\s*,\s*"url"\s*:\s*"([^"]+)"\s*</string>
 	</dict>
