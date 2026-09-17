@@ -6,24 +6,19 @@
 	<string>Downloads and Packages the defined version of macOS, using the macadmins SOFA project feed. 
 		The version must be entered in as regular expression. For example: 
 		14.4.1 would be "14\.4\.1"
-		13.5 would be "13\.5"</string>
+		13.5 would be "13\.5"
+
+MACOS_VER is the version to pin and is meant to be set in an override. The default was 14.4.1, which SOFA no longer lists - its feed only carries currently-available installers, and the oldest Sonoma is now 14.8.9 - so the recipe matched nothing out of the box. Default moved to a version the feed actually carries.</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.pkg.DefinedVersionmacOSUMAInstallerPKG</string>
 	<key>Input</key>
 	<dict>
+		<key>MACOS_VER</key>
+		<string>14\.8\.9</string>
 		<key>NAME</key>
 		<string>macOS Installer</string>
 		<key>SOFA_URL</key>
 		<string>https://sofafeed.macadmins.io/v1/macos_data_feed.json</string>
-		<key>MACOS_VER</key>
-		<!-- 
-		This represents that specific macOS version you wish to download. This version must
-		be listed in the SOFA JSON feed. 
-		The version number must be written in regular expression. 
-		For example: 14.4.1 would be "14\.4\.1"
-		13.5 would be "13\.5"
-		-->
-		<string>14\.4\.1</string>		
 		<key>URL_PATTERN</key>
 		<string>"version":\s*"%MACOS_VER%",\s*"build":\s*".*?",\s*"apple_slug":\s*".*?",\s*"url":\s*"(https?://[^"]+)"</string>
 	</dict>
@@ -34,17 +29,15 @@
 		<dict>
 			<key>Arguments</key>
 			<dict>
-				<key>source_pkg</key>
-				<string>%RECIPE_CACHE_DIR%/downloads/InstallAssistant.pkg</string>
 				<key>pkg_path</key>
 				<string>%RECIPE_CACHE_DIR%/%displayname% %buildversion%.pkg</string>
+				<key>source_pkg</key>
+				<string>%RECIPE_CACHE_DIR%/downloads/InstallAssistant.pkg</string>
 			</dict>
 			<key>Processor</key>
 			<string>PkgCopier</string>
 		</dict>
 		<dict>
-			<key>Processor</key>
-			<string>PathDeleter</string>
 			<key>Arguments</key>
 			<dict>
 				<key>path_list</key>
@@ -54,6 +47,8 @@
 					<string>%RECIPE_CACHE_DIR%/unpack</string>
 				</array>
 			</dict>
+			<key>Processor</key>
+			<string>PathDeleter</string>
 		</dict>
 	</array>
 </dict>
