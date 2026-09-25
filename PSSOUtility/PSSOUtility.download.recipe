@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest version of PSSO Utility from GitHub releases.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.PSSOUtility</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>PSSOUtility</string>
+        <key>GITHUB_REPO</key>
+        <string>Jamf-Concepts/psso-utility</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Comment</key>
+            <string>Get the latest release info from GitHub</string>
+            <key>Processor</key>
+            <string>GitHubReleasesInfoProvider</string>
+            <key>Arguments</key>
+            <dict>
+                <key>github_repo</key>
+                <string>%GITHUB_REPO%</string>
+                <key>asset_regex</key>
+                <string>^PSSOUtility\.pkg$</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Comment</key>
+            <string>Download the vendor-signed installer package</string>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%url%</string>
+                <key>filename</key>
+                <string>%NAME%-%version%.pkg</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+
+        <!-- Verify the installer package signature -->
+        <dict>
+            <key>Comment</key>
+            <string>Verify the package is signed by JAMF Software</string>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>requirement</key>
+                <string>anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.14] and certificate leaf[field.1.2.840.113635.100.6.1.14] and certificate leaf[subject.OU] = "483DWKW443"</string>
+            </dict>
+        </dict>
+
+    </array>
+</dict>
+</plist>

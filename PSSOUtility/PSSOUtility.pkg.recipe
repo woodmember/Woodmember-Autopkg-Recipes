@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Standardises the naming of the vendor-signed, notarized PSSO Utility installer package. The package is not rebuilt, which would break notarization.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.pkg.PSSOUtility</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>PSSOUtility</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>ParentRecipe</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.PSSOUtility</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Comment</key>
+            <string>Copy the vendor-signed pkg with standardised naming</string>
+            <key>Processor</key>
+            <string>PkgCopier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_pkg</key>
+                <string>%pathname%</string>
+                <key>pkg_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
