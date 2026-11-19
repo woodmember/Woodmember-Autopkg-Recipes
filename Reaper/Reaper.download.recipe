@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest universal Reaper DMG for macOS by scraping the Reaper download page. Downloads the universal (Intel + Apple Silicon) build.</string>
+    <key>Identifier</key>
+    <string>com.github.Woodmember-Autopkg-Recipes.download.Reaper</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Reaper</string>
+        <key>CHECK_URL</key>
+        <string>https://www.reaper.fm/download.php</string>
+        <key>USER_AGENT</key>
+        <string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>2.3</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%CHECK_URL%</string>
+                <key>re_pattern</key>
+                <string>\"(files/[0-9]+\.x/reaper(?P&lt;version&gt;[0-9]+)_universal\.dmg)\"</string>
+                <key>request_headers</key>
+                <dict>
+                    <key>User-Agent</key>
+                    <string>%USER_AGENT%</string>
+                </dict>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://www.reaper.fm/%match%</string>
+                <key>filename</key>
+                <string>%NAME%_%version%.dmg</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%/REAPER.app</string>
+                <key>requirement</key>
+                <string>anchor apple generic and identifier "com.cockos.reaper" and certificate leaf[subject.OU] = "Y3T58622SG"</string>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
