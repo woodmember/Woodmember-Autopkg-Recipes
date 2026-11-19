@@ -45,17 +45,6 @@
 			<string>Copier</string>
 		</dict>
 		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>source_path</key>
-				<string>%RECIPE_CACHE_DIR%/payload/Library/</string>
-				<key>destination_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%-%version%/Library/</string>
-			</dict>
-			<key>Processor</key>
-			<string>Copier</string>
-		</dict>
-		<dict>
 					<key>Processor</key>
 					<string>PkgCreator</string>
 					<key>Arguments</key>
