@@ -60,8 +60,12 @@
             <dict>
                 <key>input_path</key>
                 <string>%pathname%</string>
-                <key>requirement</key>
-                <string>anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.14] and certificate leaf[field.1.2.840.113635.100.6.1.14] and certificate leaf[subject.OU] = "483DWKW443"</string>
+                <key>expected_authority_names</key>
+                <array>
+                    <string>Developer ID Installer: JAMF Software (483DWKW443)</string>
+                    <string>Developer ID Certification Authority</string>
+                    <string>Apple Root CA</string>
+                </array>
             </dict>
         </dict>
 
