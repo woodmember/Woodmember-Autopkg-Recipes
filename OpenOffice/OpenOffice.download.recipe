@@ -5,15 +5,21 @@
 	<key>Description</key>
 	<string>Downloads the latest en-US macOS build of Apache OpenOffice.
 
-Version is read from the SourceForge project's best_release.json, which names the
-current recommended download per platform. The project RSS feed used by older
-recipes no longer returns the macOS en-US installer.</string>
+sourceforge.net blocks curl entirely at the Cloudflare TLS-fingerprint level (every
+path, including the project RSS/JSON feeds, returns the challenge page instead of
+content), so the SourceForge mirror older recipes used is permanently dead. Apache's
+own archive mirror hosts the same releases without Cloudflare. The top-level listing
+sorts by name, not version order (e.g. "4.1.2-patch1" sorts after "4.1.17"), so
+request it sorted by last-modified descending (?C=M;O=D) and take the first "4.x.y/"
+match, which is always the newest release.</string>
 	<key>Identifier</key>
 	<string>com.github.Woodmember-Autopkg-Recipes.download.OpenOffice</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
 		<string>OpenOffice</string>
+		<key>LANGUAGE</key>
+		<string>en-US</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>2.3</string>
@@ -21,15 +27,15 @@ recipes no longer returns the macOS en-US installer.</string>
 	<array>
 		<dict>
 			<key>Comment</key>
-			<string>Read the current macOS en-US installer from the SourceForge best_release feed.</string>
+			<string>sourceforge.net now blocks curl entirely at the Cloudflare TLS-fingerprint level, so get the newest version from Apache's own archive mirror instead, sorted by last-modified descending.</string>
 			<key>Processor</key>
 			<string>URLTextSearcher</string>
 			<key>Arguments</key>
 			<dict>
 				<key>url</key>
-				<string>https://sourceforge.net/projects/openofficeorg.mirror/best_release.json</string>
+				<string>https://archive.apache.org/dist/openoffice/?C=M;O=D</string>
 				<key>re_pattern</key>
-				<string>"/(?P&lt;version&gt;[0-9.]+)/binaries/en-US/(?P&lt;filename&gt;Apache_OpenOffice_[0-9.]+_MacOS_x86-64_install_en-US\.dmg)"</string>
+				<string>href="(?P&lt;version&gt;4\.[0-9]+\.[0-9]+)/"</string>
 			</dict>
 		</dict>
 		<dict>
@@ -38,7 +44,7 @@ recipes no longer returns the macOS en-US installer.</string>
 			<key>Arguments</key>
 			<dict>
 				<key>url</key>
-				<string>https://downloads.sourceforge.net/project/openofficeorg.mirror/%version%/binaries/en-US/%filename%</string>
+				<string>https://archive.apache.org/dist/openoffice/%version%/binaries/%LANGUAGE%/Apache_OpenOffice_%version%_MacOS_x86-64_install_%LANGUAGE%.dmg</string>
 				<key>filename</key>
 				<string>%NAME%-%version%.dmg</string>
 			</dict>
